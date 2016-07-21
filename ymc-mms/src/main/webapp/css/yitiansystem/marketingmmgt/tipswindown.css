@@ -1,0 +1,30 @@
+#windownbg {
+	DISPLAY: none; BACKGROUND: #000; LEFT: 0px; WIDTH: 100%; POSITION: absolute; TOP: 0px; HEIGHT: 100%
+}
+#windown-box {
+	BORDER-RIGHT: #e9f3fd 5px solid; BORDER-TOP: #e9f3fd 5px solid; BACKGROUND: #fff; BORDER-LEFT: #e9f3fd 5px solid; BORDER-BOTTOM: #e9f3fd 5px solid; POSITION: absolute; TEXT-ALIGN: left
+}
+#windown-title {
+	BORDER-RIGHT: #a6c9e1 1px solid; BORDER-TOP: #a6c9e1 1px solid; BACKGROUND: url(http://leotheme.cn/wp-content/themes/Dreamy/images/bg.png) repeat-x 0px -330px; OVERFLOW: hidden; BORDER-LEFT: #a6c9e1 1px solid; BORDER-BOTTOM: #a6c9e1 1px solid; POSITION: relative; HEIGHT: 30px
+}
+#windown-title H2 {
+	FONT-SIZE: 14px; LEFT: 10px; COLOR: #666; POSITION: relative; TOP: 5px
+}
+#windown-close {
+	RIGHT: 10px; BACKGROUND: url(http://leotheme.cn/wp-content/themes/Dreamy/images/icon.png) no-repeat -820px -720px; OVERFLOW: hidden; WIDTH: 10px; CURSOR: pointer; TEXT-INDENT: -10em; POSITION: absolute; TOP: 8px; HEIGHT: 16px
+}
+#windown-content-border {
+	BORDER-RIGHT: #a6c9e1 1px solid; PADDING-RIGHT: 0px; BORDER-TOP: #a6c9e1 1px solid; PADDING-LEFT: 5px; BACKGROUND: url(http://leotheme.cn/wp-content/themes/Dreamy/images/bg.png) repeat-x 0px -380px; PADDING-BOTTOM: 5px; BORDER-LEFT: #a6c9e1 1px solid; PADDING-TOP: 5px; BORDER-BOTTOM: #a6c9e1 1px solid; POSITION: relative; TOP: -1px
+}
+#windown-content {
+	OVERFLOW: auto; POSITION: relative; TEXT-ALIGN: center
+}
+#windown-content IMG {
+	DISPLAY: block
+}
+#windown-content IFRAME {
+	DISPLAY: block
+}
+#windown-content .loading {
+	MARGIN-TOP: -8px; LEFT: 50%; MARGIN-LEFT: -8px; POSITION: absolute; TOP: 50%
+}

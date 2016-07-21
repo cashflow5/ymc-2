@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Review id="2015-06-01CodeReview">
+  <ReviewIssue id="IADJ0XV7">
+    <ReviewIssueMeta>
+      <CreationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-01 :: 14:39:53:971 CST</CreationDate>
+      <LastModificationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-01 :: 14:39:57:229 CST</LastModificationDate>
+    </ReviewIssueMeta>
+    <ReviewerId>li.j1</ReviewerId>
+    <AssignedTo>li.j1</AssignedTo>
+    <File></File>
+    <Type>item.type.label.codingStandards</Type>
+    <Severity>item.label.unset</Severity>
+    <Summary></Summary>
+    <Description></Description>
+    <Annotation></Annotation>
+    <Revision></Revision>
+    <Resolution>item.label.unset</Resolution>
+    <Status>item.status.label.open</Status>
+  </ReviewIssue>
+  <ReviewIssue id="IAJFIJ4Z">
+    <ReviewIssueMeta>
+      <CreationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-05 :: 17:48:13:283 CST</CreationDate>
+      <LastModificationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-05 :: 17:54:16:460 CST</LastModificationDate>
+    </ReviewIssueMeta>
+    <ReviewerId>li.j1</ReviewerId>
+    <AssignedTo>li.j1</AssignedTo>
+    <File line="38">src/main/java/com/yougou/kaidian/framework/base/BaseController.java</File>
+    <Type>item.type.label.codingStandards</Type>
+    <Severity>item.severity.label.critical</Severity>
+    <Summary>URLDecoder如果传人null值，会抛异常</Summary>
+    <Description>values[0] == null ? null : values[0]	.trim()  可以改成 StringUtils.trimToEmpty(values[0])</Description>
+    <Annotation></Annotation>
+    <Revision></Revision>
+    <Resolution>item.label.unset</Resolution>
+    <Status>item.status.label.open</Status>
+  </ReviewIssue>
+  <ReviewIssue id="IAJFUYQC">
+    <ReviewIssueMeta>
+      <CreationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-05 :: 17:57:53:364 CST</CreationDate>
+      <LastModificationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-05 :: 17:59:59:841 CST</LastModificationDate>
+    </ReviewIssueMeta>
+    <ReviewerId>li.j1</ReviewerId>
+    <AssignedTo>li.j1</AssignedTo>
+    <File line="34">src/main/java/com/yougou/kaidian/framework/base/BaseController.java</File>
+    <Type>item.type.label.codingStandards</Type>
+    <Severity>item.severity.label.major</Severity>
+    <Summary>StringUtils.isEmpty判断无效</Summary>
+    <Description>p.getValue是一个对象，调用toString()方法会返回[Ljava.lang.String;@5d3ddb03这样的数据</Description>
+    <Annotation></Annotation>
+    <Revision></Revision>
+    <Resolution>item.label.unset</Resolution>
+    <Status>item.status.label.open</Status>
+  </ReviewIssue>
+  <ReviewIssue id="IAJISI20">
+    <ReviewIssueMeta>
+      <CreationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-05 :: 19:19:57:288 CST</CreationDate>
+      <LastModificationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-05 :: 19:20:36:398 CST</LastModificationDate>
+    </ReviewIssueMeta>
+    <ReviewerId>li.j1</ReviewerId>
+    <AssignedTo>li.j1</AssignedTo>
+    <File line="136">src/main/java/com/yougou/kaidian/taobao/web/TaobaoTempletController.java</File>
+    <Type>item.type.label.programLogic</Type>
+    <Severity>item.severity.label.major</Severity>
+    <Summary>不应该抛出异常</Summary>
+    <Description>建议捕获异常，然后记录日志，返回给页面合适的提示信息。</Description>
+    <Annotation></Annotation>
+    <Revision></Revision>
+    <Resolution>item.label.unset</Resolution>
+    <Status>item.status.label.open</Status>
+  </ReviewIssue>
+  <ReviewIssue id="IAJIW5TI">
+    <ReviewIssueMeta>
+      <CreationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-05 :: 19:22:48:054 CST</CreationDate>
+      <LastModificationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-05 :: 19:23:16:147 CST</LastModificationDate>
+    </ReviewIssueMeta>
+    <ReviewerId>li.j1</ReviewerId>
+    <AssignedTo>li.j1</AssignedTo>
+    <File line="666">src/main/java/com/yougou/kaidian/commodity/service/impl/MerchantCommodityServiceImpl.java</File>
+    <Type>item.type.label.suggestion</Type>
+    <Severity>item.severity.label.minor</Severity>
+    <Summary>建议使用常量类</Summary>
+    <Description>建议使用常量类</Description>
+    <Annotation></Annotation>
+    <Revision></Revision>
+    <Resolution>item.label.unset</Resolution>
+    <Status>item.status.label.open</Status>
+  </ReviewIssue>
+  <ReviewIssue id="IAJIYMDO">
+    <ReviewIssueMeta>
+      <CreationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-05 :: 19:24:42:828 CST</CreationDate>
+      <LastModificationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-05 :: 19:30:10:785 CST</LastModificationDate>
+    </ReviewIssueMeta>
+    <ReviewerId>li.j1</ReviewerId>
+    <AssignedTo>li.j1</AssignedTo>
+    <File line="682">src/main/java/com/yougou/kaidian/commodity/service/impl/MerchantCommodityServiceImpl.java</File>
+    <Type>item.type.label.codingStandards</Type>
+    <Severity>item.severity.label.major</Severity>
+    <Summary>propItems可能为null，则此处会出异常。</Summary>
+    <Description>建议增加判断null的语句。
+Collections.sort(propItems, new ComparatorPropItem()); 同样</Description>
+    <Annotation></Annotation>
+    <Revision></Revision>
+    <Resolution>item.label.unset</Resolution>
+    <Status>item.status.label.open</Status>
+  </ReviewIssue>
+  <ReviewIssue id="IAJJ2UZL">
+    <ReviewIssueMeta>
+      <CreationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-05 :: 19:28:00:609 CST</CreationDate>
+      <LastModificationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-05 :: 19:28:41:407 CST</LastModificationDate>
+    </ReviewIssueMeta>
+    <ReviewerId>li.j1</ReviewerId>
+    <AssignedTo>li.j1</AssignedTo>
+    <File line="688">src/main/java/com/yougou/kaidian/commodity/service/impl/MerchantCommodityServiceImpl.java</File>
+    <Type>item.type.label.codingStandards</Type>
+    <Severity>item.severity.label.normal</Severity>
+    <Summary>如果itemName为null，此处异常</Summary>
+    <Description>建议使用itemName1.equals(itemName)。</Description>
+    <Annotation></Annotation>
+    <Revision></Revision>
+    <Resolution>item.label.unset</Resolution>
+    <Status>item.status.label.open</Status>
+  </ReviewIssue>
+  <ReviewIssue id="IANC4Q9L">
+    <ReviewIssueMeta>
+      <CreationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-08 :: 11:24:35:193 CST</CreationDate>
+      <LastModificationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-12 :: 15:01:43:839 CST</LastModificationDate>
+    </ReviewIssueMeta>
+    <ReviewerId>li.j1</ReviewerId>
+    <AssignedTo>li.j1</AssignedTo>
+    <File line="65">src/main/java/com/yougou/kaidian/taobao/service/impl/TaobaoTempletServiceImpl.java</File>
+    <Type>item.type.label.programLogic</Type>
+    <Severity>item.severity.label.critical</Severity>
+    <Summary>点击任何分类的查看属性，都查出同样多的数据，且多达759条记录。</Summary>
+    <Description>检查SQL发现，需要传参taobao_cid，但是没有传入，页面Ajax调用的时候，没有传这个。导致每次执行都查询所有的数据。
+修改办法：页面Ajax调用传参taobaoCid（taobao.yougou.itemcat.pro.templet.js），SQL映射xml拼装条件时，少了一个and（TaobaoYougouItemCatTempletMapper.xml）。</Description>
+    <Annotation></Annotation>
+    <Revision></Revision>
+    <Resolution>item.label.unset</Resolution>
+    <Status>item.status.label.open</Status>
+  </ReviewIssue>
+  <ReviewIssue id="IANKFZVJ">
+    <ReviewIssueMeta>
+      <CreationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-08 :: 15:17:17:791 CST</CreationDate>
+      <LastModificationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-08 :: 15:17:32:609 CST</LastModificationDate>
+    </ReviewIssueMeta>
+    <ReviewerId>li.j1</ReviewerId>
+    <AssignedTo>li.j1</AssignedTo>
+    <File line="416">src/main/java/com/yougou/kaidian/taobao/web/TaobaoImportController.java</File>
+    <Type>item.type.label.codingStandards</Type>
+    <Severity>item.severity.label.normal</Severity>
+    <Summary>改用工具类</Summary>
+    <Description>改用工具类</Description>
+    <Annotation></Annotation>
+    <Revision></Revision>
+    <Resolution>item.label.unset</Resolution>
+    <Status>item.status.label.open</Status>
+  </ReviewIssue>
+  <ReviewIssue id="IANL82CP">
+    <ReviewIssueMeta>
+      <CreationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-08 :: 15:39:07:369 CST</CreationDate>
+      <LastModificationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-08 :: 15:39:20:124 CST</LastModificationDate>
+    </ReviewIssueMeta>
+    <ReviewerId>li.j1</ReviewerId>
+    <AssignedTo>li.j1</AssignedTo>
+    <File line="243">src/main/java/com/yougou/kaidian/taobao/web/TaobaoImportController.java</File>
+    <Type>item.type.label.codingStandards</Type>
+    <Severity>item.severity.label.minor</Severity>
+    <Summary>无用的代码</Summary>
+    <Description>无用的代码</Description>
+    <Annotation></Annotation>
+    <Revision></Revision>
+    <Resolution>item.label.unset</Resolution>
+    <Status>item.status.label.open</Status>
+  </ReviewIssue>
+  <ReviewIssue id="IANL91NH">
+    <ReviewIssueMeta>
+      <CreationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-08 :: 15:39:53:117 CST</CreationDate>
+      <LastModificationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-12 :: 15:03:10:096 CST</LastModificationDate>
+    </ReviewIssueMeta>
+    <ReviewerId>li.j1</ReviewerId>
+    <AssignedTo>li.j1</AssignedTo>
+    <File line="41">src/main/java/com/yougou/kaidian/taobao/constant/ThreadImportHolder.java</File>
+    <Type>item.type.label.programLogic</Type>
+    <Severity>item.severity.label.critical</Severity>
+    <Summary>未初始化TaobaoCsvItemVO list</Summary>
+    <Description>此为修改后的代码
+public static  void setVo(TaobaoCsvItemVO vo) {		 
+		voList.get().add(vo);
+	}
+</Description>
+    <Annotation></Annotation>
+    <Revision></Revision>
+    <Resolution>item.label.unset</Resolution>
+    <Status>item.status.label.open</Status>
+  </ReviewIssue>
+  <ReviewIssue id="IANLDUXN">
+    <ReviewIssueMeta>
+      <CreationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-08 :: 15:43:37:691 CST</CreationDate>
+      <LastModificationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-08 :: 15:44:45:271 CST</LastModificationDate>
+    </ReviewIssueMeta>
+    <ReviewerId>li.j1</ReviewerId>
+    <AssignedTo>li.j1</AssignedTo>
+    <File line="234">src/main/java/com/yougou/kaidian/taobao/web/TaobaoImportController.java</File>
+    <Type>item.type.label.suggestion</Type>
+    <Severity>item.severity.label.normal</Severity>
+    <Summary>3处拼装jsonObject对象的代码基本一致，可以抽取公共方法</Summary>
+    <Description></Description>
+    <Annotation></Annotation>
+    <Revision></Revision>
+    <Resolution>item.label.unset</Resolution>
+    <Status>item.status.label.open</Status>
+  </ReviewIssue>
+  <ReviewIssue id="IANMA48B">
+    <ReviewIssueMeta>
+      <CreationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-08 :: 16:08:42:731 CST</CreationDate>
+      <LastModificationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-08 :: 16:09:03:176 CST</LastModificationDate>
+    </ReviewIssueMeta>
+    <ReviewerId>li.j1</ReviewerId>
+    <AssignedTo>li.j1</AssignedTo>
+    <File line="1609">src/main/java/com/yougou/kaidian/taobao/service/impl/TaobaoDataImportServiceImpl.java</File>
+    <Type>item.type.label.suggestion</Type>
+    <Severity>item.severity.label.normal</Severity>
+    <Summary>建议做成可配置或常量</Summary>
+    <Description></Description>
+    <Annotation></Annotation>
+    <Revision></Revision>
+    <Resolution>item.label.unset</Resolution>
+    <Status>item.status.label.open</Status>
+  </ReviewIssue>
+  <ReviewIssue id="IANMI9V3">
+    <ReviewIssueMeta>
+      <CreationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-08 :: 16:15:03:279 CST</CreationDate>
+      <LastModificationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-08 :: 16:15:30:583 CST</LastModificationDate>
+    </ReviewIssueMeta>
+    <ReviewerId>li.j1</ReviewerId>
+    <AssignedTo>li.j1</AssignedTo>
+    <File line="884">src/main/java/com/yougou/kaidian/taobao/service/impl/TaobaoDataImportServiceImpl.java</File>
+    <Type>item.type.label.suggestion</Type>
+    <Severity>item.severity.label.minor</Severity>
+    <Summary>建议批量删除</Summary>
+    <Description></Description>
+    <Annotation></Annotation>
+    <Revision></Revision>
+    <Resolution>item.label.unset</Resolution>
+    <Status>item.status.label.open</Status>
+  </ReviewIssue>
+  <ReviewIssue id="IANMQVSG">
+    <ReviewIssueMeta>
+      <CreationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-08 :: 16:21:44:944 CST</CreationDate>
+      <LastModificationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-08 :: 16:22:03:574 CST</LastModificationDate>
+    </ReviewIssueMeta>
+    <ReviewerId>li.j1</ReviewerId>
+    <AssignedTo>li.j1</AssignedTo>
+    <File line="206">src/main/java/com/yougou/kaidian/taobao/web/TaobaoImportController.java</File>
+    <Type>item.type.label.suggestion</Type>
+    <Severity>item.severity.label.minor</Severity>
+    <Summary>未使用的代码</Summary>
+    <Description></Description>
+    <Annotation></Annotation>
+    <Revision></Revision>
+    <Resolution>item.label.unset</Resolution>
+    <Status>item.status.label.open</Status>
+  </ReviewIssue>
+  <ReviewIssue id="IANUD1F0">
+    <ReviewIssueMeta>
+      <CreationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-08 :: 19:54:55:980 CST</CreationDate>
+      <LastModificationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-08 :: 19:55:22:322 CST</LastModificationDate>
+    </ReviewIssueMeta>
+    <ReviewerId>li.j1</ReviewerId>
+    <AssignedTo>li.j1</AssignedTo>
+    <File line="266">src/main/java/com/yougou/kaidian/taobao/service/impl/TaobaoItemServiceImpl.java</File>
+    <Type>item.type.label.programLogic</Type>
+    <Severity>item.severity.label.normal</Severity>
+    <Summary>set可能为null</Summary>
+    <Description>可能出现空指针异常</Description>
+    <Annotation></Annotation>
+    <Revision></Revision>
+    <Resolution>item.label.unset</Resolution>
+    <Status>item.status.label.open</Status>
+  </ReviewIssue>
+  <ReviewIssue id="IANUF989">
+    <ReviewIssueMeta>
+      <CreationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-08 :: 19:56:39:417 CST</CreationDate>
+      <LastModificationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-08 :: 19:57:29:322 CST</LastModificationDate>
+    </ReviewIssueMeta>
+    <ReviewerId>li.j1</ReviewerId>
+    <AssignedTo>li.j1</AssignedTo>
+    <File line="245">src/main/java/com/yougou/kaidian/taobao/service/impl/TaobaoItemServiceImpl.java</File>
+    <Type>item.type.label.codingStandards</Type>
+    <Severity>item.label.unset</Severity>
+    <Summary>可能taobaoItem为null</Summary>
+    <Description>可能出现空指针异常</Description>
+    <Annotation></Annotation>
+    <Revision></Revision>
+    <Resolution>item.label.unset</Resolution>
+    <Status>item.status.label.open</Status>
+  </ReviewIssue>
+  <ReviewIssue id="IAOOG3RR">
+    <ReviewIssueMeta>
+      <CreationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-09 :: 09:57:07:479 CST</CreationDate>
+      <LastModificationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-09 :: 09:58:10:464 CST</LastModificationDate>
+    </ReviewIssueMeta>
+    <ReviewerId>li.j1</ReviewerId>
+    <AssignedTo>li.j1</AssignedTo>
+    <File line="446">src/main/java/com/yougou/kaidian/taobao/service/impl/TaobaoItemServiceImpl.java</File>
+    <Type>item.type.label.programLogic</Type>
+    <Severity>item.severity.label.critical</Severity>
+    <Summary>returnVO可能为null</Summary>
+    <Description>可能空指针异常</Description>
+    <Annotation></Annotation>
+    <Revision></Revision>
+    <Resolution>item.label.unset</Resolution>
+    <Status>item.status.label.open</Status>
+  </ReviewIssue>
+  <ReviewIssue id="IAOPC0L1">
+    <ReviewIssueMeta>
+      <CreationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-09 :: 10:21:56:341 CST</CreationDate>
+      <LastModificationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-09 :: 10:22:20:846 CST</LastModificationDate>
+    </ReviewIssueMeta>
+    <ReviewerId>li.j1</ReviewerId>
+    <AssignedTo>li.j1</AssignedTo>
+    <File line="471">src/main/java/com/yougou/kaidian/taobao/service/impl/TaobaoItemServiceImpl.java</File>
+    <Type>item.type.label.codingStandards</Type>
+    <Severity>item.severity.label.normal</Severity>
+    <Summary>捕获了异常未作任何处理</Summary>
+    <Description>至少记录日志吧</Description>
+    <Annotation></Annotation>
+    <Revision></Revision>
+    <Resolution>item.label.unset</Resolution>
+    <Status>item.status.label.open</Status>
+  </ReviewIssue>
+  <ReviewIssue id="IAOPHCWI">
+    <ReviewIssueMeta>
+      <CreationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-09 :: 10:26:05:586 CST</CreationDate>
+      <LastModificationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-09 :: 10:27:22:227 CST</LastModificationDate>
+    </ReviewIssueMeta>
+    <ReviewerId>li.j1</ReviewerId>
+    <AssignedTo>li.j1</AssignedTo>
+    <File line="971">src/main/java/com/yougou/kaidian/taobao/service/impl/TaobaoItemServiceImpl.java</File>
+    <Type>item.type.label.codingStandards</Type>
+    <Severity>item.severity.label.normal</Severity>
+    <Summary>使用了String.equals(long)，不对</Summary>
+    <Description>使用了String.equals(long)，不对</Description>
+    <Annotation></Annotation>
+    <Revision></Revision>
+    <Resolution>item.label.unset</Resolution>
+    <Status>item.status.label.open</Status>
+  </ReviewIssue>
+  <ReviewIssue id="IAOPKDAA">
+    <ReviewIssueMeta>
+      <CreationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-09 :: 10:28:26:050 CST</CreationDate>
+      <LastModificationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-09 :: 10:29:25:070 CST</LastModificationDate>
+    </ReviewIssueMeta>
+    <ReviewerId>li.j1</ReviewerId>
+    <AssignedTo>li.j1</AssignedTo>
+    <File line="1356">src/main/java/com/yougou/kaidian/taobao/service/impl/TaobaoItemServiceImpl.java</File>
+    <Type>item.type.label.codingStandards</Type>
+    <Severity>item.label.unset</Severity>
+    <Summary>!StringUtils.isEmpty(preImageStr) 重复代码</Summary>
+    <Description>多余的判空，也还可以改用 StringUtils.isNotEmpty方法。</Description>
+    <Annotation></Annotation>
+    <Revision></Revision>
+    <Resolution>item.label.unset</Resolution>
+    <Status>item.status.label.open</Status>
+  </ReviewIssue>
+  <ReviewIssue id="IAOPM4YR">
+    <ReviewIssueMeta>
+      <CreationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-09 :: 10:29:48:579 CST</CreationDate>
+      <LastModificationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-09 :: 10:30:12:042 CST</LastModificationDate>
+    </ReviewIssueMeta>
+    <ReviewerId>li.j1</ReviewerId>
+    <AssignedTo>li.j1</AssignedTo>
+    <File line="1568">src/main/java/com/yougou/kaidian/taobao/service/impl/TaobaoItemServiceImpl.java</File>
+    <Type>item.type.label.codingStandards</Type>
+    <Severity>item.label.unset</Severity>
+    <Summary>extendCell可能为空</Summary>
+    <Description>可能空指针异常</Description>
+    <Annotation></Annotation>
+    <Revision></Revision>
+    <Resolution>item.label.unset</Resolution>
+    <Status>item.status.label.open</Status>
+  </ReviewIssue>
+</Review>

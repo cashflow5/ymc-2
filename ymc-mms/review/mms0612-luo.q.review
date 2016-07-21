@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Review id="mms0612">
+  <ReviewIssue id="IATCAJGB">
+    <ReviewIssueMeta>
+      <CreationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-12 :: 16:15:43:355 CST</CreationDate>
+      <LastModificationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-12 :: 16:17:01:430 CST</LastModificationDate>
+    </ReviewIssueMeta>
+    <ReviewerId>luo.q</ReviewerId>
+    <AssignedTo>luo.q</AssignedTo>
+    <File line="5">src/test/java/com/yougou/test1.java</File>
+    <Type>item.type.label.codingStandards</Type>
+    <Severity>item.severity.label.trivial</Severity>
+    <Summary></Summary>
+    <Description></Description>
+    <Annotation></Annotation>
+    <Revision></Revision>
+    <Resolution>item.resolution.label.validDuplicate</Resolution>
+    <Status>item.status.label.open</Status>
+  </ReviewIssue>
+  <ReviewIssue id="IATCCFI7">
+    <ReviewIssueMeta>
+      <CreationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-12 :: 16:17:11:551 CST</CreationDate>
+      <LastModificationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-12 :: 16:17:16:380 CST</LastModificationDate>
+    </ReviewIssueMeta>
+    <ReviewerId>luo.q</ReviewerId>
+    <AssignedTo>luo.q</AssignedTo>
+    <File line="6">src/test/java/com/yougou/test1.java</File>
+    <Type>item.label.unset</Type>
+    <Severity>item.label.unset</Severity>
+    <Summary></Summary>
+    <Description></Description>
+    <Annotation></Annotation>
+    <Revision></Revision>
+    <Resolution>item.label.unset</Resolution>
+    <Status>item.status.label.open</Status>
+  </ReviewIssue>
+</Review>

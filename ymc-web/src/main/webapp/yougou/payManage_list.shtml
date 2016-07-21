@@ -1,0 +1,255 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>优购-商家中心-赔付管理列表</title>
+    <link rel="stylesheet" type="text/css" href="css/base.css" />
+    <link rel="stylesheet" type="text/css" href="css/mold.css" />
+</head>
+
+<body>
+    <script type="text/javascript" src="js/bootstrap.js"></script>
+    <!--#include file="layout/header.shtml" -->
+    <div id="newcontent" class="wrap clearfix mt10">
+        <!--#include file="layout/sidebar.shtml" -->
+        <div id="newmain" class="main_bd fr">
+            <div class="main_container">
+                <div class="normal_box">
+                    <p class="title site">当前位置：商家中心 &gt; 售后 &gt; 赔付管理</p>
+                    <div class="tab_panel  relative">
+                        <div class="tab_content"> 
+                            <!--搜索start-->
+                            <div class="search_box pt0">
+                                <form action="toPrintNewDelivery.sc" id="queryVoform" name="queryVoform" method="post">
+                                    <!--是否一单一货-->
+                                    <input type="hidden" id="singleCargo" name="singleCargo" value="" />
+                                    <!--标识页面是否第一次进入-->
+                                    <input type="hidden" id="tabNum" name="tabNum" value="1" />
+                                    <!--选项卡页面标识-->
+                                    <input type="hidden" id="flag" name="flag" value="" />
+                                    
+                                    <p>
+                                        <span>
+                                            <label style="width:110px;">工单号：</label>
+                                            <input type="text" name="orderSubNo" id="orderSubNo" class="inputtxt" value="" />
+                                        </span>
+                                        <span>
+                                            <label style="width:110px;">订单号：</label>
+                                            <input type="text" name="originalOrderNo" id="originalOrderNo" class="inputtxt" value="" />
+                                        </span>
+                                        <span>
+                                            <label style="width:110px;">创建时间：</label>
+                                            <input type="text" name="timeStart" id="startTime" value="" class="inputtxt" style="width:80px;" /> 至
+                                        <input type="text" name="timeEnd" id="endTime" value="" class="inputtxt" style="width:80px;" />
+                                        </span>
+                                    </p>
+                                    <p>
+                                        <span>
+                                            <label style="width:110px;">工单状态：</label>
+                                            <input type="text" name="logisticsName" id="logisticsName" class="inputtxt" value="" />
+                                        </span>
+                                        <span>
+                                            <label style="width:110px;">赔付原因：</label>
+                                            <input type="text" name="suppliersColorModelsCode" id="suppliersColorModelsCode"  value="" class="inputtxt" />
+                                        </span>
+                                        <span>
+                                            <a class="button" id="mySubmit" onclick="mysubmit()"><span>搜索</span></a>
+                                        </span>
+                                    </p>
+                                </form>
+                            </div>
+                            <!--搜索end-->
+
+                            <p style="position:absolute;top:82px;left:175px;"><span class="fl ml5" style="color:#e60011;">提示：请按时处理，如7天内未处理，系统则认为单据已认定无需申诉</span></p>
+                            <!-- 单据打印导航tab模版引入 -->
+                            <ul class="tab">
+                                <li onclick="location.href='#'"  ><span>待商家处理</span></li>
+                                <li onclick="location.href='payManage_list.shtml'" class="curr"  ><span>全部</span></li>
+                            </ul>
+                            <!--列表start-->
+                            <table class="list_table">
+                                <thead>
+                                    <tr>
+                                        <th><input type="checkbox" /></th>
+                                        <th>工单号</th>
+                                        <th>订单号</th>
+                                        <!--th>原始订单号</th-->
+                                        <th>赔付方式</th>
+                                        <th>等值金额(元)</th>
+                                        <th>创建时间</th>
+                                        <th>赔付原因</th>
+                                        <th>工单状态</th>
+                                        <th>剩余时间</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>  <!--do_tr 这行客户端会自动显示隐藏-->
+                                        <td><input type="checkbox" /></td>
+                                        <td><a href="#" class="">gd1506230807080001</a></td>
+                                        <td><a href="#" class="">M650620111624_1</a></td>
+                                        <td>礼品卡</td>
+                                        <td>10</td>
+                                        <td>2015-03-12 23:28:39</td>
+                                        <td>缺货</td>
+                                        <td>待处理</td>
+                                        <td><font color="#e60011;">19</font>时<font color="#e60011;">23</font>分钟<font color="#e60011;">30</font>秒</td>
+                                        <td><a href="">处理</a></td>
+                                    </tr>
+                                   <tr>  <!--do_tr 这行客户端会自动显示隐藏-->
+                                        <td><input type="checkbox" /></td>
+                                        <td><a href="#" class="">gd1506230807080001</a></td>
+                                        <td><a href="#" class="">M650620111624_1</a></td>
+                                        <td>礼品卡</td>
+                                        <td>10</td>
+                                        <td>2015-03-12 23:28:39</td>
+                                        <td>缺货</td>
+                                        <td>同意</td>
+                                        <td></td>
+                                        <td><a href="">查看</a></td>
+                                    </tr>
+                                    <tr>  <!--do_tr 这行客户端会自动显示隐藏-->
+                                        <td><input type="checkbox" /></td>
+                                        <td><a href="#" class="">gd1506230807080001</a></td>
+                                        <td><a href="#" class="">M650620111624_1</a></td>
+                                        <td>礼品卡</td>
+                                        <td>12</td>
+                                        <td>2015-03-12 23:28:39</td>
+                                        <td>未按约定时间发货</td>
+                                        <td>不同意(申诉中)</td>
+                                        <td></td>
+                                        <td><a href="">查看</a></td>
+                                    </tr>
+                                    <tr>  <!--do_tr 这行客户端会自动显示隐藏-->
+                                        <td><input type="checkbox" /></td>
+                                        <td><a href="#" class="">gd1506230807080001</a></td>
+                                        <td><a href="#" class="">M650620111624_1</a></td>
+                                        <td>礼品卡</td>
+                                        <td>15</td>
+                                        <td>2015-03-12 23:28:39</td>
+                                        <td>运费问题</td>
+                                        <td>关闭工单</td>
+                                        <td></td>
+                                        <td><a href="">查看</a></td>
+                                    </tr>           
+                                    <tr>  <!--do_tr 这行客户端会自动显示隐藏-->
+                                        <td><input type="checkbox" /></td>
+                                        <td><a href="#" class="">gd1506230807080001</a></td>
+                                        <td><a href="#" class="">M650620111624_1</a></td>
+                                        <td>礼品卡</td>
+                                        <td>10</td>
+                                        <td>2015-03-12 23:28:39</td>
+                                        <td>商品质量问题</td>
+                                        <td>申诉成功(客服)</td>
+                                        <td></td>
+                                        <td><a href="">查看</a></td>
+                                    </tr>
+                                    <tr>  <!--do_tr 这行客户端会自动显示隐藏-->
+                                        <td><input type="checkbox" /></td>
+                                        <td><a href="#" class="">gd1506230807080001</a></td>
+                                        <td><a href="#" class="">M650620111624_1</a></td>
+                                        <td>礼品卡</td>
+                                        <td>20</td>
+                                        <td>2015-03-12 23:28:39</td>
+                                        <td>发票问题</td>
+                                        <td>申诉失败(客服)</td>
+                                        <td></td>
+                                        <td><a href="">查看</a></td>
+                                    </tr>
+                                    <tr>  <!--do_tr 这行客户端会自动显示隐藏-->
+                                        <td><input type="checkbox" /></td>
+                                        <td><a href="#" class="">gd1506230807080001</a></td>
+                                        <td><a href="#" class="">M650620111624_1</a></td>
+                                        <td>礼品卡</td>
+                                        <td>10</td>
+                                        <td>2015-03-12 23:28:39</td>
+                                        <td>商品质量问题</td>
+                                        <td>申诉成功(POP仲裁)</td>
+                                        <td></td>
+                                        <td><a href="">查看</a></td>
+                                    </tr>
+                                    <tr>  <!--do_tr 这行客户端会自动显示隐藏-->
+                                        <td><input type="checkbox" /></td>
+                                        <td><a href="#" class="">gd1506230807080001</a></td>
+                                        <td><a href="#" class="">M650620111624_1</a></td>
+                                        <td>礼品卡</td>
+                                        <td>10</td>
+                                        <td>2015-03-12 23:28:39</td>
+                                        <td>商品质量问题</td>
+                                        <td>申诉失败(POP仲裁)</td>
+                                        <td></td>
+                                        <td><a href="">查看</a></td>
+                                    </tr>
+                                    <tr>  <!--do_tr 这行客户端会自动显示隐藏-->
+                                        <td><input type="checkbox" /></td>
+                                        <td><a href="#" class="">gd1506230807080001</a></td>
+                                        <td><a href="#" class="">M650620111624_1</a></td>
+                                        <td>礼品卡</td>
+                                        <td>10</td>
+                                        <td>2015-03-12 23:28:39</td>
+                                        <td>商品质量问题</td>
+                                        <td>同意</td>
+                                        <td></td>
+                                        <td><a href="">查看</a></td>
+                                    </tr>
+                                    <tr>  <!--do_tr 这行客户端会自动显示隐藏-->
+                                        <td><input type="checkbox" /></td>
+                                        <td><a href="#" class="">gd1506230807080001</a></td>
+                                        <td><a href="#" class="">M650620111624_1</a></td>
+                                        <td>礼品卡</td>
+                                        <td>10</td>
+                                        <td>2015-03-12 23:28:39</td>
+                                        <td>商品质量问题</td>
+                                        <td>同意</td>
+                                        <td></td>
+                                        <td><a href="">查看</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <!--列表end--> 
+                            <div class="gray-box">
+                                <label for="all_checkbox" class="cblue fl mr5" style="_margin-top:5px;"><input type="checkbox" id="all_checkbox" /> 全选</label>
+                                <a href="javascript:void(0);" class="btn-blue-2 fl mt3">同意赔付</a>
+                                <div class="fr">总记录行数：<span class="cred">9</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>            
+            </div>
+        </div>
+    </div>
+    <!--#include file="layout/footer.shtml" -->
+    <script>
+    // $.dialog.open('basic_info.shtml',{title:'提醒'});
+    $(function() {
+        $('.flag').click(function(){
+            var $this=$(this);
+           ygdg.dialog({
+                title:"添加备注信息",
+                content: '<dl class="flagForm_dl clearfix"><dt class="label">标记：</dt><dd class="pt3"><input type="radio" id="mark1" class="flagradio" name="mark" value="flag_red" /><label class="flaglabel flag flag_red" for="mark1"></label><input type="radio" id="mark2" class="flagradio" name="mark" value="flag_yellow" /><label class="flaglabel flag flag_yellow" for="mark2"></label><input type="radio" id="mark3" class="flagradio" name="mark" value="flag_green" /><label class="flaglabel flag flag_green" for="mark3"></label><input type="radio" id="mark4" class="flagradio" name="mark" value="flag_blue"/><label class="flaglabel flag flag_blue" for="mark4"></label><input type="radio" id="mark5" class="flagradio" name="mark" value="flag_purple"/><label class="flaglabel flag flag_purple" for="mark5"></label></dd></dl><dl class="flagForm_dl clearfix"><dt class="label">内容：</dt><dd><textarea class="flag_textarea"></textarea></dd></dl>',
+                max:false,
+                min:false,
+                width: '420px',
+                height: '205px',
+                lock:true,
+                ok: function() {
+                    var radio_val=$('input[name="mark"]:checked').val();
+                    if(radio_val){
+                        $this.attr('class',"flag "+radio_val);
+                    }
+                }
+            });
+        }).hover(function(){
+            var flag_class=$(this).attr('class');
+            if(flag_class.length!=4){
+                $(this).siblings('.flag_tip').removeClass('hide');
+            }
+        },function(){
+            $(this).siblings('.flag_tip').addClass('hide');
+        })
+    });
+    </script>
+</body>
+
+</html>

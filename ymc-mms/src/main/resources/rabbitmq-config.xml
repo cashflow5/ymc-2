@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+	xmlns:task="http://www.springframework.org/schema/task" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit.xsd
+	http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+		<!-- 定义rabbitmq连接工厂，生产环境使用集群配置，支持failover -->
+	<rabbit:connection-factory id="rmq-merchants-connectionFactory"
+		addresses="${rabbitmq.host}" />
+	
+	<rabbit:admin id="merchant-admin" connection-factory="rmq-merchants-connectionFactory" />
+
+	<bean id="jsonMessageConverter"	class="org.springframework.amqp.support.converter.JsonMessageConverter">
+		<property name="classMapper">
+			<bean class="org.springframework.amqp.support.converter.DefaultClassMapper">
+			</bean>
+		</property>
+	</bean>
+	
+	<!-- 自动生成MQ信息 -->
+	<!-- finance receive merchants deliveryFine MQ  -->
+	<rabbit:queue id="merchants.punish.queue" name="merchants.punish.queue"  declared-by="merchant-admin">
+		<rabbit:queue-arguments>
+			<entry key="x-ha-policy" value="all" />
+		</rabbit:queue-arguments>
+	</rabbit:queue>
+		
+	<rabbit:topic-exchange name="finance.merchant.topic">
+		<rabbit:bindings>
+			<rabbit:binding pattern="finance.merchant.deliveryfine" queue="merchants.punish.queue" />
+		</rabbit:bindings>
+	</rabbit:topic-exchange>
+	
+
+    <bean id="rabbitMerchantsTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate" >
+        <property name="connectionFactory" ref="rmq-merchants-connectionFactory"/>
+        <!--
+        <property name="transactionManager" ref="rabbitMerchantsTxManager"/>
+        <property name="channelTransacted" value="true"/>
+          -->
+        <property name="exchange" value="finance.merchant.topic"/>
+        <property name="routingKey" value="finance.merchant.deliveryfine"/>
+        <property name="messageConverter" ref="jsonMessageConverter"/>
+    </bean>
+    
+	
+	<!-- 招商新工单提醒MQ 声明队列-->
+	<rabbit:queue id="order.workorder.queue" name="order.workorder.queue" declared-by="merchant-admin" >
+		<rabbit:queue-arguments>
+			<entry key="x-ha-policy" value="all" />
+		</rabbit:queue-arguments>
+	</rabbit:queue>
+	
+
+	<!-- 招商违规订单接收财务打回MQ -->
+	<rabbit:queue name="finance.merchant.deliveryfinereturn.queue" declared-by="merchant-admin" />
+	<rabbit:listener-container connection-factory="rmq-merchants-connectionFactory" message-converter="jsonMessageConverter">
+		<rabbit:listener queues="finance.merchant.deliveryfinereturn.queue" ref="punishOrderHandler" method="handleMessage"/>
+	</rabbit:listener-container>
+	
+	<!-- 招商违规订单接收订单发货MQ -->
+	<rabbit:queue name="outstore.merchants.yougou.queue" declared-by="merchant-admin" />
+	<rabbit:listener-container connection-factory="rmq-merchants-connectionFactory" message-converter="jsonMessageConverter" >
+		<rabbit:listener queues="outstore.merchants.yougou.queue" ref="punishOrderHandler" method="handleOrderMessage"/>
+	</rabbit:listener-container>
+	
+	<!-- 招商新工单提醒MQ 接受消息-->
+	<rabbit:listener-container connection-factory="rmq-merchants-connectionFactory" 
+		concurrency="2" error-handler="punishOrderSaleTraceErrorHandler" message-converter="jsonMessageConverter">
+		<rabbit:listener ref="punishOrderSaleTraceHandler" method="handleOrderMessage" queues="order.workorder.queue"/>
+	</rabbit:listener-container>
+	
+
+
+</beans>

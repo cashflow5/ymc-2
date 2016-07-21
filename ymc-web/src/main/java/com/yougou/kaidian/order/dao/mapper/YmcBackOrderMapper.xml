@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yougou.kaidian.order.dao.YmcBackOrderMapper">
+
+	<resultMap type="com.yougou.merchant.api.supplier.vo.BackOrderVo" id="backOrderMap">
+		<id column="id" property="id" javaType="String"/>
+		<result column="backcode" property="backCode" javaType="String"/>
+		<result column="plan_back_totalcount" property="planBackTotalCount" javaType="int"/>
+		<result column="already_back_totalcount" property="alreadyBackTotalCount" javaType="int"/>
+		<result column="receive_status" property="receiveStatus" javaType="int"/>
+		<result column="back_operator" property="backOperator" javaType="String"/>
+		<result column="back_time" property="backTime" javaType="String"/>
+		<result column="back_warehhouse_code" property="backWarehHouseCode" javaType="String"/>
+	</resultMap>
+	
+	<!-- 首尔直发退回单，确认收货，退回单列表查询 -->
+	<select id="queryBackOrderList" resultMap="backOrderMap" parameterType="java.util.HashMap">
+		select t.id,
+			t.backcode,
+		    IFNULL(t.plan_back_totalcount,0) plan_back_totalcount,
+		    IFNULL(t.already_back_totalcount,0) already_back_totalcount,
+		    t.receive_status ,
+		    t.back_operator,
+		    date_format(t.back_time,'%Y-%m-%d %H:%i:%s') back_time,  
+		    t.back_warehhouse_code
+		
+		from tbl_merchant_qa_back_wareh t
+		where  t.back_warehhouse_code = #{backOrderVo.backWarehHouseCode} 
+		<include refid="queryBackOrderWhereSql" />
+		order by t.back_time desc 
+	   limit  #{query.offset}, #{query.pageSize}
+	</select>
+	
+	<!-- 首尔直发退回单，列表查询 条件 -->
+	<sql id="queryBackOrderWhereSql" >
+		<if test="backOrderVo != null">
+		    <!-- 退回单号查询 -->
+			<if test="backOrderVo.backCode != null and backOrderVo.backCode != '' ">
+				and t.backcode = #{backOrderVo.backCode}
+			</if>
+			<!-- 收货状态查询 -->
+			<if test="backOrderVo.receiveStatus != null ">
+				and t.receive_status = #{backOrderVo.receiveStatus}
+			</if>			
+		</if>
+		<if test="params != null">
+			<!-- 退回起始时间 -->
+			<if test="params.startDate != null and params.startDate != '' ">
+				and t.back_time >= #{params.startDate}
+			</if>
+			<!-- 退回结束时间 -->
+			<if test="params.endDate != null and params.endDate != '' ">
+				and t.back_time <![CDATA[  <= ]]>CONCAT(#{params.endDate},' 23:59:59') 
+			</if>
+			<!-- 默认查询6个月内 -->
+			<if test="(params.startDate == null or params.startDate == '') and (params.endDate == null or params.endDate == '') ">
+				and  t.back_time BETWEEN date(addDate(now(),-180)) and now()
+			</if>
+			<!-- 订单号 -->
+			<if test="params.orderSubNo != null and params.orderSubNo != '' ">
+				and EXISTS (select 1 from tbl_merchant_qa_back_wareh_detail s where s.main_id = t.id and s.order_sub_no = #{params.orderSubNo})
+			</if>
+			
+		</if>
+		
+	</sql>
+	
+	<!-- 首尔直发退回单，确认收货，退回单总数查询  -->
+	<select id="queryBackOrderCount" parameterType="java.util.HashMap" resultType="int">
+		select 
+			count(t.id) counts			
+		from tbl_merchant_qa_back_wareh t
+		where  t.back_warehhouse_code = #{backOrderVo.backWarehHouseCode} 
+		<include refid="queryBackOrderWhereSql" />
+	 </select>
+	 
+	<!-- 首尔直发二期，退回单详情列表查询 --> 
+	<select id="queryBackOrderDetailList" resultType="com.yougou.merchant.api.supplier.vo.BackOrderDetailVo" parameterType="java.util.HashMap">
+		select t2.pic_small commodityPic,
+			  d.id,d.main_id mainId,
+			  d.commodity_name commodityName,
+			  d.inside_code insideCode,
+			  d.order_sub_no orderSubNo,
+			  d.spec_key specKey,
+			  d.supplier_code supplierCode,
+			  d.type,
+			  IFNULL(d.plan_back_count,0) planBackCount,
+			  IFNULL(d.already_back_count,0) alreadyBackCount
+		 from 
+			tbl_merchant_qa_back_wareh_detail d 
+			INNER JOIN 	tbl_commodity_product t1 on d.product_no = t1.product_no
+			inner join tbl_commodity_style t2 on t1.commodity_id = t2.id
+		where d.main_id = #{backOrderDetailVo.mainId}		
+		<include refid="queryBackOrderDetailWhereSql" />
+		order by d.update_time desc
+		limit  #{query.offset}, #{query.pageSize}
+	</select> 
+	
+	<!-- 首尔直发二期，退回单详情列表查询条件 -->
+	<sql id="queryBackOrderDetailWhereSql">
+		<if test="backOrderDetailVo != null">
+			<!-- 订单号 -->
+			<if test="backOrderDetailVo.orderSubNo != null and backOrderDetailVo.orderSubNo != '' ">
+				and d.order_sub_no = #{backOrderDetailVo.orderSubNo}
+			</if>
+			<!-- 货品条码 -->
+			<if test="backOrderDetailVo.insideCode != null and backOrderDetailVo.insideCode != '' ">
+				and d.inside_code = #{backOrderDetailVo.insideCode}
+			</if>
+			<!-- 商品类型 -->
+			<if test="backOrderDetailVo.type != null and backOrderDetailVo.type != '' ">
+				and d.type = #{backOrderDetailVo.type}
+			</if>
+		</if>
+	</sql>
+	
+	<!-- 首尔直发二期，退回单详情列表总数查询 --> 
+	<select id="queryBackOrderDetailCount" resultType="int" parameterType="java.util.HashMap">
+		select count(d.id) counts
+		 from 
+			tbl_merchant_qa_back_wareh_detail d 
+			INNER JOIN 	tbl_commodity_product t1 on d.product_no = t1.product_no
+			inner join tbl_commodity_style t2 on t1.commodity_id = t2.id
+		where d.main_id = #{backOrderDetailVo.mainId}	
+		<include refid="queryBackOrderDetailWhereSql" />
+	</select> 
+	
+	<!-- 根据退回单ID查询退回单信息 -->
+	<select id="queryBackOrderInfoById" resultMap="backOrderMap" parameterType="java.util.HashMap">
+		select t.id,
+			t.backcode,
+		    IFNULL(t.plan_back_totalcount,0) plan_back_totalcount,
+		    IFNULL(t.already_back_totalcount,0) already_back_totalcount,
+		    t.receive_status ,
+		    t.back_operator,
+		    date_format(t.back_time,'%Y-%m-%d %H:%i:%s') back_time,  
+		    t.back_warehhouse_code
+		
+		from tbl_merchant_qa_back_wareh t
+	  where t.id = #{mainId}	
+	</select>
+	
+	<!-- 根据退回单详情ID查询详情信息 -->
+	<select id="queryBackOrderDetailInfoById" resultType="com.yougou.merchant.api.supplier.vo.BackOrderDetailVo" parameterType="java.util.HashMap">
+			select 
+			  d.id,d.main_id mainId,
+			  d.commodity_name commodityName,
+			  d.inside_code insideCode,
+			  d.order_sub_no orderSubNo,
+			  d.spec_key specKey,
+			  d.supplier_code supplierCode,
+			  d.product_no productNo,
+			  d.type,
+			  IFNULL(d.plan_back_count,0) planBackCount,
+			  IFNULL(d.already_back_count,0) alreadyBackCount
+		 from 
+			tbl_merchant_qa_back_wareh_detail d 
+		where d.id = #{detailId}	
+	</select>
+	
+	<!-- 新增确认收货，操作明细 -->
+	<insert id="insertReceiveDetail" parameterType="java.util.HashMap">
+		insert into tbl_merchant_qa_back_wareh_receive_detail(
+		  id,
+		  back_detail_id,
+		  backcode,
+		  order_sub_no,
+		  product_no,
+		  supplier_code,
+		  commodity_name,
+		  merchant_code,
+		  merchant_name,
+		  already_back_count,
+		  receive_operator,
+		  receive_time
+		)values(
+		  replace(uuid(),'-',''),
+		  #{receiveDetail.detailId},
+		  #{receiveDetail.backCode},
+		  #{receiveDetail.orderSubNo},
+		  #{receiveDetail.productNo},
+		  #{receiveDetail.supplierCode},
+		  #{receiveDetail.commodityName},
+		  #{receiveDetail.merchantCode},
+		  #{receiveDetail.merchantName},		     
+		  #{receiveDetail.receiveCount},
+		  #{receiveDetail.receiveOperator},
+		  now()
+		)
+	</insert>
+	
+	<!-- 修改退回当详情已退回商品数量 -->
+	<update id="updateBackOrderDetail" parameterType="java.util.HashMap">
+		update tbl_merchant_qa_back_wareh_detail d
+		set d.already_back_count = (IFNULL(d.already_back_count,0) + #{params.receiveCount}) ,
+		    d.update_time = now()
+		where d.id = #{params.detailId};
+	</update>
+	
+	<!-- 修改退回单已退回商品数量及收货状态 -->
+	<update id="updateBackOrder" parameterType="java.util.HashMap">
+		update tbl_merchant_qa_back_wareh b
+		set b.already_back_totalcount = (IFNULL(b.already_back_totalcount,0) + #{params.receiveCount}) 
+		<if test="params != null and params.receiveStatus != null">
+		    ,b.receive_status = #{params.receiveStatus}
+		</if>    		   
+		where b.id = #{params.mainId}
+	</update>
+	
+	<!-- 根据退回单ID查询所有未确认收货的详情列表 -->
+	<select id="queryBackOrderDetailListByMainId" resultType="com.yougou.merchant.api.supplier.vo.BackOrderDetailVo" parameterType="java.util.HashMap">
+		select 
+			  d.id,d.main_id mainId,
+			  d.commodity_name commodityName,
+			  d.inside_code insideCode,
+			  d.order_sub_no orderSubNo,
+			  d.product_no productNo,
+			  d.spec_key specKey,
+			  d.supplier_code supplierCode,
+			  d.type,
+			  IFNULL(d.plan_back_count,0) planBackCount,
+			  IFNULL(d.already_back_count,0) alreadyBackCount
+		 from 
+			tbl_merchant_qa_back_wareh_detail d 
+		where d.main_id = #{mainId}
+		  and d.plan_back_count <![CDATA[ > ]]> d.already_back_count
+	</select>
+
+</mapper>

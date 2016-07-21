@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yougou.kaidian.asm.dao.QualityMapper">
+	
+	<sql id="query_quality_list_temp">
+		SELECT DISTINCT
+		    p.id,
+			d.order_sub_no,
+			CASE p.return_type WHEN 'TRADE_GOODS' THEN '换货' WHEN 'QUIT_GOODS' THEN '退货' ELSE '' END AS quality_type,
+			p.express_code,
+			p.express_name,
+			p.qa_person,
+			p.qa_date,
+			t4.user_name, 
+			t4.mobile_phone,
+			CASE p.is_exception when 'NO' then '正常收货' when 'YES' then '异常收货' else '正常收货' end as is_exception,
+			if(p.is_cancel = 1, '已作废', case p.return_status when 'CONFIRMED' then '已确认' when 'WAIT_CONFIRM' then '待确认' else '未知' end) as status,
+			t2.out_order_id,
+			d.qa_product_no,
+			d.qa_inside_code,
+			d.qa_third_party_code as supplier_code,
+			d.qa_goods_name as commodity_name,
+			d.is_passed
+		FROM tbl_wms_return_qa_product p
+		INNER JOIN tbl_wms_return_qa_product_detail d ON (p.id = d.return_qa_product_id)
+		INNER JOIN tbl_order_sub t2 ON (t2.order_sub_no = d.order_sub_no)
+		INNER JOIN tbl_order_consignee_info t4 ON (t2.consignee_id = t4.id)
+		INNER JOIN tbl_order_sub_expand e ON (t2.id = e.order_sub_id)
+		WHERE 1=1
+		<if test="merchantCode != null and merchantCode != ''">
+			AND e.merchant_code = #{merchantCode,jdbcType=VARCHAR}
+		</if>
+		<if test="merchantCode == null or merchantCode == ''">
+			AND 1=0
+		</if> 
+		AND p.is_offset is null 
+		<if test="qaTimeStart != null and qaTimeStart != ''">
+			AND p.qa_date <![CDATA[>=]]> CONCAT('','${qaTimeStart}',' 00:00:00') 
+		</if>
+		<if test="qaTimeEnd != null and qaTimeEnd != ''">
+			AND p.qa_date <![CDATA[<=]]> CONCAT('','${qaTimeEnd}',' 23:59:59') 
+		</if>
+		UNION 
+		SELECT DISTINCT
+		    i.id,
+			de.order_sub_no,
+			'拒收' as quality_type,
+			i.express_code,
+			s.logistics_name as express_name,
+			i.creator as qa_person,
+			i.create_date as qa_date,
+			c.user_name,
+			c.mobile_phone,
+			CASE i.error_type when 0 then '正常收货' when 1 then '异常收货' else '正常收货' end as is_exception,
+			if(i.is_cancel = 1, '已作废', case i.`STATUS` when 1 then '已确认' when 0 then '待确认' else '未知' end) as status,
+			s.out_order_id,
+			de.commodity_code as qa_product_no,
+			de.supplier_code as qa_inside_code,
+			de.invitemno as supplier_code,
+			de.goods_name as commodity_name,
+			1 as is_passed
+		FROM tbl_wms_rejection_quality_inspection i
+		INNER JOIN tbl_wms_rejection_quality_inspection_detail de ON (i.id = de.rejection_id)
+		INNER JOIN tbl_order_sub s ON (s.express_order_id = i.express_code)
+		INNER JOIN tbl_order_consignee_info c ON (s.consignee_id = c.id)
+		INNER JOIN tbl_order_sub_expand e1 ON (s.id = e1.order_sub_id)
+		WHERE 1=1 
+		<if test="merchantCode != null and merchantCode != ''">
+			AND e1.merchant_code = #{merchantCode,jdbcType=VARCHAR}
+		</if>
+		<if test="merchantCode == null or merchantCode == ''">
+			AND 1=0
+		</if> 
+		AND i.is_offset is null 
+		<if test="qaTimeStart != null and qaTimeStart != ''">
+		 	AND i.create_date<![CDATA[>=]]> CONCAT('','${qaTimeStart}',' 00:00:00') 
+		</if>
+		<if test="qaTimeEnd != null and qaTimeEnd != ''">
+		 	AND i.create_date <![CDATA[<=]]> CONCAT('','${qaTimeEnd}',' 23:59:59') 
+		</if>
+	</sql>
+	
+	<select id="queryQualityDetailFromReturn" parameterType="com.yougou.kaidian.asm.vo.QualityQueryVo" resultType="map">
+		SELECT DISTINCT
+		    d.order_sub_no,
+			d.qa_goods_name as goods_name,
+			d.apply_no,
+			d.qa_product_no as product_no,
+		    d.qa_third_party_code as supplier_code,
+			d.qa_inside_code as inside_code,
+			CASE d.is_passed WHEN 1 THEN '通过' WHEN 0 THEN '不通过' ELSE '未知' END AS is_passed
+		FROM
+			tbl_wms_return_qa_product_detail d
+		INNER JOIN (
+			SELECT p.id, if(p.is_cancel = 1, '已作废', case p.return_status when 'CONFIRMED' then '已确认' when 'WAIT_CONFIRM' then '待确认' else '未知' end) as status 
+			FROM tbl_wms_return_qa_product p, tbl_wms_return_qa_product_detail de
+			WHERE p.id = de.return_qa_product_id
+  			AND de.order_sub_no = #{orderSubNo}
+			AND	p.is_offset is null) AS pa 
+		    ON (pa.id = d.return_qa_product_id)
+		WHERE d.order_sub_no = #{orderSubNo} 
+		AND pa.`status` = #{statusName}
+	</select>
+	
+	<select id="queryQualityDetailFromInspection" parameterType="com.yougou.kaidian.asm.vo.QualityQueryVo" resultType="map">
+		SELECT DISTINCT
+			d.order_sub_no,
+			d.goods_name,
+			'' AS apply_no,
+			d.commodity_code AS product_no,
+			d.supplier_code AS supplier_code,
+			d.invitemno AS inside_code,
+			'通过' AS is_passed
+		FROM
+			tbl_wms_rejection_quality_inspection_detail d
+		INNER JOIN (
+			SELECT i.id, IF (i.is_cancel = 1, '已作废', 	CASE i.`STATUS` WHEN 1 THEN '已确认' WHEN 0 THEN '待确认' ELSE '未知' END) AS STATUS 
+			FROM tbl_wms_rejection_quality_inspection i, tbl_wms_rejection_quality_inspection_detail de 
+			WHERE i.id = de.rejection_id
+        	AND de.order_sub_no = #{orderSubNo}
+			AND i.is_offset IS NULL) AS qi ON (qi.id = d.rejection_id)
+		WHERE d.order_sub_no = #{orderSubNo} 
+		AND qi.`status` = #{statusName}
+	</select>
+	
+	<sql id="query_quality_where">
+		<if test="orderSubNo != null and orderSubNo != ''">
+			and ff.order_sub_no = #{orderSubNo,jdbcType=VARCHAR}
+		</if>
+		<if test="outOrderId != null and outOrderId != ''">
+			and ff.out_order_id = #{outOrderId,jdbcType=VARCHAR}	
+		</if>
+		<if test="expressCode != null and expressCode != ''">
+			and ff.express_code = #{expressCode,jdbcType=VARCHAR}
+		</if>
+		<if test="expressName != null and expressName != ''">
+			and ff.express_name like CONCAT('%','${expressName}','%' )
+		</if>
+		<if test="qaProductNo != null and qaProductNo != ''">
+			and ff.qa_product_no = #{qaProductNo,jdbcType=VARCHAR}
+		</if>
+		<if test="qaInsideCode != null and qaInsideCode != ''">
+			and ff.qa_inside_code = #{qaInsideCode,jdbcType=VARCHAR}
+		</if>
+		<if test="supplierCode != null and supplierCode != ''">
+			and ff.supplier_code = #{supplierCode,jdbcType=VARCHAR}
+		</if>
+		<if test="commodityName != null and commodityName != ''">
+			and ff.commodity_name like CONCAT('%','${commodityName}','%' )
+		</if>
+		<if test="statusName != null and statusName != ''">
+			and ff.`status` = #{statusName,jdbcType=VARCHAR}
+		</if>
+		<if test="userName != null and userName != ''">
+			and ff.user_name = #{userName,jdbcType=VARCHAR}
+		</if>
+		<if test="mobilePhone != null and mobilePhone != ''">
+			and ff.mobile_phone = #{mobilePhone,jdbcType=VARCHAR}
+		</if>
+		<if test="qualityType != null and qualityType != '' and qualityType != '退换货'">
+			and ff.quality_type = #{qualityType,jdbcType=VARCHAR}
+		</if>
+		<if test="qualityType == '退换货'">
+		    and ff.quality_type != "拒收"
+		</if>
+	</sql>
+	
+	<!-- 质检查询 tmall风格 -->
+	<resultMap type="com.yougou.kaidian.asm.vo.AsmQcVo" id="asmQcMapper">
+		<result column="order_sub_no" property="orderNo" jdbcType="VARCHAR" />
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="mobile_phone" property="mobilePhone" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="queryAsmQcListByVo" parameterType="com.yougou.kaidian.asm.vo.QualityQueryVo" resultMap="asmQcMapper">
+		select DISTINCT ff.order_sub_no, ff.user_name, 
+			ff.mobile_phone from 
+			(
+			<include refid="query_quality_list_temp"/>
+			) ff where 1=1
+		<include refid="query_quality_where"/>
+	    ORDER BY ff.qa_date desc
+	</select>
+	
+	<select id="queryAsmQcListByTime" parameterType="com.yougou.kaidian.asm.vo.QualityQueryVo" resultMap="asmQcMapper">
+		select DISTINCT ff.order_sub_no, ff.user_name, 
+			ff.mobile_phone from 
+			(
+			<include refid="query_quality_list_temp"/>
+			) ff where 1=1
+		<include refid="query_quality_where"/>
+	    ORDER BY ff.qa_date desc
+	</select>
+	
+	<select id="queryAsmQcListByVoCount" parameterType="com.yougou.kaidian.asm.vo.QualityQueryVo" resultType="int">
+		select count(*) from (
+		select DISTINCT ff.order_sub_no, ff.user_name, 
+			ff.mobile_phone from 
+			(
+				<include refid="query_quality_list_temp"/>
+			) ff where 1=1
+		<include refid="query_quality_where"/>
+		) aa
+	</select>
+	
+	<resultMap type="com.yougou.kaidian.asm.vo.AsmQcDetailVo" id="asmQcDetailMapper">
+	    <result column="id" property="id" jdbcType="VARCHAR" />
+		<result column="order_sub_no" property="orderNo" jdbcType="VARCHAR" />
+		<result column="prod_name" property="prodName" jdbcType="VARCHAR" />
+		<result column="prod_no" property="prodNo" jdbcType="VARCHAR" />
+		<result column="inside_code" property="insideCode" jdbcType="VARCHAR" />
+		<result column="apply_no" property="applyNo" jdbcType="VARCHAR" />
+		<result column="apply_date" property="applyDate" jdbcType="TIMESTAMP" />
+		<result column="express_code" property="expressCode" jdbcType="VARCHAR" />
+		<result column="express_name" property="expressName" jdbcType="VARCHAR" />
+		<result column="qa_person" property="qaPerson" jdbcType="VARCHAR" />
+		<result column="qa_date" property="qaDate" jdbcType="TIMESTAMP" />
+		<result column="is_exception" property="isException" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="quality_type" property="qualityType" jdbcType="VARCHAR" />
+		<result column="is_passed" property="isPass" jdbcType="VARCHAR" />
+		<result column="express_charges" property="expressCharges" jdbcType="VARCHAR" />
+		<result column="cash_on_delivery" property="cashOnDelivery" jdbcType="VARCHAR" />
+		<result column="qa_description" property="qaDescription" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="queryAsmQcDetailsByOrderNo" parameterType="java.lang.String" resultMap="asmQcDetailMapper">
+		SELECT
+		    p.id,
+		    d.order_sub_no,
+			d.qa_goods_name AS prod_name,
+			d.qa_product_no AS prod_no,
+			d.qa_inside_code as inside_code,
+			CASE d.is_passed WHEN 1 THEN '通过' WHEN 0 THEN '不通过' ELSE '未知' END AS is_passed,
+			p.express_code,
+			p.express_name,
+			p.qa_date,
+			p.qa_person,
+			CASE p.return_type WHEN 'TRADE_GOODS' THEN '换货' WHEN 'QUIT_GOODS' THEN '退货' ELSE '' END AS quality_type,
+		    CASE p.is_exception when 'NO' then '正常收货' when 'YES' then '异常收货' else '正常收货' end as is_exception,
+		    if(p.is_cancel = 1, '已作废', case p.return_status when 'CONFIRMED' then '已确认' when 'WAIT_CONFIRM' then '待确认' else '未知' end) as status,
+		    d.apply_no,
+		    d.apply_date,
+		    p.express_charges,
+		    p.cash_on_delivery,
+		    d.qa_description
+		FROM
+			tbl_wms_return_qa_product p
+		INNER JOIN tbl_wms_return_qa_product_detail d ON (
+			p.id = d.return_qa_product_id
+		)
+		WHERE
+			p.is_offset is null 
+		AND	d.order_sub_no = #{orderNo, ,jdbcType=VARCHAR}
+		UNION
+		SELECT
+		    i.id,
+			de.order_sub_no,
+		    de.goods_name as prod_name,
+		    de.commodity_code as prod_no,
+		    de.supplier_code as inside_code,
+		    '通过' AS is_passed,
+		    i.express_code,
+		    s.logistics_name as express_name,
+		    i.create_date as qa_date,
+		    i.creator as qa_person,
+		    '拒收' as quality_type,
+		    CASE i.error_type when 0 then '正常收货' when 1 then '异常收货' else '正常收货' end as is_exception,
+			if(i.is_cancel = 1, '已作废', case i.`STATUS` when 1 then '已确认' when 0 then '待确认' else '未知' end) as status,
+		    '' as apply_no,
+		    null as apply_date,
+		    '0' as express_charges,
+		    'NO' cash_on_delivery,
+		    de.descr as qa_description
+		FROM
+			tbl_wms_rejection_quality_inspection i INNER JOIN tbl_wms_rejection_quality_inspection_detail de ON (i.id = de.rejection_id) 
+		INNER JOIN tbl_order_sub s ON (s.express_order_id = i.express_code)
+		WHERE
+			i.is_offset is NULL
+		AND de.order_sub_no = #{orderNo,jdbcType=VARCHAR}
+	</select>
+	<sql id="query_quality_notpass_list">
+		SELECT
+		d.id,
+		d.order_sub_no,
+		p.express_code,
+		p.express_name,
+		p.qa_person,
+		p.qa_date,
+		t4.user_name,
+		t4.mobile_phone,
+		d.qa_inside_code,
+		d.qa_goods_name AS
+		commodity_name,
+		ext.cs_confirm_status,
+		ext.zj_handle_status,
+		ext.return_express_code,
+		ext.return_logistics_code,
+		ext.zj_end_repair_date,
+		d.apply_no
+		FROM
+		tbl_wms_return_qa_product p
+		INNER JOIN tbl_wms_return_qa_product_detail
+		d ON (
+		p.id = d.return_qa_product_id
+		)
+		INNER JOIN tbl_order_sub t2 ON (
+		t2.order_sub_no = d.order_sub_no
+		)
+		INNER JOIN tbl_order_consignee_info t4
+		ON (t2.consignee_id = t4.id)
+		INNER JOIN tbl_order_sub_expand e ON (t2.id = e.order_sub_id)
+		RIGHT JOIN tbl_wms_return_qa_product_detail_ext ext ON
+		(d.id = ext.return_qa_id and ext.cs_confirm_status >0 AND
+		zj_handle_status >0)
+		WHERE
+		d.is_passed = 0
+		<if test="merchantCode != null and merchantCode != ''">
+			AND e.merchant_code = #{merchantCode,jdbcType=VARCHAR}
+		</if>
+		<if test="merchantCode == null or merchantCode == ''">
+			AND 1=0
+		</if>
+		AND p.is_offset is null
+		<if test="qaTimeStart != null and qaTimeStart != ''">
+			AND p.qa_date <![CDATA[>=]]>
+			CONCAT('','${qaTimeStart}',' 00:00:00')
+		</if>
+		<if test="qaTimeEnd != null and qaTimeEnd != ''">
+			AND p.qa_date <![CDATA[<=]]>
+			CONCAT('','${qaTimeEnd}',' 23:59:59')
+		</if>
+	</sql>
+	<sql id="query_quality_notpass_list_where">
+		<if test="orderSubNo != null and orderSubNo != ''">
+			and ff.order_sub_no = #{orderSubNo,jdbcType=VARCHAR}
+		</if>
+		<if test="expressCode != null and expressCode != ''">
+			and ff.return_express_code = #{expressCode,jdbcType=VARCHAR}
+		</if>
+		<if test="logisticsCode != null and logisticsCode != ''">
+			and ff.return_logistics_code = #{logisticsCode,jdbcType=VARCHAR}
+		</if>
+		<if test="userName != null and userName != ''">
+			and ff.user_name = #{userName,jdbcType=VARCHAR}
+		</if>
+		<if test="mobilePhone != null and mobilePhone != ''">
+			and ff.mobile_phone = #{mobilePhone,jdbcType=VARCHAR}
+		</if>
+		<if test="csConfirmStatus != null and csConfirmStatus != ''">
+			and ff.cs_confirm_status = #{csConfirmStatus,jdbcType=VARCHAR}
+		</if>
+		<if test="zjHandleStatus != null and zjHandleStatus != ''">
+			and ff.zj_handle_status = #{zjHandleStatus,jdbcType=VARCHAR}
+		</if>
+		<if test="repairTimeStart != null and repairTimeStart != ''">
+			AND ff.zj_end_repair_date <![CDATA[>=]]>
+			CONCAT('','${repairTimeStart}',' 00:00:00')
+		</if>
+		<if test="repairTimeEnd != null and repairTimeEnd != ''">
+			AND ff.zj_end_repair_date <![CDATA[<=]]>
+			CONCAT('','${repairTimeEnd}',' 23:59:59')
+		</if>
+	</sql>
+	<resultMap type="com.yougou.kaidian.asm.vo.QualityNotPassResultVo" id="notPassMapper">
+		<result column="id" property="id" jdbcType="VARCHAR" />
+		<result column="order_sub_no" property="orderSubNo" jdbcType="VARCHAR" />
+		<result column="express_code" property="expressCode" jdbcType="VARCHAR" />
+		<result column="express_name" property="expressName" jdbcType="VARCHAR" />
+		<result column="qa_person" property="qaPerson" jdbcType="VARCHAR" />
+		<result column="qa_date" property="qaDate" jdbcType="TIMESTAMP" />
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="mobile_phone" property="mobilePhone" jdbcType="VARCHAR" />
+		<result column="qa_inside_code" property="qaInsideCode" jdbcType="VARCHAR" />
+		<result column="commodity_name" property="commodityName" jdbcType="VARCHAR" />
+		<result column="cs_confirm_status" property="csConfirmStatus" jdbcType="VARCHAR" />
+		<result column="zj_handle_status" property="zjHandleStatus" jdbcType="VARCHAR" />
+		<result column="return_express_code" property="returnExpressCode" jdbcType="VARCHAR" />
+		<result column="return_logistics_code" property="returnLogisticsCode" jdbcType="VARCHAR" />
+		<result column="zj_end_repair_date" property="repairDate" jdbcType="TIMESTAMP" />
+		<result column="apply_no" property="applyNo" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="queryQualityNotPassListByVo" parameterType="com.yougou.kaidian.asm.vo.QualityNotPassQueryVo" resultMap="notPassMapper">
+		select * from 
+			(
+			<include refid="query_quality_notpass_list"/>
+			) ff where 1=1
+		<include refid="query_quality_notpass_list_where"/>
+	    ORDER BY ff.qa_date desc
+	</select>
+	
+	<select id="queryQualityNotPassListByVoCount" parameterType="com.yougou.kaidian.asm.vo.QualityNotPassQueryVo" resultType="int">
+		select count(*) from (
+				<include refid="query_quality_notpass_list"/>
+		)	ff where 1=1
+		<include refid="query_quality_notpass_list_where"/>
+	</select>
+	<select id="queryChangeOrderSubNoByOldOrderSubNo" parameterType="java.lang.String" resultType="String">
+	       select order_sub_no from tbl_order_sub where original_order_no=#{orderSubNo, jdbcType=VARCHAR} order by sync_time desc limit 1
+	</select>
+</mapper>

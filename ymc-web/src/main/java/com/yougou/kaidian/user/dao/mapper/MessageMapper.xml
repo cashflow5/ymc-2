@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yougou.kaidian.user.dao.MessageMapper" >
+	<insert id="saveMessage" parameterType="com.yougou.kaidian.user.model.pojo.Message">
+		insert into tbl_merchant_message(id,receiver,operated,type,content,remark,login_name) 
+		values(#{id,jdbcType=VARCHAR},#{to,jdbcType=VARCHAR},now(),#{type,jdbcType=CHAR},
+		#{content,jdbcType=VARCHAR},#{comment,jdbcType=VARCHAR},#{loginName,jdbcType=VARCHAR})
+	</insert>
+</mapper>

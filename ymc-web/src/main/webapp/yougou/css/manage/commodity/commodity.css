@@ -1,0 +1,232 @@
+.publishSetp{
+    height:30px;
+}
+.publishSetp li{
+    width:145px;
+    height:30px;
+    text-align:center;
+    float:left
+}
+
+.freqCatg{
+    height:52px;
+    background-color:#f3f3f3;
+    display: inline-block;
+}
+
+.bottomTip{
+    height:35px;
+    background-color:#f3f3f3;
+    text-indent:2em;
+}
+
+.bottomTip p{
+    display:block;
+    padding-top:8px;
+}
+
+.freqCatg span{
+	display:block;
+	padding-top:16px;
+}
+
+.freqCatg label{
+    display: inline-block;
+    float: left;
+}
+
+.brandAndCatg{
+    height:300px;
+}
+
+.brandAndCatg div{
+    width:24%;
+    margin-right:6px;
+    height:100%;
+    overflow-x:hidden;
+    overflow-y:auto;
+    float:left;
+    border-right:1px solid #c2d5ef;
+    border-left:1px solid #c2d5ef;
+}
+
+.brandAndCatg li{
+   height:30px;
+   line-height:30px;
+   text-indent:2em;
+   border-bottom:1px solid #f3f3f3;
+   cursor:pointer;
+}
+
+.sel{
+   background:#dff1fb;
+   border-top: 1px solid #f3f3f3;
+}
+
+.brandAndCatg li span.gt{
+   float:right;
+   padding-right:15px;
+}
+
+#nextStep{
+   margin-top:20px;
+   text-align:center;
+}
+
+#nextStep button{
+   height:30px;
+   border-radius:10px;
+   /*color:#C9C9C9;*/
+}
+
+.selectedBrdCatg{
+   height:80px;
+   background-color:#f3f3f3;
+   width:100%;
+}
+
+.selectedBrdCatg p{
+  line-height:30px;
+  font-size:14px;
+}
+
+.selectedBrd{
+  padding-top:10px;
+  text-indent:10em;
+}
+
+.selectedCatg{
+  text-indent:5em;  
+}
+
+.msg{
+  position:relative;
+  height:467px;
+}
+
+.msgPic{
+  position: absolute;
+  left: 240px;
+  top: 80px;
+  width: 92px;
+  height: 90px;
+}
+
+.msgText{
+  position: absolute;
+  left: 352px;
+  top: 80px;
+  font-size:14px;
+  font-family:'΢���ź�';
+  font-style: normal;
+}
+
+.msgText h1{
+  font-family:'΢���ź� Bold';
+  font-size:20px;
+  font-weight:700;
+}
+
+.msgText p{
+  line-height:25px;
+}
+
+.msgPic img{
+  width:92px;
+  height:90px;
+}
+
+.redStar{
+   color:red;
+}
+
+.grayFont{
+   color:#999;
+}
+
+.hide{
+   display:none;
+}
+
+.show{
+   display:block;
+}
+
+.layerTitle{
+   margin-top:20px;
+   height:30px;
+   background-color:#f3f3f3;
+   line-height:30px;
+   text-indent:2em;
+}
+
+.layerTitle .left{
+   font-weight:700;	
+}
+
+.layerTitle .right{
+   float:right;
+   color:#999;	
+}
+
+.itemTip{
+   /*background:url("/yougou/images/commodityPublish/tip.png");*/
+   margin-top:10px;
+   margin-bottom:10px;
+   color:#999; 
+}
+
+.prop_list{
+    margin-top: 10px;
+	border: 1px solid #cccccc;
+}
+
+
+
+.property{
+   	width:100%;
+	border-bottom: 1px solid #cccccc;
+	background:  #f6f6f6;
+}
+
+.propertyTitle{
+	padding-top:  10px;
+   	width:  18%;
+	float: left;
+	background: #f6f6f6;
+	text-align:  right;
+}
+
+.propertyContent{
+   	width: 75%;
+	float: left;
+	border-left: 1px solid #cccccc;
+	padding-left: 5px;
+	background: #fff;
+	/*border:1px solid #cccccc;*/
+}
+
+.property li {
+    float: left;
+    height: 20px;
+    padding-right: 5px;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 120px;
+}
+
+.propertyContent li label{
+    padding-right: 10px;
+    text-align: right;
+    width: 120px;	
+	float: none;
+}
+
+.propertyTail{
+   	width:  6%;
+	float: left;
+	background: #fff;
+}
+#nextStep p{
+	margin: 20px 0;
+}

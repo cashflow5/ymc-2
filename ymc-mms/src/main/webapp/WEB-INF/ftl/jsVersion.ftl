@@ -1,0 +1,1 @@
+<#macro jsVersion><#assign YOUGOU_JS_VERSION = 'YOUGOU1.0.1.004'/></#macro>

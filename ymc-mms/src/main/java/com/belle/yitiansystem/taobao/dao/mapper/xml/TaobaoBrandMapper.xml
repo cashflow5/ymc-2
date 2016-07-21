@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.belle.yitiansystem.taobao.dao.mapper.TaobaoBrandMapper">
+    
+    <resultMap id="taobao_brand_map" type="com.belle.yitiansystem.taobao.model.TaobaoBrand">
+		<result column="bid" property="bid" jdbcType="CHAR" />
+		<result column="vid" property="vid" jdbcType="CHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="pid" property="pid" jdbcType="VARCHAR" />
+		<result column="prop_name" property="propName" jdbcType="VARCHAR" />
+		<result column="operater" property="operater" jdbcType="VARCHAR" />
+		<result column="operated" property="operated" jdbcType="VARCHAR" />
+		<result column="is_artificial_input" property="isArtificialInput" jdbcType="VARCHAR" />
+		<result column="yougou_brand_no" property="yougouBrandNo" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<sql id="query_condition">
+		  <if test="null!=params" >
+		      <if test="null!=params.vid and ''!=params.vid" >
+		       	 and b.vid  =  #{params.vid,jdbcType=VARCHAR}
+		      </if>
+		      <if test="null!=params.name and ''!=params.name" >
+		       	 and b.name like '%${params.name}%'
+		      </if>
+		       <if test="null!=params.isArtificialInput and ''!=params.isArtificialInput" >
+		       	 and b.is_artificial_input  =  #{params.isArtificialInput,jdbcType=VARCHAR}
+		      </if>
+		      <if test="null!=params.yougouBrandNo and '0'.toString()==params.yougouBrandNo" >
+		       	 and t.yougou_brand_no is null
+		      </if>
+		      <if test="null!=params.yougouBrandNo and '1'.toString()==params.yougouBrandNo" >
+		       	 and t.yougou_brand_no is not null
+		      </if>
+		   </if>
+	</sql>
+	<insert id="insertBrand" parameterType="com.belle.yitiansystem.taobao.model.TaobaoBrand">
+		insert into tbl_merchant_taobao_brand(bid,vid,name,pid,prop_name,operater,operated,is_artificial_input)
+		values(#{bid},#{vid},#{name},#{pid},#{propName},#{operater},#{operated},#{isArtificialInput})
+	</insert>
+	
+	<select id="selectBrandCount" resultType="java.lang.Integer">
+		select count(1) from tbl_merchant_taobao_brand b left join tbl_merchant_taobao_yougou_brand_templet t 
+		on t.taobao_bid = b.bid
+		where 1=1  <include refid="query_condition"/>
+	</select>
+	
+	<select id="selectBrandList" resultMap="taobao_brand_map">
+		select b.*,t.yougou_brand_no from tbl_merchant_taobao_brand b left join tbl_merchant_taobao_yougou_brand_templet t
+		on t.taobao_bid = b.bid
+		 where 1=1  <include refid="query_condition"/>
+		order by operated desc
+	</select>
+	
+	<select id="selectBrandById" resultMap="taobao_brand_map">
+		select b.*,t.yougou_brand_no from tbl_merchant_taobao_brand b left join tbl_merchant_taobao_yougou_brand_templet t
+		on t.taobao_bid = b.bid
+		 where b.bid = #{bid}
+	</select>
+	
+	<update id="updateBrand">
+		update tbl_merchant_taobao_brand set vid = #{vid},name = #{name} where bid = #{bid}
+	</update>
+	
+	<delete id="deleteBrand">
+		delete from tbl_merchant_taobao_brand where bid = #{bid}
+	</delete>
+</mapper>

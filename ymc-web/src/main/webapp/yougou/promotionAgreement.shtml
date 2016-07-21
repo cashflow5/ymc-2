@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>优购-商家中心-促销协议</title>
+    <link rel="stylesheet" type="text/css" href="css/base.css" />
+    <link rel="stylesheet" type="text/css" href="css/mold.css" />
+</head>
+
+<body>
+    <div class="promotion_box">
+        <h1>促销活动最高可承担卡券金额协议</h1>
+        <div class="promotion_cont">
+            尊敬的供应商，请您再次确认本次活动报名中最高可承担卡券金额,一经勾
+选“我已仔细阅读并同意协议”并点击“同意”按键，即意味着商家同意与优购
+签订本协议并自愿受本协议约束，如优购审核通过后，本协议对商家及优购具有
+法律效力。
+        </div>
+        <div class="promotion_checkbox_box">
+            <input id="promotion_checkbox" type="checkbox" checked/><label class="promotion_label" for="promotion_checkbox">我已仔细阅读并同意协议</label>
+        </div>
+    </div>
+    <script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="js/subaccount.js"></script>
+</body>
+</html>

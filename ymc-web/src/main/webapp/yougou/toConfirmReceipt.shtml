@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>优购-商家中心-售后确认收货列表</title>
+    <link rel="stylesheet" type="text/css" href="css/base.css" />
+    <link rel="stylesheet" type="text/css" href="css/mold.css" />
+</head>
+
+<body>
+    <script type="text/javascript" src="js/bootstrap.js"></script>
+    <!--#include file="layout/header.shtml" -->
+    <div id="newcontent" class="wrap clearfix mt10">
+        <!--#include file="layout/sidebar.shtml" -->
+        <div id="newmain" class="main_bd fr">
+            <div class="main_container">
+                <div class="normal_box">
+                    <p class="title site">当前位置：商家中心 &gt; 售后 &gt; 售后单查询</p>
+                    <div class="tab_panel  relative">
+                        <div class="tab_content">
+                            <!-- 单据打印导航tab模版引入 -->
+                            <ul class="tab">
+                                <li onclick="location.href='payManage_list.shtml'" class="curr"><span>计划退回数量</span></li>
+                            </ul>
+                            <!--搜索start-->
+                            <div class="search_box">
+                                <form method="post">
+                                    <p>
+                                        <span>
+                                            <label>退回单号：</label>
+                                            <input type="text" class="inputtxt" />
+                                        </span>
+                                        <span>
+                                            <label>订单号：</label>
+                                            <input type="text" class="inputtxt" />
+                                        </span>
+                                        <span>
+                                            <label>收货状态：</label>
+                                            <select>
+                                                <option value="">待确认收货</option>
+                                            </select>
+                                        </span>
+                                        <span>
+                                            <label>创建时间：</label>
+                                            <input type="text" name="timeStart" id="startTime" value="" class="inputtxt" style="width:80px;" /> 至
+                                        <input type="text" name="timeEnd" id="endTime" value="" class="inputtxt" style="width:80px;" />
+                                        </span>
+                                        <span>
+                                            <a class="button"><span>搜索</span></a>
+                                        </span>
+                                    </p>
+                                </form>
+                            </div>
+                            <!--列表start-->
+                            <table class="list_table">
+                                <thead>
+                                    <tr>
+                                        <th>退回单号</th>
+                                        <th>计划退回总数</th>
+                                        <th>实际退回总数</th>
+                                        <th>收货状态</th>
+                                        <th>创建人</th>
+                                        <th>创建时间</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>BS150910894493</td>
+                                        <td>100</td>
+                                        <td>0</td>
+                                        <td>待确认收货</td>
+                                        <td>张三</td>
+                                        <td>2015-09-10 16:51:52</td>
+                                        <td><a href="javascript:;">处理</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>BS150910894493</td>
+                                        <td>100</td>
+                                        <td>0</td>
+                                        <td>待确认收货</td>
+                                        <td>张三</td>
+                                        <td>2015-09-10 16:51:52</td>
+                                        <td><a href="javascript:;">处理</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>BS150910894493</td>
+                                        <td>100</td>
+                                        <td>95</td>
+                                        <td>部分确认收货</td>
+                                        <td>张三</td>
+                                        <td>2015-09-10 16:51:52</td>
+                                        <td><a href="javascript:;">处理</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>BS150910894493</td>
+                                        <td>100</td>
+                                        <td>100</td>
+                                        <td>已确认收货</td>
+                                        <td>张三</td>
+                                        <td>2015-09-10 16:51:52</td>
+                                        <td><a href="javascript:;">查看</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>BS150910894493</td>
+                                        <td>100</td>
+                                        <td>100</td>
+                                        <td>已确认收货</td>
+                                        <td>张三</td>
+                                        <td>2015-09-10 16:51:52</td>
+                                        <td><a href="javascript:;">查看</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>BS150910894493</td>
+                                        <td>100</td>
+                                        <td>100</td>
+                                        <td>已确认收货</td>
+                                        <td>张三</td>
+                                        <td>2015-09-10 16:51:52</td>
+                                        <td><a href="javascript:;">查看</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <!--列表end--> 
+                            <div class="page_box">
+                                <div class="page">
+                                    <span style="float:left;padding-right:15px;line-height:23px;">
+                                    总记录行数：<font color ="red">3438</font>
+                                    </span>
+                                        <a class="prevdis" href="javascript:;">&nbsp;&nbsp;上一页</a>
+                                                <!-- 选中时的样式 -->
+                                                <a href="javascript:queryPage(1)" class="curr" >1</a>
+                                                <a href="javascript:queryPage(2)" >2</a>
+                                        <!-- 默认的样式 -->
+                                        <a href="javascript:queryPage(2)" class="next"  title="下一页"  >下一页</a>
+                                    <input id="query.page" name="query.page" value="1"  onkeyup="value=value.replace(/[^\d]/g,'')"  class="inputtxt" type="text" value="1" title="输入页码后点击转到" style="float:left;height:20px;width:40px;text-align:center;" />
+                                    <input class="btn_normal pagego_btn" type="button" name="" value="转到" onclick="queryPage(0);">
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--#include file="layout/footer.shtml" -->
+</body>
+
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>身份验证</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/mold.css">
+</head>
+
+<body>
+    <div class="box-contain mt60">
+        <dl class="c-h-2column-left c-h-2column-l120 padding-normal">
+            <dt class="label">验证方式：</dt>
+            <dd class="c-h-contain">135*****080</dd>
+            <dt class="label">&nbsp;</dt>
+            <dd class="c-h-contain">&nbsp;</dd>
+        </dl>
+        <dl class="c-h-2column-left c-h-2column-l120 padding-normal">
+            <dt class="label"><em class="cred">*</em>图形验证码：</dt>
+            <dd class="c-h-contain">
+                <input type="text" class="input-default" style="width:185px;">
+                <img src="images/checkcode.png" alt="" class="checkcode"><a href="javascript:;" class="btnn btnn-link gray">换一张</a></dd>
+            <dt class="label">&nbsp;</dt>
+            <dd class="c-h-contain errormsg f_red">&nbsp;</dd>
+        </dl>
+        <dl class="c-h-2column-left c-h-2column-l120 padding-normal">
+            <dt class="label"><em class="cred">*</em>请填写手机验证码：</dt>
+            <dd class="c-h-contain">
+                <input type="text" class="input-default" disabled="disabled" style="width:185px;">
+                <a href="javascript:;" class="btnn btnn-default black">获取短信校验码</a>
+            </dd>
+            <dt class="label">&nbsp;</dt>
+            <dd class="c-h-contain errormsg">&nbsp;</dd>
+        </dl>
+        <dl class="c-h-2column-left c-h-2column-l120">
+            <dt class="label">&nbsp;</dt>
+            <dd class="c-h-contain"><a href="javascript:;" class="btnn btnn-primary"><strong>提交</strong></a></dd>
+        </dl>
+    </div>
+</body>
+
+</html>

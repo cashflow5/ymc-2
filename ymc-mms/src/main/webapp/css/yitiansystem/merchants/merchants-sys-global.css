@@ -1,0 +1,65 @@
+
+label.error{color: #EA5200}
+
+
+.clearfixed:after {clear: both; content: ""; display: block;}
+.goodsPicsList {background: none repeat scroll 0 0 #FFFFFF; padding: 20px;}
+.clearfixed {overflow: hidden; }
+ol, ul, li {list-style: none outside none;}
+
+.goodsPicsList li {float: left;margin: 10px 15px; width: 120px;}
+
+.goodsPicsList li p.img {
+    border: 1px solid #CCCCCC;
+    height: 130px;
+    padding: 1px;
+    width: 130px;
+}
+.goodsPicsList li p {
+    padding-left: 5px;
+    padding-top: 5px;
+    text-align: left;
+}
+.relative {
+    position: relative;
+}
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, hr, input {
+    background: none repeat scroll 0 0 transparent;
+    border: 0 none;
+    font-size: 100%;
+    margin: 0;
+    outline: 0 none;
+    padding: 0;
+}
+input {
+    vertical-align: middle;
+}
+
+.lazy_loading{background:url(../../../yougou/images/layout/blue-loading.gif) no-repeat center center;}
+
+.list_table_01 {
+    border-collapse: collapse;
+    //border-top: 1px solid #AEC7E5;
+    clear: both;
+    margin-top: 15px;
+    width: 100%;
+}
+
+.list_table_01 th {
+    background: url("../../../yougou/images/layout/thbg01.gif") repeat-x scroll center bottom transparent;
+    border-bottom: 1px solid #AEC7E5;
+    font-weight: normal;
+    height: 29px;
+    line-height: 120%;
+    padding: 3px 0;
+    vertical-align: middle;
+}
+
+.list_table_01 td {
+    border-bottom: 1px solid #D4E7FF;
+    height: 35px;
+    padding: 3px 0;
+    text-align: center;
+    vertical-align: middle;
+}

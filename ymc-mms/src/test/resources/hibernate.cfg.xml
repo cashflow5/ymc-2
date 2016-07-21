@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+		"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+		"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="hibernate.connection.url">jdbc:mysql://10.0.30.122:3306/yitian_b2c_db?useUnicode=true&amp;characterEncoding=utf-8&amp;autoReconnect=true</property>
+        <property name="hibernate.connection.username">belle</property>
+        <property name="hibernate.connection.password">belle@belle</property>
+        <property name="hibernate.dialect">com.belle.infrastructure.orm.hibernate.HibernateTypeDialect</property>
+        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.format_sql">true</property>
+        <property name="hibernate.cache.use_second_level_cache">true</property>
+        <property name="hibernate.cache.use_query_cache">true</property>
+        <property name="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</property>
+        
+		<mapping class="com.yougou.api.model.pojo.ApiExample"/>
+		<mapping class="com.yougou.api.model.pojo.ApiVersion"/>
+		<mapping class="com.yougou.api.model.pojo.ApiLicense"/>
+		<mapping class="com.yougou.api.model.pojo.ApiValidator"/>
+		<mapping class="com.yougou.api.model.pojo.Api"/>
+		<mapping class="com.yougou.api.model.pojo.ApiImplementor"/>
+		<mapping class="com.yougou.api.model.pojo.ApiLog"/>
+		<mapping class="com.yougou.api.model.pojo.ApiCategory"/>
+		<mapping class="com.yougou.api.model.pojo.ApiError"/>
+		<mapping class="com.yougou.api.model.pojo.ApiInterceptor"/>
+		<mapping class="com.yougou.api.model.pojo.ApiInputParamMetadata"/>
+		<mapping class="com.yougou.api.model.pojo.ApiInterceptorMapper"/>
+		<mapping class="com.yougou.api.model.pojo.ApiVersionInterceptorMapper"/>
+		<mapping class="com.yougou.api.model.pojo.ApiInputParam"/>
+		<mapping class="com.yougou.api.model.pojo.ApiVersionInputParam"/>
+		<mapping class="com.yougou.api.model.pojo.ApiOutputParam"/>
+		<mapping class="com.yougou.api.model.pojo.ApiVersionOutputParam"/>
+		<mapping class="com.yougou.api.model.pojo.ApiFilter"/>
+	        
+    </session-factory>
+</hibernate-configuration>

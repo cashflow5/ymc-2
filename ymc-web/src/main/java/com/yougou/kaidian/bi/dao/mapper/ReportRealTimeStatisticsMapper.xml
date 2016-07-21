@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yougou.kaidian.bi.dao.ReportRealTimeStatisticsMapper">
+	<resultMap type="com.yougou.kaidian.bi.vo.RealTimeStatisticsVo" id="RealTimeStatisticsMap">
+		<result property="payedOrder" column="payedOrder" />
+	    <result property="payedAmount" column="payedAmount" />
+	    <result property="payedAveragePrice" column="payedAveragePrice" />
+	</resultMap>	
+	
+	<resultMap type="java.util.HashMap" id="orderInfoHourMap">
+		<result property="orderNums" column="orderNums" javaType="int"/>
+	    <result property="orderHour" column="orderHour" javaType="int" />
+	    <result property="orderAmt" column="orderAmt" javaType="int" />
+	    <result property="avgOrderAmt" column="avgOrderAmt" javaType="int" />
+	</resultMap>	
+	
+	
+	
+	<!-- 查询指定时间段订单实时数据：订单支付金额，订单均价，订单数 -->
+	<select id="queryRealTimeOrderInfo" parameterType="java.util.HashMap" resultMap="RealTimeStatisticsMap">
+		 select avg(order_sum_amt) payedAveragePrice,sum(order_sum_amt) payedAmount,count(1) payedOrder from (
+  			 select  a.merchant_code,sum(a.prod_total_amt) order_sum_amt,a.order_sub_no
+			 	 from tbl_merchant_report_realtime_orderinfo a
+			 	 
+             where a.order_date <![CDATA[ >= ]]> #{startDate}
+	             AND a.order_date <![CDATA[ < ]]> #{endDate}          
+	             and a.merchant_code = #{merchantCode}	   
+	             <if test="(catNo !=null and catNo !='' ) or (brandNo !=null and brandNo !='')">       					
+		             and order_sub_no in (select distinct order_sub_no 
+		             			from tbl_merchant_report_realtime_orderinfo 
+		             			where 1=1 
+		             			 <!-- 类别过滤条件 -->	
+		             			 <if test="catNo !=null and catNo !='' ">
+		             			  and struct_name like concat(#{catNo},'%') 
+		             			 </if>
+		             			  <!-- 类别过滤条件 -->	
+		             			 <if test="brandNo !=null and brandNo !='' ">
+		             			  and brand_no = #{brandNo}
+		             			 </if>
+		             			 and merchant_code = #{merchantCode})
+	             </if>  
+				 group by a.merchant_code,a.order_sub_no ) tmp 
+		 group by tmp.merchant_code
+	</select>		
+	
+	<!-- 查询指定时间段内每个小时的订单实时数据，做折线图展示 -->
+	<select id="queryOrderInfoByHour" parameterType="java.util.HashMap" resultMap="orderInfoHourMap">
+		  select count(t.order_hour) orderNums, t.order_hour orderHour, round(sum(orderAmt)) orderAmt,round(avg(orderAmt)) avgOrderAmt from (
+
+			SELECT  a.merchant_code,sum(a.prod_total_amt) orderAmt,a.order_sub_no,a.order_hour
+			FROM tbl_merchant_report_realtime_orderinfo a
+             WHERE a.order_date <![CDATA[ >= ]]> #{startDate}
+             AND a.order_date <![CDATA[ < ]]> #{endDate}          
+             and a.merchant_code = #{merchantCode}	 
+             <if test="(catNo !=null and catNo !='' ) or (brandNo !=null and brandNo !='')">       					
+             and order_sub_no in (select distinct order_sub_no 
+             			from tbl_merchant_report_realtime_orderinfo 
+             			where 1=1 
+             			 <!-- 类别过滤条件 -->	
+             			 <if test="catNo !=null and catNo !='' ">
+             			  and struct_name like concat(#{catNo},'%') 
+             			 </if>
+             			  <!-- 类别过滤条件 -->	
+             			 <if test="brandNo !=null and brandNo !='' ">
+             			  and brand_no = #{brandNo}
+             			 </if>
+             			 and merchant_code = #{merchantCode})
+	         </if>  
+			 group by a.merchant_code,a.order_sub_no ) t  group by t.order_hour order by order_hour asc
+	</select>		
+	
+	<resultMap type="com.yougou.kaidian.bi.vo.CommoditySaleRank" id="commoditySaleNumsMap">
+		<result property="prodUrl" column="commodity_link"/>
+		<result property="imageUrl" column="commodity_pic_url"/>
+		<result property="storge" column="commodity_totall_available"/>
+		<result property="payedProduct" column="salecommoditynum"/>
+		<result property="payedAveragePrice" column="saleprice"/>
+		<result property="productNo" column="commodity_no"/>
+		<result property="merchantCode" column="merchant_code"/>
+		<collection property="saleNums" javaType="java.util.List" column="{commodity_no=commodity_no,merchant_code=merchant_code}" 
+		select="selectLast7DaysSaleNumsByCommodityNo"></collection>
+	</resultMap>
+	
+	<!-- 单品销售排行列表查询 -->
+	<select id="queryCommodiySaleNumsList" parameterType="java.util.HashMap" resultMap="commoditySaleNumsMap">
+		 select 
+               a.*,
+               b.commodity_name,
+               b.commodity_link,
+               b.commodity_pic_url,
+			   b.commodity_totall_available
+          from (select sum(commodity_num) salecommoditynum,
+                       sum(prod_total_amt) totalamt,
+                       commodity_no,
+                       merchant_code,
+                       case 
+						 when sum(commodity_num) = 0 then 
+						   	0 
+						 else   
+								round(sum(prod_total_amt) /
+											sum(commodity_num),
+											2)                                
+				       end    saleprice
+                             
+                  from tbl_merchant_report_realtime_orderinfo
+                 where order_date >= date_format(now(),'%Y-%m-%d')
+                 and merchant_code = #{merchantCode}
+                 <!-- 类别过滤条件 -->	
+				 <if test="catNo !=null and catNo !='' ">       			 
+	             and  struct_name like concat(#{catNo},'%') 
+		         </if>  
+		         <!-- 品牌过滤条件 -->	
+				 <if test="brandNo !=null and brandNo !='' ">       			 
+	             and  brand_no = #{brandNo}
+		         </if>  
+                 group by commodity_no
+                 order by sum(commodity_num) desc) a
+         inner join tbl_merchant_report_commodity_base_info b
+            on a.commodity_no = b.commodity_no limit #{query.offset},#{query.pageSize}
+	</select>
+	
+	<resultMap type="java.util.HashMap" id="last7DaysSaleNumsMap">
+		<result property="salecommoditynum" column="salecommoditynum" javaType="int"/>
+		<result property="saledate" column="saledate" javaType="string"/>
+		<result property="diffdate" column="diffdate" javaType="int"/>
+	</resultMap>	
+	
+	<!-- 单品销售排行，每个商品最近7天内销量查询 -->
+	<select id="selectLast7DaysSaleNumsByCommodityNo" parameterType="java.util.HashMap" resultMap="last7DaysSaleNumsMap">
+		select sum(commodity_num) salecommoditynum,                     
+                date_format(order_date,'%Y-%m-%d') saledate,
+				datediff(now(),order_date)  diffdate
+            from tbl_merchant_report_realtime_orderinfo
+           where order_date <![CDATA[ >=  ]]> date_format(adddate(now(),-6),'%Y-%m-%d')
+		   and order_date <![CDATA[ <  ]]> date_format(adddate(now(),1),'%Y-%m-%d')
+           and commodity_no = #{commodity_no}
+           and merchant_code = #{merchant_code}
+           group by commodity_no ,date_format(order_date,'%Y-%m-%d')
+           order by date_format(order_date,'%Y-%m-%d')
+	</select>
+	
+	<!-- 单品销售排行总记录查询 -->
+	<select id="queryCommoditySaleNumsTotalRow" resultType="int" parameterType="java.util.HashMap">
+		select count(1) totalRows from (
+			select t1.commodity_no
+				FROM tbl_merchant_report_realtime_orderinfo t1 
+					inner join tbl_merchant_report_commodity_base_info t2 on t1.commodity_no = t2.commodity_no				
+			 where t1.order_date <![CDATA[ >=  ]]> date_format(now(),'%Y-%m-%d')
+			  and t1.merchant_code = #{merchantCode}
+              <!-- 类别过滤条件 -->	
+			  <if test="catNo !=null and catNo !='' ">       			 
+              and  t1.struct_name like concat(#{catNo},'%') 
+	          </if>  
+              <!-- 品牌过滤条件 -->	
+			  <if test="brandNo !=null and brandNo !='' ">       			 
+              and  brand_no = #{brandNo}
+	          </if>  
+			 group by t1.commodity_no )a
+	</select>
+	
+	
+</mapper>

@@ -1,0 +1,18 @@
+/*查询条件列表*/
+.audit-query-list{
+	padding:10px 0;
+}
+.audit-query-list dt.audit-query-title{
+	float: left;
+	width: 100px;
+	text-align: right;
+	height: 20px;
+	line-height: 20px;
+	padding-right: 10px;
+}
+.audit-query-list dd{
+	width: 180px;
+	float: left;
+	height: 20px;
+	line-height: 20px;
+}

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yougou.kaidian.taobao.dao.TaobaoItemCatPropMapper">
+    <!-- 淘宝属性中间表 -->
+    <resultMap id="taobaoYougouItemCatDtoPro" type="com.yougou.kaidian.taobao.model.TaobaoItemCatPropDto">
+		<result column="cid" property="cid" jdbcType="BIGINT" />
+		<result column="pid" property="pid" jdbcType="BIGINT" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="propBindId" property="propBindId" jdbcType="VARCHAR" />
+		<result column="yougou_prop_item_no" property="yougouPropItemNo" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+	</resultMap>
+    
+	<!--查询淘宝分类对应的所有属性-->
+	<select id="selectItemProByCatId" resultMap="taobaoYougouItemCatDtoPro">
+		select c.cid,c.pid,p.name from tbl_merchant_taobao_item_cat_prop c
+		inner join tbl_merchant_taobao_item_prop p on c.pid=p.pid
+		where c.cid = #{cid,jdbcType=VARCHAR} 
+	</select>
+	
+	<!--查询分类对应的所有属性以及绑定的属性-->
+	<select id="selectItemProWidthBindYougouItemPro" resultMap="taobaoYougouItemCatDtoPro">
+		select c.cid,c.pid,p.name,ty.yougou_prop_item_no,ty.id propBindId from 
+		tbl_merchant_taobao_item_cat_prop c
+		inner join tbl_merchant_taobao_item_prop p on c.pid=p.pid
+		inner join tbl_merchant_taobao_yougou_itemcat i on i.taobao_cid = c.cid 
+		left join tbl_merchant_taobao_yougou_item_prop ty on ty.taobao_cid=c.cid and ty.taobao_pid = c.pid
+		where i.id = #{catBindId,jdbcType=VARCHAR} and i.merchant_code = #{merchantCode,jdbcType=VARCHAR}
+	</select>
+</mapper>

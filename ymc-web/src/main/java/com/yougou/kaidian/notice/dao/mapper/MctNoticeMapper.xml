@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yougou.kaidian.notice.dao.MctNoticeMapper">
+
+	<resultMap id="mctNoticeMap" type="com.yougou.kaidian.notice.model.pojo.MctNotice">
+		<result column="id" property="id" jdbcType="VARCHAR" />
+		<result column="notice_type" property="noticeType" jdbcType="VARCHAR" />
+		<result column="merchant_type" property="merchantType" jdbcType="VARCHAR" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="is_red" property="isRed" jdbcType="VARCHAR" />
+		<result column="content" property="content" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="author" property="author" jdbcType="VARCHAR" />
+		<result column="is_top" property="isTop" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="queryMctNoticeList" resultMap="mctNoticeMap" parameterType="string">
+       select * from tbl_merchant_notice where merchant_type=#{merchant_type} order by is_top desc,update_time desc
+	</select>
+	
+	<select id="queryMctNoticeListCount" resultType="int" parameterType="string">
+       select count(1) as count from tbl_merchant_notice where merchant_type=#{merchant_type}
+	</select>
+	
+	<select id="queryMctNoticeListTop5" resultMap="mctNoticeMap" parameterType="string">
+       select * from tbl_merchant_notice where merchant_type=#{merchant_type} order by is_top desc,update_time desc limit 5
+	</select>
+	
+	<select id="queryMctNoticeById" resultMap="mctNoticeMap" parameterType="string">
+       select * from tbl_merchant_notice where id=#{id}
+	</select>
+	
+</mapper>

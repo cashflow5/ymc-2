@@ -1,0 +1,245 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
+<!-- saved from url=(0045)http://lhgcore.com/lhgcalendar/demo/demo.html -->
+<HTML 
+xmlns="http://www.w3.org/1999/xhtml"><HEAD><TITLE>在线演示 - LHGCALENDAR</TITLE>
+<META content="text/html; charset=utf-8" http-equiv=Content-Type>
+<META name=keywords 
+content="lhg,lhgcalendar,calendar,date,datepicker,time,日历,弹出日历,js日历,组件,js组件,js库,lhgcore,javascript,jquery,window,clientside,control,open source,LGPL,dhtml,html,xhtml,word,plugins">
+<META name=description 
+content="lhgcalendar是一功能强大的简单迷你并且高效的弹出日历组件,基于网络访问并且兼容IE 6.0+,Firefox 3.0+,Opera 9.6+,Chrome 1.0+,Safari 3.22+.">
+<META name=copyright content=lhgcore.com><LINK rel=icon type=image/x-icon 
+href="../favicon.ico"><LINK rel="shortcut icon" type=image/x-icon 
+href="../favicon.ico"><LINK rel=stylesheet type=text/css 
+href="demo/index.css"><LINK rel=stylesheet type=text/css 
+href="demo/prettify.css">
+<SCRIPT type=text/javascript 
+src="demo/prettify.js"></SCRIPT>
+
+<SCRIPT type=text/javascript 
+src="demo/lhgcore.min.js"></SCRIPT>
+
+<SCRIPT type=text/javascript 
+src="demo/lhgcalendar.min.js"></SCRIPT>
+
+<SCRIPT type=text/javascript>
+J(function(){
+    J('#inp1').calendar();
+    J('#img').calendar({ id:'inp3' });
+	J('#inp4').calendar({ btnBar:false });
+	J('#inp5').calendar({ format:'yyyy年MM月dd日 HH时mm分ss秒' });
+	J('#inp6').calendar({ format:'yyyy年MM月dd日', real:'realInp' });
+	J('#inp7').calendar({ minDate:'2011-04-10', maxDate:'2011-05-27' });
+	J('#inp8').calendar({ maxDate:'%y-%M-%d' });
+	J('#inp9').calendar({ minDate:'%y-%M-%d' });
+	J('#inp10').calendar({ minDate:'%y-04-%d', maxDate:'%y-%M-25' });
+	J('#inp11').calendar({ maxDate:'#inp12' });
+	J('#inp12').calendar({ minDate:'#inp11' });
+	J('#inp13').calendar({ maxDate:'#inp14', format:'yyyyMMdd', targetFormat:'yyyy年MM月dd日' });
+	J('#inp14').calendar({ minDate:'#inp13', format:'yyyy年MM月dd日', targetFormat:'yyyyMMdd' });
+    J('#inp15').calendar({ disWeek:'6' });
+    J('#inp16').calendar({ disWeek:'0,4' });
+	J('#inp17').calendar({ disDate:['5$'] });
+	J('#inp18').calendar({ disDate:['^19'] });
+	J('#inp19').calendar({ disDate:['2011-05-05','2011-05-24'] });
+	J('#inp20').calendar({ disDate:['2011-..-04','2011-05-29'] });
+	J('#inp21').calendar({ disDate:['200[0-8]-05-01','2011-05-29'] });
+	J('#inp22').calendar({ disDate:['....-..-07','%y-%M-%d'] });
+	J('#inp23').calendar({ disDate:['5$'], enDate:true });
+	J('#inp24').calendar({ onSetDate:function(){alert(this.inpObj.value);} });
+	J('#inp25').calendar({ onSetDate:function(){alert('日期框原来的值为:'+this.inpObj.value+',要用新选择的值:'+this.getDateStr('date')+'覆盖吗?');} });
+	J('#inp26').calendar({ linkageObj:'#inp27', maxDate:'#inp27' });
+});
+
+function opcal(){
+    J.calendar.Show();
+}
+
+function opcal1(){
+    J.calendar.Show({ minDate:'#inp26' });
+}
+
+function stopEvent(ev){
+    ev.stopPropagation ? ev.stopPropagation() : (ev.cancelBubble = true);
+}
+	</SCRIPT>
+
+<META name=GENERATOR content="MSHTML 8.00.6001.19088"></HEAD>
+<BODY>
+<DIV class=container>
+	<DIV class=demo_content>
+	
+<H2>日历的各种在线演示示例</H2>
+<P>jQuery方式和普通函数式</P>
+<OL>
+  <LI>
+  <H3>jQuery方式调用</H3><PRE class=prettyprint>J(function(){
+J('#inp1').calendar();
+});
+</PRE>
+  <P><INPUT id=inp1 class=runcode></P></LI>
+  <LI>
+  <H3>普通函数方式调用</H3><PRE class=prettyprint>function opcal(){
+J.calendar.Show();
+}
+//输入框的代码：
+&lt;input class="runcode" id="inp2" onclick="opcal();"/&gt;
+</PRE>
+  <P><INPUT id=inp2 class=runcode onclick=opcal();></P></LI></OL>
+<P>下拉，输入，导航选择日期(年月输入框都具备以下三种特性)</P>
+<OL>
+  <LI>
+  <H3>通过导航图标选择</H3>
+  <P><IMG src="demo/lhgcalendar1.gif"></P></LI>
+  <LI>
+  <H3>直接使用键盘输入数字</H3>
+  <P><IMG src="demo/lhgcalendar2.gif"></P></LI>
+  <LI>
+  <H3>直接从弹出的下拉框中选择</H3>
+  <P><IMG src="demo/lhgcalendar3.gif"></P></LI></OL>
+<P>常规功能使用演示</P>
+<OL>
+  <LI>
+  <H3>id参数(注意这里的id参数的值是左边输入框的id)，图标触发</H3><PRE class=prettyprint>J('#img').calendar({ id:'inp3' });
+</PRE>
+  <P><INPUT style="BACKGROUND-IMAGE: none" id=inp3 class=runcode>&nbsp;<IMG 
+  id=img align=absMiddle 
+  src="demo/iconDate.gif"></P></LI>
+  <LI>
+  <H3>是否显示按钮栏</H3><PRE class=prettyprint>J('#inp4').calendar({ btnBar:false });
+</PRE>
+  <P><INPUT id=inp4 class=runcode></P></LI>
+  <LI>
+  <H3>自动选择显示位置</H3><PRE class=prettyprint>当控件处在页面边界时，它会自动选择显示的位置，所以没有必要担心弹出框会被页面边界遮住的问题了。
+</PRE>
+  <P></P></LI>
+  <LI>
+  <H3>自定义格式()</H3><PRE class=prettyprint>J('#inp5').calendar({ format:'yyyy年MM月dd日 HH时mm分ss秒' });
+</PRE>
+  <P><INPUT style="WIDTH: 200px" id=inp5 class=runcode></P></LI>
+  <LI>
+  <H3>取得系统可识别的日期值(重要)</H3><PRE class=prettyprint>// 类似于 1999年7月5日 这样的日期是不能够被系统识别的,他必须转换为能够识别的类型如 1999-07-05
+J('#inp6').calendar({ format:'yyyy年MM月dd日', real:'realInp' });
+
+// input文本框的代码是：
+&lt;input class="runcode" id="inp6"/&gt;&lt;input class="runcode" id="realInp" type="text"/&gt;
+
+// 注意:在实际应用中,一般会把real指定为一个hidden控件,这里是为了把真实值展示出来,所以使用文本框
+// 关键属性: real 指定一个控件或控件的ID,必须具有value属性(如input),用于存储真实值
+</PRE>
+  <P><INPUT id=inp6 class=runcode>真实的日期值是:<INPUT id=realInp class=runcode 
+  type=text></P></LI>
+  <LI>
+  <H3>自动纠错功能</H3><PRE class=prettyprint>当日期框中的值不符合格式时,系统会尝试自动修复,显示当前日期。
+</PRE></LI></OL>
+<P>日期范围限制</P>
+<OL>
+  <LI>
+  <H3>静态限制</H3><PRE class=prettyprint>// 限制日期的范围是 2011-04-10到2008-05-27 (注意minDate和maxDate的格式一定要是yyyy-MM-dd)
+J('#inp7').calendar({ minDate:'2011-04-10', maxDate:'2011-05-27' });
+</PRE>
+  <P><INPUT id=inp7 class=runcode></P></LI>
+  <LI>
+  <H3>动态限制()</H3><PRE class=prettyprint>// 只能选择今天以前的日期
+J('#inp8').calendar({ maxDate:'%y-%M-%d' });
+</PRE>
+  <P><INPUT id=inp8 class=runcode></P></LI>
+  <LI>
+  <H3>只能选择今天以后的日期</H3><PRE class=prettyprint>J('#inp9').calendar({ minDate:'%y-%M-%d' });
+</PRE>
+  <P><INPUT id=inp9 class=runcode></P></LI>
+  <LI>
+  <H3>只能选择本年4月当前天到当前月的25号之间的日期</H3><PRE class=prettyprint>J('#inp10').calendar({ minDate:'%y-04-%d', maxDate:'%y-%M-25' });
+</PRE>
+  <P><INPUT id=inp10 class=runcode></P></LI>
+  <LI>
+  <H3>前面的日期不能大于后面的日期</H3><PRE class=prettyprint>// #inp12为一个#号加上后面输入框的id
+J('#inp11').calendar({ maxDate:'#inp12' });
+// #inp11为一个#号加上前面输入框的id
+J('#inp12').calendar({ minDate:'#inp11' });
+</PRE>
+  <P>有效期从<INPUT id=inp11 class=runcode>到<INPUT id=inp12 class=runcode 
+  type=text></P></LI>
+  <LI>
+  <H3>前面的日期不能大于后面的日期(targetFormat参数示例)</H3><PRE class=prettyprint>// #inp14为一个#号加上后面输入框的id
+J('#inp13').calendar({ maxDate:'#inp14', format:'yyyyMMdd' targetFormat:'yyyy年MM月dd日' });
+// #inp13为一个#号加上前面输入框的id
+J('#inp14').calendar({ minDate:'#inp13', format:'yyyy年MM月dd日', targetFormat:'yyyyMMdd' });
+注：如果目标文本框的日期格式不是'yyyy-MM-dd'的格式，则一定要加上targetFormat参数，指明目标文本框的日期格式
+</PRE>
+  <P>有效期从<INPUT id=inp13 class=runcode value=20110511>到<INPUT id=inp14 
+  class=runcode value=2011年06月11日 type=text></P></LI>
+  <LI>
+  <H3>无效周(可以使用此功能禁用周日至周六所对应的日期,相关属性:disWeek (0至6 分别代表 周日至周六))</H3><PRE class=prettyprint>// 前面的输入框代码(周六所对应的日期无效)
+J('#inp15').calendar({ disWeek:'6' });
+// 后面的输入框代码(周日和周四所对应的日期无效)
+J('#inp16').calendar({ disWeek:'0,4' });
+</PRE>
+  <P><INPUT id=inp15 class=runcode>&nbsp;&nbsp;<INPUT id=inp16 
+  class=runcode></P></LI></OL>
+<P>无效日期(可以使用此功能禁用,所指定的一个或多个日期,只要你熟悉正则表达式,你可以尽情发挥)</P>
+<OL>
+  <LI>
+  <H3>禁用 每个月份的 5日 15日 25日</H3><PRE class=prettyprint>// '5$' 表示以 5 结尾 注意 $ 的用法
+J('#inp17').calendar({ disDate:['5$'] });
+</PRE>
+  <P><INPUT id=inp17 class=runcode></P></LI>
+  <LI>
+  <H3>禁用 所有早于2000-01-01的日期</H3><PRE class=prettyprint>J('#inp18').calendar({ disDate:['^19'] });
+</PRE>
+  <P><INPUT id=inp18 class=runcode></P></LI>
+  <LI>
+  <H3>禁用 2011-05-05 和 2011-05-24</H3><PRE class=prettyprint>J('#inp19').calendar({ disDate:['2011-05-05','2011-05-24'] });
+</PRE>
+  <P><INPUT id=inp19 class=runcode></P></LI>
+  <LI>
+  <H3>禁用 2011-所有月份-04 和 2011-05-29</H3><PRE class=prettyprint>J('#inp20').calendar({ disDate:['2011-..-04','2011-05-29'] });
+</PRE>
+  <P><INPUT id=inp20 class=runcode></P></LI>
+  <LI>
+  <H3>禁用 [2000至2008]-05-01 和 2011-05-29</H3><PRE class=prettyprint>J('#inp21').calendar({ disDate:['200[0-8]-05-01','2011-05-29'] });
+</PRE>
+  <P><INPUT id=inp21 class=runcode></P></LI>
+  <LI>
+  <H3>禁用 所有年份和所有月份的第7天和今天</H3><PRE class=prettyprint>J('#inp22').calendar({ disDate:['....-..-07','%y-%M-%d'] });
+</PRE>
+  <P><INPUT id=inp22 class=runcode></P></LI></OL>
+<P>有效日期<BR>使用无效日期可以很方便的禁用不可用的日期,但是在只需要启用少部分日期的情况下,有效日期的功能就非常适合了<BR><STRONG 
+style="COLOR: red">关键属性: enDate</STRONG> 默认为false, 为true时,无效日期变成有效日期</P>
+<OL>
+  <LI>
+  <H3>启用 每个月份的 5日 15日 25日</H3><PRE class=prettyprint>J('#inp23').calendar({ disDate:['5$'], enDate:true });
+</PRE>
+  <P><INPUT id=inp23 class=runcode></P></LI></OL>
+<P>自定义事件</P>
+<OL>
+  <LI>
+  <H3>自定义事件</H3><PRE class=prettyprint>如果你需要做一些附加的操作,你也不必担心,日期控件自带的自定义事件可以满足你的需求.此外,你还可以在自定义事件中调用提供的API库来做更多的运算和扩展,绝对可以通过很少的代码满足你及其个性化的需求.
+
+注意下面几个重要的指针,将对你的编程带来很多便利
+this: 指向日历对象实例，也就是J.calendar对象
+this.inpObj: 指向文本框
+this.cal: 指向日历控件对象
+
+注意:函数原型必须使用类似 function(dp){} 的模式,这样子,在函数内部才可以使用this
+</PRE>
+  <P></P></LI>
+  <LI>
+  <H3>onSetDate事件</H3><PRE class=prettyprint>J('#inp24').calendar({ onSetDate:function(){alert(this.inpObj.value);} });
+</PRE>
+  <P><INPUT id=inp24 class=runcode value=2011-05-12></P></LI>
+  <LI>
+  <H3>getDateStr()用法</H3><PRE class=prettyprint><A href="http://lhgcore.com/lhgcalendar/api/api.html"></A>
+J('#inp25').calendar({ onSetDate:function(){alert('日期框原来的值为:'+this.inpObj.value+',要用新选择的值:'+this.getDateStr('date')+'覆盖吗?');} });
+</PRE>
+  <P><INPUT id=inp25 class=runcode value=2011-05-12></P></LI>
+  <LI>
+  <H3>联动日历选择(2.0.3新增)</H3><PRE class=prettyprint>J('#inp26').calendar({ linkageObj:'#inp27', maxDate:'#inp27' });
+
+// id为inp27的输入框的代码为：
+// 这里要注意要联动的日历文本框一定要用onfocus事件，调用日历的方式也只能用J.calendar.Show({});这种
+&lt;input class="runcode" id="inp27" onfocus="opcal1();"/&gt;
+</PRE>
+  <P><INPUT id=inp26 class=runcode>&nbsp;<INPUT id=inp27 class=runcode 
+  onfocus=opcal1();></P></LI></OL></DIV>
+<DIV class=line></DIV></DIV>
+</BODY></HTML>

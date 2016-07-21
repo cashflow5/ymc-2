@@ -1,0 +1,203 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>优购-商家中心-官方活动报名-活动报名</title>
+    <link rel="stylesheet" type="text/css" href="css/base.css" />
+    <link rel="stylesheet" type="text/css" href="css/mold.css" />
+</head>
+
+<body>
+    <script type="text/javascript" src="js/bootstrap.js"></script>
+    <!--#include file="layout/header.shtml" -->
+    <div id="newcontent" class="wrap clearfix mt10">
+        <!--#include file="layout/sidebar.shtml" -->
+        <div id="newmain" class="main_bd fr">
+            <div class="main_container">
+                <div class="normal_box">
+                    <p class="title site">当前位置：商家中心 &gt; 营销中心 &gt; 官方活动报名 &gt; 625年中大促女鞋会场</p>
+                    <div class="tab_panel">
+                        <div class="notice-box mt15 mb30">
+                            <p>活动名称：<strong>625年中大促女鞋会场</strong></p>
+                            <p>活动类型：满减</p>
+                            <p>报名时间： 2015年06月23日 13:43:36 - 2015年06月25日 23:59:59</p>
+                            <p>审核时间： 2015年06月26日 00:00:00 - 2015年06月26日 23:59:59</p>
+                            <p>活动时间： 2015年06月16日 00:00:00 - 2015年12月30日 23:59:59</p>
+                            <p>报名商品： 品牌：不限 品类：男鞋、女鞋</p>
+                            <p>商品数量： 报名活动数量必须高于30</p>
+                            <p>报名状态： <strong class="f_yellow">审核不通过</strong></p>
+                            <p>审核意见： 商品价格异常，请在审核时间结束前修改并重新提交</p>
+                        </div>
+                        <ul class="tab">
+                            <li onclick="location.href='registrationInfo.shtml'"><span>活动介绍</span></li>
+                            <li onclick="location.href='registrationActivities.shtml'" class="curr"><span>活动报名</span></li>
+                        </ul>
+                        <div class="tab_content">
+                            <div class="title-content-box">
+                                <h3>活动规则</h3>
+                                <dl class="c-h-2column-left c-h-2column-reg mt25">
+                                    <dt class="label">是否支持优惠券：</dt>
+                                    <dd class="c-h-contain">是</dd>
+                                    <dt class="label">支持平台：</dt>
+                                    <dd class="c-h-contain">网站和手机</dd>
+                                    <dt class="label">活动规则：</dt>
+                                    <dd class="c-h-contain">
+                                        <p>满200元，减40元</p>
+                                        <p>满300元，减60元</p>
+                                        <p>满400元，减100元</p>
+                                    </dd>
+                                </dl>
+                            </div>
+                            <div class="title-content-box">
+                                <h3>添加活动商品</h3>
+                                <dl class="c-h-2column-left c-h-2column-reg mt25">
+                                    <dt class="label">导入商品：</dt>
+                                    <dd class="c-h-contain">
+                                        <div class="c-h-box">
+                                            <div class="mt10">
+                                                <a class="button" onclick="javascript:;" style="vertical-align: middle;"><span>上传</span></a> 批量添加商品:<a class="button" onclick="javascript:;" style="vertical-align: middle;"><span>浏览...</span></a> 未选择文件。 上传CSV文件，请按模板规范上传<a href="javascript:;">下载csv模板</a>
+                                            </div>
+                                            <dl class="c-h-2column-left c-h-2column-reg mt20">
+                                                <dt class="label">导入结果：</dt>
+                                                <dd class="c-h-contain">成功2个 失败1个</dd>
+                                                <dt class="label">异常导入反馈：</dt>
+                                                <dd class="c-h-contain"><a href="javascript:;" >点击下载</a></dd>
+                                            </dl>
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl class="c-h-2column-left c-h-2column-reg mt25">
+                                    <dt class="label">导入商品：</dt>
+                                    <dd class="c-h-contain">
+                                        <!--搜索start-->
+                                        <div class="search_box clearfix" style="padding-top:0;">
+                                            <form action="#" id="queryVoform" name="queryVoform" method="post">
+                                                <span>
+                                            <label>商品编码：</label>
+                                            <input type="text" name="orderSubNo" id="orderSubNo" class="inputtxt" style="width:105px;" value="" />
+                                        </span>
+                                                <span>
+                                            <label style="width:110px;">商品名称：</label>
+                                            <input type="text" class="inputtxt" style="width:105px;" value="" />
+                                        </span>
+                                                <span>
+                                            <label>报名状态：</label>
+                                            <select>
+                                                <option value="">请选择</option>
+                                                <option value="">未审核</option>
+                                                <option value="">已审核</option>
+                                            </select>
+                                        </span>
+                                                <span>
+                                            <a class="button" id="mySubmit" onclick="" style="vertical-align:middle; margin-left:45px;"><span>查询</span></a>
+                                                </span>
+                                            </form>
+                                        </div>
+                                        <dl class="c-h-2column-left c-h-2column-reg mt10 c-h-2column-left-w80 f_red">
+                                            <dt class="label"> 温馨提示：</dt>
+                                            <dd class="c-h-contain">
+                                                最高可承担卡券金额结算方式以双方签订的协议为准，填写金额需大于等于协议约定金额为5倍的数值，数值越高可获得越有利的促销资源；最高可承担卡券金额为“非必填项”。
+                                            </dd>
+                                        </dl>
+                                        <!--搜索end-->
+                                        <!--列表start-->
+                                        <table class="list_table">
+                                            <thead>
+                                                <tr>
+                                                    <th width="25">&nbsp;</th>
+                                                    <th width="66">商品编码</th>
+                                                    <th width="280">商品名称</th>
+                                                    <th width="36">款色</th>
+                                                    <th width="50">优购价</th>
+                                                    <th width="50">活动价</th>
+                                                    <th width="100">最高可承担卡券金额</th>
+                                                    <th width="36">操作</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <input type="checkbox" />
+                                                    </td>
+                                                    <td>99893721</td>
+                                                    <td class="tl"><a href="#">STACCATO/思加图紫红色胎牛漆皮/酒红沙丁布女鞋
+9SD01CQ4秋季</a></td>
+                                                    <td>黑色</td>
+                                                    <td>229</td>
+                                                    <td><input type="text" class="number" value="198"/></td>
+                                                    <td><input type="text" class="number" value="40"/></td>
+                                                    <td><a href="">删除</a></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <input type="checkbox" />
+                                                    </td>
+                                                    <td>99893721</td>
+                                                    <td class="tl"><a href="#">STACCATO/思加图紫红色胎牛漆皮/酒红沙丁布女鞋
+9SD01CQ4秋季</a></td>
+                                                    <td>白色</td>
+                                                    <td>99</td>
+                                                    <td><input type="text" class="number" value="80"/></td>
+                                                    <td><input type="text" class="number" value="35"/></td>
+                                                    <td><a href="">删除</a></td>
+                                                </tr>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <!--列表end-->
+                                        <div class="page_box">
+                                            <div class="dobox">
+                                                <input type="checkbox" id="all_checkbox"> 全选 <span class="ml10">删除</span>
+                                            </div>
+                                            <div class="page">
+                                                <span style="float:left;padding-right:15px;line-height:23px;">
+            总数：<font color="red">514</font>
+            </span>
+                                                <a class="prevdis" href="javascript:;">&nbsp;&nbsp;上一页</a>
+                                                <a href="javascript:queryPage(1);" class="curr"> 1</a>
+                                                <a href="javascript:queryPage(2);"> 2</a>
+                                                <a href="javascript:queryPage(3);"> 3</a>
+                                                <a href="javascript:queryPage(2)" class="next" title="下一页">下一页</a>
+                                                <input id="query.page" name="query.page" value="1" onkeyup="value=value.replace(/[^\d]/g,'')" class="inputtxt" type="text" title="输入页码后点击转到" style="float:left;height:20px;width:20px;text-align:center;padding:0px;">
+                                                <input class="btn_normal pagego_btn" type="button" name="" value="转到" onclick="queryPage(0);">
+                                            </div>
+                                        </div>
+                                       <div class="mt20"> <a href="javascript:;" class="btn-blue-1 submit-btn" style="display: block;float:left;margin-top: 0;">提交报名</a> <a class="button"><span>取 消</span></a></div>
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--#include file="layout/footer.shtml" -->
+    <script>
+    // $.dialog.open('basic_info.shtml',{title:'提醒'});
+    $(function() {
+        $('.submit-btn').click(function() {
+            dialog_obj=$.dialog.open('promotionAgreement.shtml',{
+                title:"促销协议",
+                max:false,
+                min:false,
+                width: '450px',
+                height: '200px',
+                lock:true,
+                button:[
+                   {
+                        name: '同意',
+                        focus: true
+                    },
+                    {
+                        name: '取消'
+                    }
+                ]
+            });
+        });
+    });
+    </script>
+</body>
+
+</html>

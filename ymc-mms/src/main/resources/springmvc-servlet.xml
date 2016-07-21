@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc  http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+		http://www.springframework.org/schema/tx  http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+        http://www.springframework.org/schema/beans  http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/context  http://www.springframework.org/schema/context/spring-context-3.0.xsd
+        http://www.springframework.org/schema/aop  http://www.springframework.org/schema/aop/spring-aop-3.0.xsd"
+	default-autowire="byName">
+
+	<!-- 自动搜索@Controller标注的类 -->
+	<context:component-scan base-package="com.belle, com.yougou" use-default-filters="false">
+	    <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+	</context:component-scan>
+
+	<context:property-placeholder location="classpath:/config/*.properties,file:/etc/yougouhtconf/*.properties" ignore-unresolvable="true" ignore-resource-not-found="true" 
+		local-override="true" />
+
+	<!-- 开启自动切面代理 -->
+	<aop:aspectj-autoproxy />
+
+	<bean class="com.belle.infrastructure.exception.DefaultHandlerExceptionResolver">
+		<property name="exceptionMappings">
+			<props>
+				<prop key="com.belle.infrastructure.exception.MallfriendlyException">
+					forward:/yitianmall/commodityshow/mallindex/systemException.sc</prop>
+				<prop key="java.lang.Exception">forward:/yitiansystem/systemmgmt/mainmanage/error.sc </prop>
+				<prop key="org.springframework.web.multipart.MaxUploadSizeExceededException">redirect:/common/fileupload/fileuploaderror.sc?errortype=1</prop>
+				<prop key="org.springframework.web.multipart.MultipartException">redirect:/common/fileupload/fileuploaderror.sc </prop>
+				
+			</props>
+		</property>
+	</bean>
+
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<bean
+					class="org.springframework.http.converter.StringHttpMessageConverter">
+					<property name="supportedMediaTypes">
+						<list>
+							<value>text/plain;charset=UTF-8</value>
+						</list>
+					</property>
+				</bean>
+			</list>
+		</property>
+
+		<!-- 验证框架配置 -->
+		<property name="webBindingInitializer">
+			<bean class="org.springframework.web.bind.support.ConfigurableWebBindingInitializer">
+				<property name="validator" ref="validator" />
+			</bean>
+		</property>
+	</bean>
+	<!-- JSR-303 Validator -->
+	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
+
+
+	<mvc:annotation-driven />
+
+	<!-- 配置处理器拦截器 -->
+	<mvc:interceptors>
+		<!-- 更改语言环境时，一个'locale'的请求参数发送  -->
+		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor" />
+
+		<!-- 权限拦截 -->
+		<mvc:interceptor>
+			<mvc:mapping path="/**/*.sc" />
+			<bean class="com.belle.yitiansystem.systemmgmt.web.interceptoer.PrivilegeInterceptor"/>
+		</mvc:interceptor>
+
+	</mvc:interceptors>
+
+	<!-- 配置对文件上传的支持 -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+	    <property name="maxUploadSize" value="${springMVC.file.upload.maxsize}" />  
+        <!--resolveLazily属性启用为false -->  
+     	<property name="resolveLazily" value="false"/>    
+	</bean>
+
+	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" />
+
+	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basename" value="yitianplatform" />
+	</bean>
+
+
+	<tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" />
+
+</beans>
+
+
+

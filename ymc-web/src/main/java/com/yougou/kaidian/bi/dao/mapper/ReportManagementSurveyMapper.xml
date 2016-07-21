@@ -1,0 +1,983 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yougou.kaidian.bi.dao.ReportManagementSurveyMapper">
+	
+	<!-- 商品指标汇总：访次，浏览量，发货件数，新上架商品数 -->
+	<resultMap type="java.util.HashMap" id="totalIndexMap">
+		<result column="merchantCode" property="merchantCode" javaType="String"/>
+		<result column="visitCount" property="visitCount" javaType="int"/>
+		<result column="pageView" property="pageView" javaType="int"/>
+		<result column="sendCommodityNum" property="sendCommodityNum" javaType="int"/> 
+		<result column="rejectedCommodityNum" property="rejectedCommodityNum" javaType="int"/>
+		<result column="rejectedCommodityAmt" property="rejectedCommodityAmt" javaType="double"/>
+	</resultMap>	
+	
+	<!-- 收订订单统计：订单数，订单金额 -->
+	<!-- <resultMap type="java.util.HashMap" id="orderedInfoMap">
+		<result column="totalAmt" property="totalAmt" javaType="double"/>
+		<result column="orderNum" property="orderNum" javaType="int"/>		
+		<result column="orderDate" property="orderDate" javaType="String"/>
+	</resultMap>	 -->
+	
+	<!-- 支付商品统计:支付商品件数，支付商品金额 -->
+	<resultMap type="java.util.HashMap" id="payedCommodityMap">
+		<result column="payedCommodityNum" property="payedCommodityNum" javaType="int"/>
+		<result column="payedCommodityAmt" property="payedCommoditydAmt" javaType="double"/>		
+		<result column="avgCommdotiyAmt" property="avgCommdotiyAmt" javaType="double"/>
+		<result column="orderDate" property="orderDate" javaType="String"/>
+	</resultMap>	
+	
+	<!-- 支付订单统计：支付订单数，支付订单金额，支付订单均价 -->
+	<resultMap type="java.util.HashMap" id="payedOrderMap">
+		<result column="payedOrderAvgAmt" property="payedOrderAvgAmt" javaType="double"/>		
+		<result column="payedOrderAmt" property="payedOrderAmt" javaType="double"/>
+		<result column="payedOrderNum" property="payedOrderNum" javaType="int"/>
+		<result column="orderDate" property="orderDate" javaType="String"/>
+		
+	</resultMap>	
+	
+	<!-- 每天新上架商品统计 -->
+	<resultMap type="java.util.HashMap" id="newSaleCommodityMap">
+		<result column="newSaleCommodityNum" property="newSaleCommodityNum" javaType="int"/>
+		<result column="firstSaleDate" property="firstSaleDate" javaType="String"/>
+	</resultMap>	
+	
+	<!-- 根据商家编码查询时间段内的汇总指标数据 -->
+	<select id="queryTotalIndexByParams" parameterType="java.util.HashMap" resultMap="totalIndexMap">
+		 select 
+			 t.merchant_code merchantCode,
+			 sum(t.visit_count) visitCount,
+			 sum(t.page_view) pageView,
+			 sum(t.send_commodity_num) sendCommodityNum,
+			 (sum(t.reject_commodity_num) + sum(t.return_commodity_num))rejectedCommodityNum,
+			 round((sum(t.reject_commodity_amt) + sum(t.return_commodity_amt)),2) rejectedCommodityAmt
+		 from tbl_merchant_report_commodity_analysis t
+		 where  t.report_date <![CDATA[ >= ]]> #{startDate}
+		    and t.report_date <![CDATA[ < ]]> addDate(#{endDate},1)
+		 	and t.merchant_code = #{merchantCode}
+		 	group by t.merchant_code 
+	</select>
+	
+	<!-- 统计新上架商品数 -->
+	<select id="queryNewSaleCommodityNumByParams" parameterType="java.util.HashMap" resultType="int">
+		 select count(s.commodity_no) newSaleCommodityNum from tbl_merchant_report_commodity_base_info s 
+				 where s.commodity_first_sell_date <![CDATA[  >= ]]> #{startDate}
+				 and s.commodity_first_sell_date <![CDATA[  < ]]> addDate(#{endDate},1)
+				 and s.merchant_code = #{merchantCode} 
+	</select>
+	
+	<!-- 按小时或者按天统计商品指标，以便做折线图展示 -->
+	<select id="queryEveryDayOrHourIndex"  parameterType="java.util.HashMap" resultMap="totalIndexMap">
+		 select 
+			 merchant_code merchantCode,
+			 sum(visit_count) visitCount,
+			 sum(page_view) pageView,
+			 sum(send_commodity_num) sendCommodityNum,
+			 (sum(t.reject_commodity_num) + sum(t.return_commodity_num)) rejectedCommodityNum,
+			 round((sum(t.reject_commodity_amt) + sum(t.return_commodity_amt)),2) rejectedCommodityAmt,
+			 date_format(t.report_date,'%Y-%m-%d') reportDate
+		 from tbl_merchant_report_commodity_analysis t 
+		 where  t.report_date <![CDATA[ >= ]]> #{startDate}
+		    and t.report_date <![CDATA[ < ]]> addDate(#{endDate},1)
+		 	and t.merchant_code = #{merchantCode}		 
+		 	group by t.merchant_code ,date_format(t.report_date,'%Y-%m-%d')		
+			
+	</select>
+	
+	<!-- 统计商家收订订单数据 -->
+<!-- 	<select id="queryOrderByParams" parameterType="java.util.HashMap" resultMap="orderedInfoMap">
+		select sum(total_price) totalAmt,count(*) orderNum from tbl_order_sub t1,tbl_order_sub_expand t2  
+		where 
+		  t1.id = t2.order_sub_id
+		  and t1.create_time <![CDATA[ >=  ]]> #{startDate}
+		  AND t1.create_time <![CDATA[ < ]]> addDate(#{endDate},1)
+		  AND t1.original_order_no IS NULL 
+		  and t2.merchant_code = #{merchantCode}
+	</select> -->
+	
+	<!-- 统计商家支付商品件数，支付金额 ,商品均价 -->
+	<select id="queryPayedCommodityByParams" parameterType="java.util.HashMap" resultMap="payedCommodityMap">
+		select sum(commodity_num) payedCommodityNum,
+			   sum(prod_total_amt) payedCommodityAmt,
+			   round(sum(prod_total_amt) / sum(commodity_num) , 2) avgCommdotiyAmt
+	    from tbl_merchant_report_realtime_orderinfo 
+		where merchant_code = #{merchantCode}
+		  and order_date <![CDATA[ >= ]]> #{startDate}
+		  and order_date <![CDATA[ < ]]> addDate(#{endDate},1)
+	</select>
+	
+	<!-- 统计支付订单数，订单金额，订单均价 -->
+	<select id="queryPayedOrderByParams" parameterType="java.util.HashMap" resultMap="payedOrderMap">
+	 select round(avg(order_sum_amt),2) payedOrderAvgAmt,round(sum(order_sum_amt),2) payedOrderAmt,count(1) payedOrderNum from (
+  			 select  a.merchant_code,sum(a.prod_total_amt) order_sum_amt,a.order_sub_no
+			 	 from tbl_merchant_report_realtime_orderinfo a
+			 	 
+             where a.order_date <![CDATA[ >= ]]> #{startDate}
+	             AND a.order_date <![CDATA[ < ]]> addDate(#{endDate},1)         
+	             and a.merchant_code = #{merchantCode}	   	            
+				 group by a.merchant_code,a.order_sub_no ) tmp 
+		 group by tmp.merchant_code
+	</select>
+	
+	<!-- 查询指定日期内商家每天支付的订单数，订单金额，定均价，以便做折线图展示 -->
+	<select id="queryEveryDayPayedOrderByParams" parameterType="java.util.HashMap" resultMap="payedOrderMap" >
+		select round(avg(order_sum_amt),2) payedOrderAvgAmt,
+			  round(sum(order_sum_amt),2) payedOrderAmt,
+			  count(1) payedOrderNum,
+			  date_format(tmp.order_date,'%Y-%m-%d') orderDate
+		from (
+  			 select  a.merchant_code,sum(a.prod_total_amt) order_sum_amt,a.order_sub_no,a.order_date
+			 	 from tbl_merchant_report_realtime_orderinfo a			 	 
+             where a.order_date <![CDATA[ >= ]]> #{startDate}
+	             AND a.order_date <![CDATA[ < ]]>  addDate(#{endDate},1) 
+	             and a.merchant_code = #{merchantCode}   	            
+				 group by a.merchant_code,a.order_sub_no,a.order_date ) tmp 
+		 group by date_format(tmp.order_date,'%Y-%m-%d')
+	</select>
+	
+	<!-- 查询商家指定时间范围内每天的支付商品数据，金额，均价 ，以便做折线图展示 -->
+	<select id="queryEveryDayPayedCommodityByParams" parameterType="java.util.HashMap" resultMap="payedCommodityMap" >
+		 select  round(sum(a.prod_total_amt),2) payedCommodityAmt,
+				 round(sum(a.prod_total_amt) /  sum(commodity_num) ,2) avgCommdotiyAmt,
+		         sum(commodity_num) payedCommodityNum,
+		         date_format(a.order_date,'%Y-%m-%d') orderDate
+			 	 from tbl_merchant_report_realtime_orderinfo a			 	 
+             where a.order_date  <![CDATA[ >= ]]> #{startDate}
+	             AND a.order_date <![CDATA[ < ]]>  addDate(#{endDate},1)     
+	             and a.merchant_code =  #{merchantCode}   	            
+				 group by date_format(a.order_date,'%Y-%m-%d') 
+	</select>
+	
+	<!-- 查询商家指定时间范围内每天的新上架商品数 -->
+	<select id="queryEveryDayNewSaleCommodityByParams" parameterType="java.util.HashMap" resultMap="newSaleCommodityMap">
+		select count(commodity_no) newSaleCommodityNum,
+	     	   date_format(commodity_first_sell_date,'%Y-%m-%d') firstSaleDate
+		from tbl_merchant_report_commodity_base_info 
+		where commodity_first_sell_date <![CDATA[ >= ]]> #{startDate}
+		   and commodity_first_sell_date <![CDATA[ < ]]>  addDate(#{endDate},1)  
+		   and merchant_code =  #{merchantCode}  
+		   group by date_format(commodity_first_sell_date,'%Y-%m-%d')
+	</select>
+	
+	<!-- 查询商家指定时间范围内每天收订的订单数据 -->
+	<!-- <select id="queryEveryDayOrderByParams" parameterType="java.util.HashMap" resultMap="orderedInfoMap">
+		select count(*) orderNum,
+			  date_format(t1.create_time,'%Y-%m-%d') orderDate
+ 		from tbl_order_sub t1,tbl_order_sub_expand t2  
+		where t1.id = t2.order_sub_id
+		  and t1.create_time <![CDATA[ >= ]]> '2015-06-06'
+		  AND t1.create_time <![CDATA[ < ]]> '2015-08-01'   
+		  AND t1.original_order_no IS NULL 
+		  and t2.merchant_code =  'SP20150123257493'
+			group by date_format(t1.create_time,'%Y-%m-%d')
+	</select> -->
+	
+	<select id="queryCommodityAnalysisList" parameterType="com.yougou.kaidian.bi.vo.CommodityAnalysisVo" resultType="java.util.Map">
+		<!-- select COMMODITY_PIC_URL,COMMODITY_LINK,COMMODITY_NO,COMMODITY_STATUS,sum(VISIT_COUNT) visit_count,sum(PAGE_VIEW) 
+		page_view,sum(SALE_COMMODITY_NUM) sale_commodity_num, (sum(SALE_COMMODITY_NUM)/sum(VISIT_COUNT)) 
+		converse_rate, sum(SALE_TOTAL_AMOUNT) sale_total_amount,sum(SEND_TOTAL_AMOUNT) send_total_amount,
+		sum(SEND_COMMODITY_NUM) send_commodity_num,(sum(SEND_TOTAL_AMOUNT)/sum(SEND_COMMODITY_NUM)) 
+		send_commodity_avg, sum(commodity_Num) commodity_num,sum(prod_total_amt) prod_total_amt,
+		(sum(SEND_COMMODITY_NUM)/sum(commodity_Num)) send_rate,sum(store_num) store_num,
+		(sum(SALE_TOTAL_AMOUNT)/sum(SALE_COMMODITY_NUM)) sale_commodity_avg,
+		(sum(prod_total_amt)/sum(commodity_Num)) pay_commodity_avg,
+		commodity_times,colected_num,sum(reject_commodity_num) reject_commodity_num,
+		sum(reject_commodity_amt) reject_commodity_amt,(sum(REJECT_COMMODITY_NUM)/sum(SEND_COMMODITY_NUM)) reject_rate,
+		no_sale_day,datediff(curdate(),online_day) online_day 
+		from ( -->select bi.COMMODITY_LINK,bi.COMMODITY_PIC_URL,bi.COMMODITY_NO,bi.COMMODITY_STATUS,sum(ca.VISIT_COUNT) visit_count,
+		sum(ca.PAGE_VIEW) page_view,sum(ca.SALE_COMMODITY_NUM) sale_commodity_num, (sum(SALE_COMMODITY_NUM)/sum(VISIT_COUNT)) converse_rate,
+		sum(ca.SALE_TOTAL_AMOUNT) sale_total_amount,sum(SEND_TOTAL_AMOUNT) send_total_amount,(sum(SEND_COMMODITY_NUM)/sum(commodity_Num)) send_rate,
+		(sum(SEND_TOTAL_AMOUNT)/sum(SEND_COMMODITY_NUM)) send_commodity_avg,
+		(sum(SALE_TOTAL_AMOUNT)/sum(SALE_COMMODITY_NUM)) sale_commodity_avg,
+		(sum(prod_total_amt)/sum(commodity_Num)) pay_commodity_avg,
+		((sum(REJECT_COMMODITY_NUM)+sum(RETURN_COMMODITY_NUM)) / sum(SEND_COMMODITY_NUM)) reject_rate,
+		sum(SEND_COMMODITY_NUM) send_commodity_num,bi.commodity_totall_available store_num, <!-- sum(ca.STORE_NUM) store_num, -->
+		bi.COMMODITY_TIMES commodity_times,bi.COLECTED_NUM colected_num,
+		(sum(reject_commodity_num) +sum(RETURN_COMMODITY_NUM)) reject_commodity_num,
+		(sum(reject_commodity_amt)+sum(RETURN_COMMODITY_AMT)) reject_commodity_amt,
+		bi.NO_SALE_DAY no_sale_day,datediff(curdate(),bi.COMMODITY_FIRST_SELL_DATE) online_day,
+		<!-- ca.commodity_num commodity_Num,ca.prod_total_amt prod_total_amt  -->
+		sum(ca.commodity_num) commodity_num,sum(ca.prod_total_amt) prod_total_amt 
+		from tbl_merchant_report_commodity_analysis ca inner join tbl_merchant_report_commodity_base_info bi on 
+		ca.commodity_No = bi.COMMODITY_NO and ca.merchant_code = bi.merchant_code
+		<where>
+			<if test="merchantCode!=null and merchantCode!=''">
+				ca.MERCHANT_CODE = #{merchantCode,jdbcType=VARCHAR}
+			</if>
+			<if test="queryStartDate!=null and queryEndDate!=null">
+				and (report_date between #{queryStartDate,jdbcType=TIMESTAMP} and #{queryEndDate,jdbcType=TIMESTAMP})
+			</if>
+			<if test="keywords!=null and keywords!=''">
+				and (bi.commodity_no like CONCAT('%','${keywords}','%' ) or bi.COMMODITY_NAME like CONCAT('%','${keywords}','%' ))
+			</if>
+			<!-- 品牌 -->
+			<if test="brandNo!=null and brandNo !=''">
+				and bi.COMMODITY_BRAND_NO = #{brandNo ,jdbcType=VARCHAR}
+			</if>
+			<!-- 一级分类 -->
+			<if test="rootCategory !=null and rootCategory !=''">
+				and bi.COMMODITY_STRUCTNAME_ONE = #{rootCategory ,jdbcType=VARCHAR}
+			</if>
+			<!-- 二级分类 -->
+			<if test="secondCategory!=null and secondCategory !=''">
+				and bi.COMMODITY_STRUCTNAME_TWO = #{secondCategory ,jdbcType=VARCHAR}
+			</if>
+			<!-- 三级分类-->
+			<if test="threeCategory!=null and threeCategory !=''">
+				and bi.COMMODITY_STRUCTNAME_THREE = #{threeCategory ,jdbcType=VARCHAR}
+			</if>
+		</where>
+		group by ca.commodity_No<!-- ) temp group by temp.COMMODITY_NO  -->
+		<choose>
+			<when test="sortBy!=null and sortBy!=''">
+				order by ${sortBy} 
+			</when>
+			<otherwise>
+				order by temp.VISIT_COUNT
+			</otherwise>
+		</choose>
+		<if test="sortDirection==0">
+			desc,COMMODITY_NO desc
+		</if>
+	</select>
+	
+	<select id="queryCommodityAnalysisListCount" resultType="Integer" parameterType="com.yougou.kaidian.bi.vo.CommodityAnalysisVo">
+		<!-- select count(*) from ( -->select count(*) from (select ca.commodity_No from 
+		tbl_merchant_report_commodity_analysis ca inner join tbl_merchant_report_commodity_base_info bi 
+		on ca.commodity_No = bi.COMMODITY_NO and ca.merchant_code = bi.merchant_code 
+		<where>
+			<if test="merchantCode!=null and merchantCode!=''">
+				ca.MERCHANT_CODE = #{merchantCode,jdbcType=VARCHAR}
+			</if>
+			<if test="queryStartDate!=null and queryEndDate!=null">
+				and (report_date between #{queryStartDate,jdbcType=TIMESTAMP} and #{queryEndDate,jdbcType=TIMESTAMP})
+			</if>
+			<if test="keywords!=null and keywords!=''">
+				and (bi.commodity_no like CONCAT('%','${keywords}','%' ) or bi.COMMODITY_NAME like CONCAT('%','${keywords}','%' ))
+			</if>
+			
+			<!-- 品牌 -->
+			<if test="brandNo!=null and brandNo !=''">
+				and bi.COMMODITY_BRAND_NO = #{brandNo ,jdbcType=VARCHAR}
+			</if>
+			<!-- 一级分类 -->
+			<if test="rootCategory !=null and rootCategory !=''">
+				and bi.COMMODITY_STRUCTNAME_ONE = #{rootCategory ,jdbcType=VARCHAR}
+			</if>
+			<!-- 二级分类 -->
+			<if test="secondCategory!=null and secondCategory !=''">
+				and bi.COMMODITY_STRUCTNAME_TWO = #{secondCategory ,jdbcType=VARCHAR}
+			</if>
+			<!-- 三级分类-->
+			<if test="threeCategory!=null and threeCategory !=''">
+				and bi.COMMODITY_STRUCTNAME_THREE = #{threeCategory ,jdbcType=VARCHAR}
+			</if>
+		</where>
+		group by ca.commodity_no
+		 ) temp <!-- group by temp.COMMODITY_NO ) tt  -->
+	</select>
+	
+	<!-- 商品分析第一行汇总列 -->
+	<select id="querySumOfCommodityAnalysis" parameterType="com.yougou.kaidian.bi.vo.CommodityAnalysisVo" resultType="java.util.Map">
+		select sum(VISIT_COUNT) visit_count,sum(PAGE_VIEW) page_view,
+		sum(SALE_COMMODITY_NUM) sale_commodity_num, (sum(SALE_COMMODITY_NUM)/sum(VISIT_COUNT)) 
+		converse_rate, sum(SALE_TOTAL_AMOUNT) sale_total_amount,sum(SEND_TOTAL_AMOUNT) send_total_amount,
+		sum(SEND_COMMODITY_NUM) send_commodity_num,(sum(SEND_TOTAL_AMOUNT)/sum(SEND_COMMODITY_NUM)) 
+		send_commodity_avg, sum(commodity_Num) commodity_num,sum(prod_total_amt) prod_total_amt,
+		(sum(SEND_COMMODITY_NUM)/sum(commodity_Num)) send_rate,
+		(sum(SALE_TOTAL_AMOUNT)/sum(SALE_COMMODITY_NUM)) sale_commodity_avg,
+		(sum(prod_total_amt)/sum(commodity_Num)) pay_commodity_avg,
+		(sum(reject_commodity_num) +sum(RETURN_COMMODITY_NUM)) reject_commodity_num,
+		(sum(reject_commodity_amt)+sum(RETURN_COMMODITY_AMT)) reject_commodity_amt,
+		((sum(REJECT_COMMODITY_NUM)+sum(RETURN_COMMODITY_NUM))/sum(SEND_COMMODITY_NUM)) reject_rate
+ 		from (select sum(ca.VISIT_COUNT) VISIT_COUNT,
+		sum(ca.PAGE_VIEW) PAGE_VIEW,sum(ca.SALE_COMMODITY_NUM) SALE_COMMODITY_NUM,
+		sum(ca.SALE_TOTAL_AMOUNT) SALE_TOTAL_AMOUNT,sum(SEND_TOTAL_AMOUNT) SEND_TOTAL_AMOUNT,
+		sum(SEND_COMMODITY_NUM) SEND_COMMODITY_NUM,sum(REJECT_COMMODITY_NUM) reject_commodity_num,
+		sum(REJECT_COMMODITY_AMT) reject_commodity_amt,
+		sum(RETURN_COMMODITY_NUM) RETURN_COMMODITY_NUM,
+		sum(RETURN_COMMODITY_AMT) RETURN_COMMODITY_AMT,
+ 		<!-- ca.commodity_num commodity_Num,ca.prod_total_amt prod_total_amt  -->
+ 		sum(ca.commodity_num) commodity_Num,sum(ca.prod_total_amt) prod_total_amt 
+ 		from tbl_merchant_report_commodity_analysis ca 
+		inner join tbl_merchant_report_commodity_base_info bi on 
+		ca.commodity_No = bi.COMMODITY_NO and ca.merchant_code = bi.merchant_code 
+		<where>
+			<if test="merchantCode!=null and merchantCode!=''">
+				ca.MERCHANT_CODE = #{merchantCode,jdbcType=VARCHAR}
+			</if>
+			<if test="queryStartDate!=null and queryEndDate!=null">
+				and (report_date between #{queryStartDate,jdbcType=TIMESTAMP} and #{queryEndDate,jdbcType=TIMESTAMP}) 
+			</if>
+			<if test="keywords!=null and keywords!=''">
+				and (bi.commodity_no like CONCAT('%','${keywords}','%' ) or bi.COMMODITY_NAME like CONCAT('%','${keywords}','%' ))
+			</if>
+			<!-- 品牌 -->
+			<if test="brandNo!=null and brandNo !=''">
+				and bi.COMMODITY_BRAND_NO = #{brandNo ,jdbcType=VARCHAR}
+			</if>
+			<!-- 一级分类 -->
+			<if test="rootCategory !=null and rootCategory !=''">
+				and bi.COMMODITY_STRUCTNAME_ONE = #{rootCategory ,jdbcType=VARCHAR}
+			</if>
+			<!-- 二级分类 -->
+			<if test="secondCategory!=null and secondCategory !=''">
+				and bi.COMMODITY_STRUCTNAME_TWO = #{secondCategory ,jdbcType=VARCHAR}
+			</if>
+			<!-- 三级分类-->
+			<if test="threeCategory!=null and threeCategory !=''">
+				and bi.COMMODITY_STRUCTNAME_THREE = #{threeCategory ,jdbcType=VARCHAR}
+			</if>
+		</where>
+		group by ca.commodity_No) temp
+	</select>
+	
+	<select id="queryCategoryAnalysisList" parameterType="com.yougou.kaidian.bi.vo.CommodityAnalysisVo" resultType="java.util.Map">
+		select binf.COMMODITY_STRUCTNAME_TWO,binf.COMMODITY_CATNAME_TWO,
+		sum(visit_count) visit_count,sum(page_view) page_view,sum(sale_commodity_num) sale_commodity_num,
+		sum(sale_total_amount) sale_total_amount,sum(send_commodity_num) send_commodity_num,
+		sum(send_total_amount) send_total_amount,(sum(send_commodity_num)/sum(commodity_num)) send_rate,
+		sum(commodity_times) commodity_times,sum(colected_num) colected_num,
+		sum(reject_commodity_num) reject_commodity_num,sum(reject_commodity_amt) reject_commodity_amt,
+		(sum(reject_commodity_num)/sum(send_commodity_num)) reject_rate,
+		(sum(sale_commodity_num)/sum(visit_count)) converse_rate,
+		<!-- sum(store_num) store_num, -->
+		sum(binf.commodity_totall_available) store_num ,
+		sum(commodity_num) commodity_num,sum(prod_total_amt) prod_total_amt,
+		(select count(binf2.COMMODITY_NO) from tbl_merchant_report_commodity_base_info binf2 
+		where binf2.merchant_code=t5.merchant_code  
+		<if test="queryStartDate!=null and queryEndDate!=null">
+			and binf2.COMMODITY_FIRST_SELL_DATE BETWEEN #{queryStartDate,jdbcType=TIMESTAMP} and #{queryEndDate,jdbcType=TIMESTAMP} 
+		</if>
+		and binf2.COMMODITY_STRUCTNAME_TWO=binf.COMMODITY_STRUCTNAME_TWO ) new_commodity_count 
+		from (select MERCHANT_CODE,commodity_no,sum(VISIT_COUNT) visit_count,sum(PAGE_VIEW) page_view, 
+		sum(SALE_COMMODITY_NUM) sale_commodity_num,sum(SALE_TOTAL_AMOUNT) sale_total_amount,
+		sum(SEND_COMMODITY_NUM) send_commodity_num,sum(SEND_TOTAL_AMOUNT) send_total_amount,
+		(sum(reject_commodity_num)+sum(return_commodity_num)) reject_commodity_num,
+		(sum(reject_commodity_amt)+sum(return_commodity_amt)) reject_commodity_amt,
+		<!-- sum(return_commodity_num) return_commodity_num, -->
+		<!-- sum(STORE_NUM) store_num, --><!--  commodity_num,prod_total_amt   -->		
+		sum(commodity_num) commodity_Num,sum(prod_total_amt) prod_total_amt 
+		from tbl_merchant_report_commodity_analysis can 
+		<where>
+			<if test="merchantCode!=null and merchantCode!=''">
+				can.merchant_code=#{merchantCode,jdbcType=VARCHAR}
+			</if>
+			<if test="queryStartDate!=null and queryEndDate!=null">
+				and report_date BETWEEN #{queryStartDate,jdbcType=TIMESTAMP} and #{queryEndDate,jdbcType=TIMESTAMP}
+			</if>
+		</where>
+		group by can.commodity_no ) t5 inner join  tbl_merchant_report_commodity_base_info binf 
+		on t5.COMMODITY_NO = binf.COMMODITY_NO and t5.merchant_code = binf.merchant_code 
+		<if test="keywords!=null and keywords!=''">
+			and binf.COMMODITY_CATNAME_TWO like CONCAT('%','${keywords}','%' ) 
+		</if>
+		<!-- 品牌 -->
+		<if test="brandNo!=null and brandNo !=''">
+			and binf.COMMODITY_BRAND_NO = #{brandNo ,jdbcType=VARCHAR}
+		</if>
+		<!-- 一级分类 -->
+		<if test="rootCategory !=null and rootCategory !=''">
+			and binf.COMMODITY_STRUCTNAME_ONE = #{rootCategory ,jdbcType=VARCHAR}
+		</if>
+		<!-- 二级分类 -->
+		<if test="secondCategory!=null and secondCategory !=''">
+			and binf.COMMODITY_STRUCTNAME_TWO = #{secondCategory ,jdbcType=VARCHAR}
+		</if>
+		<!-- 三级分类-->
+		<if test="threeCategory!=null and threeCategory !=''">
+			and binf.COMMODITY_STRUCTNAME_THREE = #{threeCategory ,jdbcType=VARCHAR}
+		</if>
+		group by binf.COMMODITY_STRUCTNAME_TWO 
+		<choose>
+			<when test="sortBy!=null and sortBy!=''">
+				order by ${sortBy} 
+			</when>
+			<otherwise>
+				order by VISIT_COUNT 
+			</otherwise>
+		</choose>
+		<if test="sortDirection==0">
+			desc,binf.COMMODITY_STRUCTNAME_TWO desc
+		</if>
+	</select>
+	
+	<select id="queryCategoryAnalysisListCount" resultType="Integer" parameterType="com.yougou.kaidian.bi.vo.CommodityAnalysisVo">
+		select count(*) from (select count(*) from (select MERCHANT_CODE,commodity_no
+		from tbl_merchant_report_commodity_analysis can 
+		<where>
+			<if test="merchantCode!=null and merchantCode!=''">
+				can.merchant_code= #{merchantCode,jdbcType=VARCHAR}   
+			</if>
+			<if test="queryStartDate!=null and queryEndDate!=null">
+				and report_date BETWEEN #{queryStartDate,jdbcType=TIMESTAMP} and #{queryEndDate,jdbcType=TIMESTAMP}
+			</if>
+		</where>
+		group by can.commodity_no ) t5 inner join  tbl_merchant_report_commodity_base_info binf 
+		on t5.COMMODITY_NO = binf.COMMODITY_NO and t5.merchant_code = binf.merchant_code 
+		<if test="keywords!=null and keywords!=''">
+			and binf.COMMODITY_CATNAME_TWO like CONCAT('%','${keywords}','%' ) 
+		</if>
+		<!-- 品牌 -->
+		<if test="brandNo!=null and brandNo !=''">
+			and binf.COMMODITY_BRAND_NO = #{brandNo ,jdbcType=VARCHAR}
+		</if>
+		<!-- 一级分类 -->
+		<if test="rootCategory !=null and rootCategory !=''">
+			and binf.COMMODITY_STRUCTNAME_ONE = #{rootCategory ,jdbcType=VARCHAR}
+		</if>
+		<!-- 二级分类 -->
+		<if test="secondCategory!=null and secondCategory !=''">
+			and binf.COMMODITY_STRUCTNAME_TWO = #{secondCategory ,jdbcType=VARCHAR}
+		</if>
+		<!-- 三级分类-->
+		<if test="threeCategory!=null and threeCategory !=''">
+			and binf.COMMODITY_STRUCTNAME_THREE = #{threeCategory ,jdbcType=VARCHAR}
+		</if>
+		group by binf.COMMODITY_STRUCTNAME_TWO ) temp
+	</select>
+	
+	<!-- 品类分析第一行汇总 -->
+	<select id="querySumOfCategoryAnalysis" parameterType="com.yougou.kaidian.bi.vo.CommodityAnalysisVo" resultType="java.util.Map">
+		select sum(visit_count) visit_count,sum(page_view) page_view,sum(sale_commodity_num) sale_commodity_num,
+		sum(sale_total_amount) sale_total_amount,sum(send_commodity_num) send_commodity_num,
+		sum(send_total_amount) send_total_amount,(sum(send_commodity_num)/sum(commodity_num)) send_rate,
+		sum(reject_commodity_num) reject_commodity_num,sum(reject_commodity_amt) reject_commodity_amt,
+		(sum(reject_commodity_num)/sum(send_commodity_num)) reject_rate,
+		(sum(sale_commodity_num)/sum(visit_count)) converse_rate,sum(new_commodity_count) new_commodity_count,
+		sum(commodity_num) commodity_num,sum(prod_total_amt) prod_total_amt from (select 
+		sum(visit_count) visit_count,sum(page_view) page_view,sum(sale_commodity_num) sale_commodity_num,
+		sum(sale_total_amount) sale_total_amount,sum(send_commodity_num) send_commodity_num,
+		sum(send_total_amount) send_total_amount,sum(reject_commodity_num) reject_commodity_num,
+		sum(reject_commodity_amt) reject_commodity_amt,sum(commodity_num) commodity_num,
+		<!-- sum(return_commodity_num) return_commodity_num, -->
+		sum(prod_total_amt) prod_total_amt,(select count(binf2.COMMODITY_NO) from 
+		tbl_merchant_report_commodity_base_info binf2 where binf2.merchant_code=t5.merchant_code  
+		<if test="queryStartDate!=null and queryEndDate!=null">
+			and binf2.COMMODITY_FIRST_SELL_DATE BETWEEN #{queryStartDate,jdbcType=TIMESTAMP} and #{queryEndDate,jdbcType=TIMESTAMP} 
+		</if> 
+		and binf2.COMMODITY_STRUCTNAME_TWO=binf.COMMODITY_STRUCTNAME_TWO 
+		) new_commodity_count 
+		from (select MERCHANT_CODE,commodity_no,sum(VISIT_COUNT) visit_count,sum(PAGE_VIEW) page_view, 
+		sum(SALE_COMMODITY_NUM) sale_commodity_num,sum(SALE_TOTAL_AMOUNT) sale_total_amount, 
+		sum(SEND_COMMODITY_NUM) send_commodity_num,sum(SEND_TOTAL_AMOUNT) send_total_amount,
+		(sum(reject_commodity_num)+sum(return_commodity_num)) reject_commodity_num,
+		(sum(reject_commodity_amt)+sum(return_commodity_amt)) reject_commodity_amt,
+		<!-- sum(return_commodity_num) return_commodity_num, -->
+		<!-- commodity_num,prod_total_amt  -->
+		sum(commodity_num) commodity_Num,sum(prod_total_amt) prod_total_amt 
+		from tbl_merchant_report_commodity_analysis can 
+		<where>
+			<if test="merchantCode!=null and merchantCode!=''">
+				can.merchant_code=#{merchantCode,jdbcType=VARCHAR}
+			</if>
+			<if test="queryStartDate!=null and queryEndDate!=null">
+				and report_date BETWEEN #{queryStartDate,jdbcType=TIMESTAMP} and #{queryEndDate,jdbcType=TIMESTAMP}
+			</if>
+		</where>
+		group by can.commodity_no ) t5 inner join  tbl_merchant_report_commodity_base_info binf 
+		on t5.COMMODITY_NO = binf.COMMODITY_NO and t5.merchant_code = binf.merchant_code 
+		<if test="keywords!=null and keywords!=''">
+			and binf.COMMODITY_CATNAME_TWO like CONCAT('%','${keywords}','%' ) 
+		</if>
+		<!-- 品牌 -->
+		<if test="brandNo!=null and brandNo !=''">
+			and binf.COMMODITY_BRAND_NO = #{brandNo ,jdbcType=VARCHAR}
+		</if>
+		<!-- 一级分类 -->
+		<if test="rootCategory !=null and rootCategory !=''">
+			and binf.COMMODITY_STRUCTNAME_ONE = #{rootCategory ,jdbcType=VARCHAR}
+		</if>
+		<!-- 二级分类 -->
+		<if test="secondCategory!=null and secondCategory !=''">
+			and binf.COMMODITY_STRUCTNAME_TWO = #{secondCategory ,jdbcType=VARCHAR}
+		</if>
+		<!-- 三级分类-->
+		<if test="threeCategory!=null and threeCategory !=''">
+			and binf.COMMODITY_STRUCTNAME_THREE = #{threeCategory ,jdbcType=VARCHAR}
+		</if>
+		group by binf.COMMODITY_STRUCTNAME_TWO) t6 
+	</select>
+	
+	<select id="queryCategoryAnalysisListByStructCode" resultType="java.util.Map" parameterType="com.yougou.kaidian.bi.vo.CommodityAnalysisVo">
+		select binf.COMMODITY_STRUCTNAME_THREE,binf.COMMODITY_CATNAME_THREE,
+		sum(visit_count) visit_count,sum(page_view) page_view,sum(sale_commodity_num) sale_commodity_num,
+		sum(sale_total_amount) sale_total_amount,sum(send_commodity_num) send_commodity_num,
+		sum(send_total_amount) send_total_amount,(sum(send_commodity_num)/sum(commodity_num)) send_rate,
+		sum(commodity_times) commodity_times,sum(colected_num) colected_num,sum(reject_commodity_num) reject_commodity_num,
+		sum(reject_commodity_amt) reject_commodity_amt,(sum(reject_commodity_num) /sum(send_commodity_num)) reject_rate,
+		(sum(sale_commodity_num)/sum(visit_count)) converse_rate,
+		<!-- sum(store_num) store_num, -->
+		sum(binf.commodity_totall_available) store_num,
+		sum(commodity_num) commodity_num,sum(prod_total_amt) prod_total_amt,
+		(select count(binf2.COMMODITY_NO) from tbl_merchant_report_commodity_base_info binf2 
+		where binf2.merchant_code=t5.merchant_code 
+		<if test="queryStartDate!=null and queryEndDate!=null">
+			and binf2.COMMODITY_FIRST_SELL_DATE BETWEEN #{queryStartDate,jdbcType=TIMESTAMP} and #{queryEndDate,jdbcType=TIMESTAMP} 
+		</if>  
+		and binf2.COMMODITY_STRUCTNAME_THREE=binf.COMMODITY_STRUCTNAME_THREE ) new_commodity_count 
+		from (select MERCHANT_CODE,commodity_no,sum(VISIT_COUNT) visit_count,sum(PAGE_VIEW) page_view, 
+		sum(SALE_COMMODITY_NUM) sale_commodity_num,sum(SALE_TOTAL_AMOUNT) sale_total_amount, 
+		sum(SEND_COMMODITY_NUM) send_commodity_num,sum(SEND_TOTAL_AMOUNT) send_total_amount,
+		sum(reject_commodity_num)+sum(return_commodity_num) reject_commodity_num,
+		sum(reject_commodity_amt)+sum(return_commodity_amt)  reject_commodity_amt,
+		<!-- sum(return_commodity_num) return_commodity_num, -->
+		<!-- sum(STORE_NUM) store_num, --> <!-- commodity_num,prod_total_amt   -->
+		sum(commodity_num) commodity_num,sum(prod_total_amt) prod_total_amt
+		from tbl_merchant_report_commodity_analysis can 
+		<where>
+			<if test="merchantCode!=null and merchantCode!=''">
+				can.merchant_code=#{merchantCode,jdbcType=VARCHAR}
+			</if>
+			<if test="queryStartDate!=null and queryEndDate!=null">
+				and report_date BETWEEN #{queryStartDate,jdbcType=TIMESTAMP} and #{queryEndDate,jdbcType=TIMESTAMP}
+			</if>
+		</where>
+		group by can.commodity_no) t5 inner join  tbl_merchant_report_commodity_base_info binf 
+		on t5.COMMODITY_NO = binf.COMMODITY_NO and t5.merchant_code = binf.merchant_code 
+		and binf.COMMODITY_STRUCTNAME_TWO = #{secondCategory,jdbcType=VARCHAR} 
+		<!-- 品牌 -->
+		<if test="brandNo!=null and brandNo !=''">
+			and binf.COMMODITY_BRAND_NO = #{brandNo ,jdbcType=VARCHAR}
+		</if>
+		<!-- 一级分类 -->
+		<if test="rootCategory !=null and rootCategory !=''">
+			and binf.COMMODITY_STRUCTNAME_ONE = #{rootCategory ,jdbcType=VARCHAR}
+		</if>
+		<!-- 二级分类  上面语句已有此条件 -->
+		<!-- <if test="secondCategory!=null and secondCategory !=''">
+			and binf.COMMODITY_STRUCTNAME_TWO = #{secondCategory ,jdbcType=VARCHAR}
+		</if> -->
+		<!-- 三级分类-->
+		<if test="threeCategory!=null and threeCategory !=''">
+			and binf.COMMODITY_STRUCTNAME_THREE = #{threeCategory ,jdbcType=VARCHAR}
+		</if>
+		group by binf.COMMODITY_STRUCTNAME_THREE 
+		<choose>
+			<when test="sortBy!=null and sortBy!=''">
+				order by ${sortBy} 
+			</when>
+			<otherwise>
+				order by VISIT_COUNT 
+			</otherwise>
+		</choose>
+		<if test="sortDirection==0">
+			desc,binf.COMMODITY_STRUCTNAME_THREE desc
+		</if>
+	</select>
+	
+	<select id="queryExportCategoryAnalysisList" resultType="java.util.Map" parameterType="com.yougou.kaidian.bi.vo.CommodityAnalysisVo">
+	select * from (
+	select binf.COMMODITY_STRUCTNAME_TWO STRUCTNAME,binf.COMMODITY_CATNAME_TWO CATNAME, sum(VISIT_COUNT) visit_count,
+	sum(PAGE_VIEW) page_view, sum(SALE_COMMODITY_NUM) sale_commodity_num, sum(SALE_TOTAL_AMOUNT) sale_total_amount, 
+	sum(SEND_COMMODITY_NUM) send_commodity_num,sum(SEND_TOTAL_AMOUNT) send_total_amount,
+	(sum(SEND_COMMODITY_NUM)/sum(commodity_Num)) send_rate,commodity_times,colected_num,
+	sum(reject_commodity_num) reject_commodity_num,sum(reject_commodity_amt) reject_commodity_amt,
+	(sum(reject_commodity_num)/sum(send_commodity_num)) reject_rate,
+	(sum(SALE_COMMODITY_NUM)/sum(VISIT_COUNT)) converse_rate,<!-- sum(STORE_NUM) store_num,  -->
+	sum(binf.commodity_totall_available) store_num,
+	sum(commodity_num) commodity_num,sum(prod_total_amt) prod_total_amt,
+	(select count(binf2.COMMODITY_NO) from tbl_merchant_report_commodity_base_info binf2 
+	where binf2.merchant_code=t5.merchant_code 
+	<if test="queryStartDate!=null and queryEndDate!=null">
+		and (COMMODITY_FIRST_SELL_DATE between #{queryStartDate,jdbcType=TIMESTAMP} and #{queryEndDate,jdbcType=TIMESTAMP})
+	</if>
+	and binf2.COMMODITY_STRUCTNAME_TWO=binf.COMMODITY_STRUCTNAME_TWO) 
+	new_commodity_count from 
+	(select MERCHANT_CODE,commodity_no,report_date,sum(VISIT_COUNT) visit_count,sum(PAGE_VIEW) page_view, 
+		sum(SALE_COMMODITY_NUM) sale_commodity_num,sum(SALE_TOTAL_AMOUNT) sale_total_amount, 
+		sum(SEND_COMMODITY_NUM) send_commodity_num,sum(SEND_TOTAL_AMOUNT) send_total_amount,
+		sum(reject_commodity_num) + sum(return_commodity_num) reject_commodity_num,
+		sum(reject_commodity_amt)+ sum(return_commodity_amt) reject_commodity_amt,
+		<!-- sum(return_commodity_num) return_commodity_num, -->
+		<!-- sum(STORE_NUM) store_num, --> <!-- commodity_num,prod_total_amt  -->
+		sum(commodity_num) commodity_num,sum(prod_total_amt) prod_total_amt
+		from tbl_merchant_report_commodity_analysis can 
+	<where>
+		<if test="merchantCode!=null and merchantCode!=''">
+			can.merchant_code=#{merchantCode,jdbcType=VARCHAR}
+		</if>
+		<if test="queryStartDate!=null and queryEndDate!=null">
+			and report_date BETWEEN #{queryStartDate,jdbcType=TIMESTAMP} and #{queryEndDate,jdbcType=TIMESTAMP} 
+		</if>
+	</where>
+	group by can.commodity_no ) t5 inner join  tbl_merchant_report_commodity_base_info binf 
+	on t5.COMMODITY_NO = binf.COMMODITY_NO and t5.merchant_code = binf.merchant_code 
+	group by binf.COMMODITY_STRUCTNAME_TWO
+	UNION
+	select binf.COMMODITY_STRUCTNAME_THREE STRUCTNAME,binf.COMMODITY_CATNAME_THREE CATNAME, sum(VISIT_COUNT) visit_count,
+	sum(PAGE_VIEW) page_view, sum(SALE_COMMODITY_NUM) sale_commodity_num, sum(SALE_TOTAL_AMOUNT) sale_total_amount, 
+	sum(SEND_COMMODITY_NUM) send_commodity_num,sum(SEND_TOTAL_AMOUNT) send_total_amount,
+	(sum(SEND_COMMODITY_NUM)/sum(commodity_Num)) send_rate,commodity_times,colected_num,
+	sum(reject_commodity_num) reject_commodity_num,sum(reject_commodity_amt) reject_commodity_amt,
+	(sum(reject_commodity_num)/sum(send_commodity_num)) reject_rate,
+	(sum(SALE_COMMODITY_NUM)/sum(VISIT_COUNT)) converse_rate,<!-- sum(STORE_NUM) store_num,  -->
+	sum(binf.commodity_totall_available) store_num,
+	sum(commodity_num) commodity_num,sum(prod_total_amt) prod_total_amt,
+	(select count(binf2.COMMODITY_NO) from tbl_merchant_report_commodity_base_info binf2 
+	where binf2.merchant_code=t5.merchant_code
+	<if test="queryStartDate!=null and queryEndDate!=null">
+		and (COMMODITY_FIRST_SELL_DATE between #{queryStartDate,jdbcType=TIMESTAMP} and #{queryEndDate,jdbcType=TIMESTAMP})
+	</if>
+	and binf2.COMMODITY_STRUCTNAME_THREE=binf.COMMODITY_STRUCTNAME_THREE) 
+	new_commodity_count from (select MERCHANT_CODE,commodity_no,sum(VISIT_COUNT) visit_count,sum(PAGE_VIEW) page_view, 
+		sum(SALE_COMMODITY_NUM) sale_commodity_num,sum(SALE_TOTAL_AMOUNT) sale_total_amount, 
+		sum(SEND_COMMODITY_NUM) send_commodity_num,sum(SEND_TOTAL_AMOUNT) send_total_amount,
+		sum(reject_commodity_num) + sum(return_commodity_num) reject_commodity_num,
+		sum(reject_commodity_amt)+ sum(return_commodity_amt) reject_commodity_amt,
+		<!-- sum(return_commodity_num) return_commodity_num, -->
+		<!-- sum(STORE_NUM) store_num, --> <!-- commodity_num,prod_total_amt -->
+		sum(commodity_num) commodity_num,sum(prod_total_amt) prod_total_amt
+	 from tbl_merchant_report_commodity_analysis can 
+	<where>
+		<if test="merchantCode!=null and merchantCode!=''">
+			can.merchant_code=#{merchantCode,jdbcType=VARCHAR}
+		</if>
+		<if test="queryStartDate!=null and queryEndDate!=null">
+			and report_date BETWEEN #{queryStartDate,jdbcType=TIMESTAMP} and #{queryEndDate,jdbcType=TIMESTAMP} 
+		</if>
+	</where>
+		group by can.commodity_no) t5 inner join  tbl_merchant_report_commodity_base_info binf 
+		on t5.COMMODITY_NO = binf.COMMODITY_NO and t5.merchant_code = binf.merchant_code 
+		group by binf.COMMODITY_STRUCTNAME_THREE
+ 	) temp order by STRUCTNAME,VISIT_COUNT desc
+	<!--  
+	select * from (
+	select binf.COMMODITY_STRUCTNAME_TWO STRUCTNAME,binf.COMMODITY_CATNAME_TWO CATNAME, sum(VISIT_COUNT) visit_count,
+	sum(PAGE_VIEW) page_view, sum(SALE_COMMODITY_NUM) sale_commodity_num,sum(SALE_TOTAL_AMOUNT) sale_total_amount, 
+	sum(SEND_COMMODITY_NUM) send_commodity_num,sum(SEND_TOTAL_AMOUNT) send_total_amount,
+	(sum(SEND_COMMODITY_NUM)/sum(t4.commodity_Num)) send_rate,commodity_times,colected_num,
+	sum(reject_commodity_num) reject_commodity_num,sum(reject_commodity_amt) reject_commodity_amt,
+	(sum(REJECT_COMMODITY_NUM)/sum(SEND_COMMODITY_NUM)) reject_rate,
+	(sum(SALE_COMMODITY_NUM)/sum(VISIT_COUNT)) converse_rate, sum(STORE_NUM) store_num, 
+	(select count(binf2.COMMODITY_NO) from tbl_merchant_report_commodity_base_info binf2 
+	<where>
+		<if test="merchantCode!=null and merchantCode!=''">
+			binf2.merchant_code=#{merchantCode,jdbcType=VARCHAR}
+		</if>
+		<if test="queryStartDate!=null and queryEndDate!=null">
+			and (COMMODITY_FIRST_SELL_DATE between #{queryStartDate,jdbcType=TIMESTAMP} and #{queryEndDate,jdbcType=TIMESTAMP})
+		</if>
+	</where>
+	and binf2.COMMODITY_STRUCTNAME_TWO=binf.COMMODITY_STRUCTNAME_TWO) 
+	new_commodity_count,t4.commodity_num,t4.prod_total_amt from tbl_merchant_report_commodity_analysis can 
+	INNER JOIN tbl_merchant_report_commodity_base_info binf on can.COMMODITY_NO = binf.COMMODITY_NO 
+	and can.merchant_code = binf.merchant_code inner join (select COMMODITY_STRUCTNAME_TWO,COMMODITY_CATNAME_TWO,sum(commodity_Num) 
+	commodity_Num,sum(prod_total_amt) prod_total_amt from (select binfo.COMMODITY_STRUCTNAME_TWO,binfo.COMMODITY_CATNAME_TWO,( 
+	select sum(tt.sumNum) from (select ansi.COMMODITY_NO,sum(ansi.commodity_Num) sumNum from tbl_merchant_report_realtime_orderinfo 
+	ansi where ansi.merchant_code=#{merchantCode,jdbcType=VARCHAR} 
+	<if test="queryStartDate!=null and queryEndDate!=null">
+		and ansi.order_date BETWEEN #{queryStartDate,jdbcType=TIMESTAMP} and #{queryEndDate,jdbcType=TIMESTAMP} 
+	</if> 
+	group by ansi.COMMODITY_NO) tt where tt.commodity_no = binfo.commodity_no group by 
+	binfo.COMMODITY_STRUCTNAME_TWO) commodity_Num, ( select sum(t2.prod_total_amt) 
+	from (select ansi.COMMODITY_NO,sum(ansi.prod_total_amt) prod_total_amt from tbl_merchant_report_realtime_orderinfo 
+	ansi where ansi.merchant_code=#{merchantCode,jdbcType=VARCHAR} 
+	<if test="queryStartDate!=null and queryEndDate!=null">
+		and ansi.order_date BETWEEN #{queryStartDate,jdbcType=TIMESTAMP} and #{queryEndDate,jdbcType=TIMESTAMP} 
+	</if> 
+	group by ansi.COMMODITY_NO) t2 where t2.commodity_no = binfo.commodity_no group by 
+	binfo.COMMODITY_STRUCTNAME_TWO) prod_total_amt from tbl_merchant_report_commodity_base_info 
+	binfo where binfo.merchant_code = #{merchantCode,jdbcType=VARCHAR} ) ttt group by ttt.COMMODITY_STRUCTNAME_TWO 
+	) t4 on binf.COMMODITY_STRUCTNAME_TWO = t4.COMMODITY_STRUCTNAME_TWO 
+	<where>
+		<if test="merchantCode!=null and merchantCode!=''">
+			can.merchant_code=#{merchantCode,jdbcType=VARCHAR}
+		</if>
+		<if test="queryStartDate!=null and queryEndDate!=null">
+			and (report_date between #{queryStartDate,jdbcType=TIMESTAMP} and #{queryEndDate,jdbcType=TIMESTAMP})
+		</if>
+	</where>
+	group by binf.COMMODITY_STRUCTNAME_TWO 
+	UNION
+	select binf.COMMODITY_STRUCTNAME_THREE STRUCTNAME,binf.COMMODITY_CATNAME_THREE CATNAME, sum(VISIT_COUNT) visit_count,
+	sum(PAGE_VIEW) page_view, sum(SALE_COMMODITY_NUM) sale_commodity_num, sum(SALE_TOTAL_AMOUNT) sale_total_amount, 
+	sum(SEND_COMMODITY_NUM) send_commodity_num,sum(SEND_TOTAL_AMOUNT) send_total_amount,
+	(sum(SEND_COMMODITY_NUM)/sum(t4.commodity_Num)) send_rate,commodity_times,colected_num,
+	sum(reject_commodity_num) reject_commodity_num,sum(reject_commodity_amt) reject_commodity_amt,
+	(sum(REJECT_COMMODITY_NUM)/sum(SEND_COMMODITY_NUM)) reject_rate,
+	(sum(SALE_COMMODITY_NUM)/sum(VISIT_COUNT)) converse_rate,sum(STORE_NUM) store_num, 
+	(select count(binf2.COMMODITY_NO) from tbl_merchant_report_commodity_base_info binf2 
+	<where>
+		<if test="merchantCode!=null and merchantCode!=''">
+			binf2.merchant_code=#{merchantCode,jdbcType=VARCHAR}
+		</if>
+		<if test="queryStartDate!=null and queryEndDate!=null">
+			and (COMMODITY_FIRST_SELL_DATE between #{queryStartDate,jdbcType=TIMESTAMP} and #{queryEndDate,jdbcType=TIMESTAMP})
+		</if>
+	</where>
+	and binf2.COMMODITY_STRUCTNAME_THREE=binf.COMMODITY_STRUCTNAME_THREE) 
+	new_commodity_count, t4.commodity_num,t4.prod_total_amt from tbl_merchant_report_commodity_analysis 
+	can INNER JOIN tbl_merchant_report_commodity_base_info binf on can.COMMODITY_NO = binf.COMMODITY_NO 
+	and can.merchant_code = binf.merchant_code inner join (select COMMODITY_STRUCTNAME_TWO,COMMODITY_STRUCTNAME_THREE,COMMODITY_CATNAME_THREE, 
+	sum(commodity_Num) commodity_Num,sum(prod_total_amt) prod_total_amt from (select binfo.COMMODITY_STRUCTNAME_TWO,
+	binfo.COMMODITY_STRUCTNAME_THREE,binfo.COMMODITY_CATNAME_THREE,( 
+	select sum(tt.sumNum) from (select ansi.COMMODITY_NO,sum(ansi.commodity_Num) sumNum from tbl_merchant_report_realtime_orderinfo 
+	ansi where ansi.merchant_code=#{merchantCode,jdbcType=VARCHAR} 
+	<if test="queryStartDate!=null and queryEndDate!=null">
+		and ansi.order_date BETWEEN #{queryStartDate,jdbcType=TIMESTAMP} and #{queryEndDate,jdbcType=TIMESTAMP} 
+	</if> 
+	 group by ansi.COMMODITY_NO) tt where tt.commodity_no 
+	= binfo.commodity_no group by binfo.COMMODITY_STRUCTNAME_THREE) commodity_Num, ( select sum(t2.prod_total_amt) 
+	from (select ansi.COMMODITY_NO,sum(ansi.prod_total_amt) prod_total_amt from tbl_merchant_report_realtime_orderinfo 
+	ansi where ansi.merchant_code=#{merchantCode,jdbcType=VARCHAR} 
+	<if test="queryStartDate!=null and queryEndDate!=null">
+		and ansi.order_date BETWEEN #{queryStartDate,jdbcType=TIMESTAMP} and #{queryEndDate,jdbcType=TIMESTAMP} 
+	</if> 
+	 group by ansi.COMMODITY_NO) t2 where t2.commodity_no 
+	= binfo.commodity_no group by binfo.COMMODITY_STRUCTNAME_THREE) prod_total_amt from tbl_merchant_report_commodity_base_info 
+	binfo where binfo.merchant_code = #{merchantCode,jdbcType=VARCHAR}) ttt group by ttt.COMMODITY_STRUCTNAME_THREE 
+	) t4 on binf.COMMODITY_STRUCTNAME_THREE = t4.COMMODITY_STRUCTNAME_THREE 
+	<where>
+		<if test="merchantCode!=null and merchantCode!=''">
+			can.merchant_code=#{merchantCode,jdbcType=VARCHAR}
+		</if>
+		<if test="queryStartDate!=null and queryEndDate!=null">
+			and (report_date between #{queryStartDate,jdbcType=TIMESTAMP} and #{queryEndDate,jdbcType=TIMESTAMP})
+		</if>
+	</where>
+	group by binf.COMMODITY_STRUCTNAME_THREE ) temp order by STRUCTNAME,VISIT_COUNT desc
+	-->
+	</select>
+	
+	<select id="queryExportCommodityAnalysisList" resultType="java.util.Map" parameterType="com.yougou.kaidian.bi.vo.CommodityAnalysisVo">
+		<!-- select COMMODITY_PIC_URL,COMMODITY_NO,COMMODITY_NAME,sum(VISIT_COUNT) visit_count,sum(PAGE_VIEW) 
+		page_view,sum(SALE_COMMODITY_NUM) sale_commodity_num, (sum(SALE_COMMODITY_NUM)/sum(VISIT_COUNT)) 
+		converse_rate, sum(SALE_TOTAL_AMOUNT) sale_total_amount,sum(SEND_TOTAL_AMOUNT) send_total_amount,
+		sum(SEND_COMMODITY_NUM) send_commodity_num,(sum(SEND_TOTAL_AMOUNT)/sum(SEND_COMMODITY_NUM)) 
+		send_commodity_avg, sum(commodity_Num) commodity_num,sum(prod_total_amt) prod_total_amt,
+		(sum(SEND_COMMODITY_NUM)/sum(commodity_Num)) send_rate,sum(store_num) store_num,
+		(sum(SALE_TOTAL_AMOUNT)/sum(SALE_COMMODITY_NUM)) sale_commodity_avg,
+		(sum(prod_total_amt)/sum(commodity_Num)) pay_commodity_avg,
+		commodity_times,colected_num,sum(reject_commodity_num) reject_commodity_num,
+		sum(reject_commodity_amt) reject_commodity_amt,(sum(REJECT_COMMODITY_NUM)/sum(SEND_COMMODITY_NUM)) reject_rate,
+		no_sale_day,datediff(curdate(),online_day) online_day 
+		from ( -->select bi.COMMODITY_LINK,bi.COMMODITY_PIC_URL,bi.COMMODITY_NO,bi.COMMODITY_NAME,bi.COMMODITY_STATUS,sum(ca.VISIT_COUNT) visit_count,
+		sum(ca.PAGE_VIEW) page_view,sum(ca.SALE_COMMODITY_NUM) sale_commodity_num, (sum(SALE_COMMODITY_NUM)/sum(VISIT_COUNT)) converse_rate,
+		sum(ca.SALE_TOTAL_AMOUNT) sale_total_amount,sum(SEND_TOTAL_AMOUNT) send_total_amount,(sum(SEND_COMMODITY_NUM)/sum(commodity_Num)) send_rate,
+		(sum(SEND_TOTAL_AMOUNT)/sum(SEND_COMMODITY_NUM)) send_commodity_avg,
+		(sum(SALE_TOTAL_AMOUNT)/sum(SALE_COMMODITY_NUM)) sale_commodity_avg,
+		(sum(prod_total_amt)/sum(commodity_Num)) pay_commodity_avg,
+		((sum(REJECT_COMMODITY_NUM)+sum(RETURN_COMMODITY_NUM))/sum(SEND_COMMODITY_NUM)) reject_rate,
+		sum(SEND_COMMODITY_NUM) send_commodity_num,<!-- sum(ca.STORE_NUM) store_num, -->
+		bi.commodity_totall_available store_num,
+		bi.COMMODITY_TIMES commodity_times,bi.COLECTED_NUM colected_num,
+		(sum(REJECT_COMMODITY_NUM)+sum(RETURN_COMMODITY_NUM)) reject_commodity_num,
+		(sum(REJECT_COMMODITY_AMT)+sum(RETURN_COMMODITY_AMT)) reject_commodity_amt,
+		bi.NO_SALE_DAY no_sale_day,datediff(curdate(),bi.COMMODITY_FIRST_SELL_DATE) online_day,
+		sum(commodity_Num) commodity_Num,sum(prod_total_amt) prod_total_amt
+		from tbl_merchant_report_commodity_analysis ca inner join tbl_merchant_report_commodity_base_info 
+		bi on ca.commodity_No = bi.COMMODITY_NO and ca.merchant_code = bi.merchant_code 
+		<where>
+			<if test="merchantCode!=null and merchantCode!=''">
+				ca.MERCHANT_CODE = #{merchantCode,jdbcType=VARCHAR}
+			</if>
+			<if test="queryStartDate!=null and queryEndDate!=null">
+				and (report_date between #{queryStartDate,jdbcType=TIMESTAMP} and #{queryEndDate,jdbcType=TIMESTAMP})
+			</if>
+		</where>
+		group by bi.COMMODITY_NO <!--  ) temp group by temp.COMMODITY_NO  -->  order by VISIT_COUNT desc,COMMODITY_NO desc
+	</select>
+	
+	<!-- 每天定时任务计算商品分析的商品昨天的支付件数，支付金额 -->
+	<update id="updateAnalysisCommodityNumAndAmt">
+		update  tbl_merchant_report_commodity_analysis t ,
+		(select merchant_code,commodity_no, ifnull(sum(commodity_num) ,0) commodity_num, ifnull(sum(prod_total_amt) ,0) prod_total_amt
+			from tbl_merchant_report_realtime_orderinfo where date_format(order_date,'%Y-%m-%d') = date_format(addDate(now(),-1),'%Y-%m-%d') 
+			group by merchant_code,commodity_no) s 
+		set t.commodity_num = s.commodity_num  ,
+				t.prod_total_amt = s.prod_total_amt
+		where t.commodity_no = s.commodity_no
+		  and t.merchant_code = s.merchant_code
+		  and t.report_date >=  date_format(addDate(now(),-1),'%Y-%m-%d') 
+	</update>
+	
+	<resultMap type="java.util.HashMap" id="supplierCommodityAnalysisIndexMap">
+		<result column="visitCount" property="visitCount" javaType="int"/>
+		<result column="pageView" property="pageView" javaType="int"/>
+		<result column="rejectedCommodityNum" property="rejectedCommodityNum" javaType="int"/>
+		<result column="rejectedCommodityAmt" property="rejectedCommodityAmt" javaType="double"/>
+		<result column="rejectedCommodityPercent" property="rejectedCommodityPercent" javaType="double"/>
+		<result column="sendCommodityNum" property="sendCommodityNum" javaType="int"/>
+		<result column="newSaleCommodityNum" property="newSaleCommodityNum" javaType="int"/>		
+		<result column="merchantCode" property="merchantCode" javaType="string"/>
+		<result column="report_date" property="reportDate" javaType="string"/>
+	</resultMap>
+	
+	<!-- 商家昨日访次，浏览量，发货商品数，退货拒收数，退货拒收额，退货拒收率，新上架商品数 -->
+	<select id="querySupplierCommodityAnalysisIndex" resultMap="supplierCommodityAnalysisIndexMap" parameterType="java.util.HashMap"> 
+		select date_format(report_date,'%Y-%m-%d') report_date , merchant_code merchantCode,
+		sum(visit_count) visitCount,sum(page_view) pageView,(sum(reject_commodity_num) + sum(return_commodity_num) )rejectedCommodityNum,
+		(sum(reject_commodity_amt) + sum(return_commodity_amt)) rejectedCommodityAmt, 
+		IFNULL(round((sum(reject_commodity_num) + sum(return_commodity_num)) / SUM(send_commodity_num) * 100 ,2),0) rejectedCommodityPercent,
+		sum(send_commodity_num) sendCommodityNum,
+		(select count(commodity_no) from tbl_merchant_report_commodity_base_info t 
+				where 1=1
+					<choose>
+						<when test="queryDate != null and queryDate != ''">
+							and t.COMMODITY_FIRST_SELL_DATE <![CDATA[ >= ]]> date(#{queryDate}) 
+							and t.COMMODITY_FIRST_SELL_DATE <![CDATA[ < ]]> date(addDate(#{queryDate},1)) 
+						</when>
+						<otherwise>
+							and t.COMMODITY_FIRST_SELL_DATE <![CDATA[ >= ]]> date(addDate(now(),-1)) 
+							and t.COMMODITY_FIRST_SELL_DATE <![CDATA[ < ]]> date(now()) 
+						</otherwise>
+					</choose>
+					and  t.MERCHANT_CODE = s.merchant_code  )newSaleCommodityNum
+		 from tbl_merchant_report_commodity_analysis s
+		where 
+		<choose>
+			<when test="queryDate != null and queryDate != ''">
+				report_date = date(#{queryDate}) 
+			</when>
+			<otherwise>
+				report_date = date(addDate(now(),-1)) 
+			</otherwise>
+		</choose>
+		and ( s.merchant_code != 'KOREA' AND s.merchant_code != 'SPYG' )
+		and (s.merchant_code is not null and length(trim(s.merchant_code)) >0 )
+		group by merchant_code
+	</select>
+	
+	<resultMap type="java.util.HashMap" id="supplierPayedOrderIndexMap">
+		<result column="payedOrderAmt" property="payedOrderAmt" javaType="double"/>
+		<result column="payedOrderAvgAmt" property="payedOrderAvgAmt" javaType="double"/>
+		<result column="payedOrderNum" property="payedOrderNum" javaType="int"/>
+		<result column="merchantCode" property="merchantCode" javaType="string"/>
+	</resultMap>
+	
+	<!-- 商家昨日支付订单数，支付金额，订单均价 -->
+	<select id="querySupplierPayedOrderIndex" resultMap="supplierPayedOrderIndexMap" parameterType="java.util.HashMap">
+		select round(avg(order_sum_amt),2) payedOrderAvgAmt,
+			  round(sum(order_sum_amt),2) payedOrderAmt,
+			  count(1) payedOrderNum,
+			  merchant_code merchantCode
+		from (
+  			 select  a.merchant_code,sum(a.prod_total_amt) order_sum_amt
+			 	 from tbl_merchant_report_realtime_orderinfo a			 	 
+             where 1=1
+	             <choose>
+					<when test="queryDate != null and queryDate != ''">
+						and a.order_date  <![CDATA[ >= ]]> date(#{queryDate}) 
+	            		AND a.order_date <![CDATA[ < ]]> date(addDate(#{queryDate},1))
+					</when>
+					<otherwise>
+						and a.order_date  <![CDATA[ >= ]]> date(addDate(now(),-1)) 
+	            		AND a.order_date <![CDATA[ < ]]> date(now())
+					</otherwise>
+				</choose>
+	             and ( a.merchant_code != 'KOREA' AND a.merchant_code != 'SPYG' ) 
+	             and ( a.merchant_code is not null and length(trim(a.merchant_code)) >0 )	            
+				 group by a.merchant_code,a.order_sub_no) tmp 
+		 group by tmp.merchant_code
+	</select>
+	
+	<insert id="insertSupplierSurveyIndex" parameterType="java.util.HashMap">
+		insert into tbl_merchant_report_suppler_survey_index(
+		   id,
+		  create_time,
+		  update_time,
+		  report_date,
+		  merchant_code,
+		  visitCount,
+		  pageView,
+		  orderNum,
+		  payedOrderNum,
+		  payedOrderAmt,
+		  changePercent,
+		  deliveryPercent,
+		  payedOrderAvgAmt,
+		  totalAmt,
+		  deliveryOrderNum,
+		  deliveryOrderAmt,
+		  sendCommodityNum,
+		  rejectedCommodityNum,
+		  rejectedCommodityAmt,
+		  rejectedCommodityPercent
+		  <!-- ,newSaleCommodityNum -->
+		) values
+		<foreach collection="listParams" item="item" separator="," >  
+	        (replace(uuid(),'-',''),now(),now(),#{item.reportDate},#{item.merchantCode},#{item.visitCount},#{item.pageView},#{item.orderNum},#{item.payedOrderNum},
+	        #{item.payedOrderAmt},#{item.changePercent},#{item.deliveryPercent},#{item.payedOrderAvgAmt},#{item.totalAmt},#{item.deliveryOrderNum},
+	        #{item.deliveryOrderAmt},#{item.sendCommodityNum},#{item.rejectedCommodityNum},#{item.rejectedCommodityAmt},#{item.rejectedCommodityPercent}
+	        <!-- ,#{item.newSaleCommodityNum} -->)  
+	    </foreach>  
+	</insert>
+	
+	<!-- 更新经营概况指标提前计算表中新上架商品数 -->
+	<update id="updateNewSaleCommodityNum" parameterType="java.util.HashMap" >
+		update tbl_merchant_report_suppler_survey_index t 
+		set t.newSaleCommodityNum = (select count(COMMODITY_NO) 
+										from tbl_merchant_report_commodity_base_info s
+										where s.merchant_code = t.merchant_code 
+										
+												and s.COMMODITY_FIRST_SELL_DATE  <![CDATA[ >= ]]> date(addDate(now(),-1)) 
+												and s.COMMODITY_FIRST_SELL_DATE  <![CDATA[ < ]]> date(now()) ),
+            t.update_time = now()																						
+		where t.report_date = date(addDate(now(),-1))		
+    </update>
+	
+	<!-- 商家经营分析指标  -->
+	<resultMap type="java.util.HashMap" id="supplierSurveyIndex">
+		<result column="visitCount" property="visitCount" javaType="int"/>
+		<result column="pageView" property="pageView" javaType="int"/>
+		<result column="orderNum" property="orderNum" javaType="int"/>
+		<result column="payedOrderNum" property="payedOrderNum" javaType="int"/>
+		<result column="payedOrderAmt" property="payedOrderAmt" javaType="double"/>
+		<result column="changePercent" property="changePercent" javaType="double"/>
+		<result column="totalAmt" property="totalAmt" javaType="double"/>
+		<result column="payedOrderAvgAmt" property="payedOrderAvgAmt" javaType="double"/>
+		<result column="rejectedCommodityNum" property="rejectedCommodityNum" javaType="int"/>
+		<result column="rejectedCommodityAmt" property="rejectedCommodityAmt" javaType="double"/>
+		<result column="rejectedCommodityPercent" property="rejectedCommodityPercent" javaType="double"/>
+		<result column="newSaleCommodityNum" property="newSaleCommodityNum" javaType="int"/>
+		<result column="deliveryOrderNum" property="deliveryOrderNum" javaType="int"/>
+		<result column="deliveryOrderAmt" property="deliveryOrderAmt" javaType="double"/>
+		<result column="deliveryPercent" property="deliveryPercent" javaType="double"/>
+		<result column="report_date" property="reportDate" javaType="String"/>
+	</resultMap>
+	
+	<!-- 从提前计算好的经营分析指标表中查询商家经营分析指标（发货相关除外） -->
+	<select id="selectSupplierSurveyIndex" parameterType="java.util.HashMap" resultMap="supplierSurveyIndex">
+		select sum(s.visitCount) visitCount,
+			 sum(s.pageView) pageView,
+			 SUM(s.orderNum) orderNum,
+			 SUM(s.payedOrderNum) payedOrderNum,
+			 SUM(s.payedOrderAmt) payedOrderAmt,
+			 round(SUM(s.orderNum) / sum(s.visitCount) *100,2) changePercent,
+			 round(SUM(s.payedOrderAmt) /  SUM(s.payedOrderNum),2) payedOrderAvgAmt,
+			 SUM(s.totalAmt) totalAmt,
+			 SUM(s.rejectedCommodityNum) rejectedCommodityNum,
+			 SUM(s.rejectedCommodityAmt) rejectedCommodityAmt,
+			 ROUND(SUM(s.rejectedCommodityNum) / SUM(s.sendCommodityNum) * 100,2) rejectedCommodityPercent,
+			 SUM(s.newSaleCommodityNum) newSaleCommodityNum
+		 from tbl_merchant_report_suppler_survey_index s 
+		 where s.merchant_code = #{merchantCode}
+		   and s.report_date <![CDATA[  >= ]]> #{startDate}
+		   and s.report_date <![CDATA[ < ]]>  addDate(#{endDate},1)  
+	</select>
+	
+	<select id="selectSupplierEveryDaySurveyIndex" parameterType="java.util.HashMap" resultMap="supplierSurveyIndex">
+		select s.visitCount ,
+			 s.pageView ,
+			 s.orderNum ,
+			 s.payedOrderNum ,
+			 s.payedOrderAmt ,
+			 s.changePercent ,
+			 s.payedOrderAvgAmt,
+			 s.totalAmt,
+			 date_format(report_date,'%Y-%m-%d') report_date,
+			 s.rejectedCommodityNum,
+			 s.rejectedCommodityAmt,
+			 s.rejectedCommodityPercent ,
+			 s.newSaleCommodityNum,
+			 s.deliveryOrderAmt,
+			 s.deliveryOrderNum,
+			 s.deliveryPercent
+		 from tbl_merchant_report_suppler_survey_index s 
+		 where s.merchant_code = #{merchantCode}
+			and  s.report_date <![CDATA[  >= ]]> #{startDate}
+		  and s.report_date <![CDATA[ < ]]> addDate(#{endDate},1)
+	</select>
+	
+</mapper>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Configure PUBLIC "-//Mort Bay Consulting//DTD Configure//EN"  
+"http://jetty.mortbay.org/configure.dtd">
+<Configure class="org.eclipse.jetty.webapp.WebAppContext">
+	<New class="org.eclipse.jetty.plus.jndi.Resource">
+		<Arg>MySqlDSYmcM</Arg>
+		<Arg>
+			<New class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+			    <!--  <Set name="driverClassName">net.sf.log4jdbc.DriverSpy</Set>-->
+			    <Set name="url">jdbc:log4jdbc:mysql://10.0.30.131:3306/mms_db?useUnicode=true&amp;characterEncoding=utf-8&amp;autoReconnect=true</Set>
+				<Set name="driverClassName">net.sf.log4jdbc.DriverSpy</Set>
+				<!-- <Set name="driverClassName">com.mysql.jdbc.Driver</Set>-->
+				<!--<Set name="url">jdbc:mysql://10.0.30.131:3306/mms_db?useUnicode=true&amp;characterEncoding=utf-8&amp;autoReconnect=true</Set>-->
+				<Set name="username">belle</Set>
+				<Set name="password">belle@belle</Set>
+			</New>
+			
+		</Arg>
+	</New>
+	<New class="org.eclipse.jetty.plus.jndi.Resource">
+		<Arg>MySqlDSYmcS</Arg>
+		<Arg>
+			<New class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+				 <Set name="driverClassName">net.sf.log4jdbc.DriverSpy</Set>
+			    <Set name="url">jdbc:log4jdbc:mysql://10.0.30.131:3306/mms_db?useUnicode=true&amp;characterEncoding=utf-8&amp;autoReconnect=true</Set>
+				<!-- <Set name="driverClassName">com.mysql.jdbc.Driver</Set>
+				<Set name="url">jdbc:mysql://10.0.30.131:3306/mms_db?useUnicode=true&amp;characterEncoding=utf-8&amp;autoReconnect=true</Set>-->
+				<Set name="username">belle</Set>
+				<Set name="password">belle@belle</Set>
+			</New>
+		</Arg>
+	</New>
+	
+	<New class="org.eclipse.jetty.plus.jndi.Resource">
+		<Arg>MySqlDSYmcReport</Arg>
+		<Arg>
+			<New class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+				 <Set name="driverClassName">net.sf.log4jdbc.DriverSpy</Set>
+			    <Set name="url">jdbc:log4jdbc:mysql://192.168.211.245:5678/report_mms_db?useUnicode=true&amp;characterEncoding=utf-8&amp;autoReconnect=true</Set>
+				<Set name="driverClassName">com.mysql.jdbc.Driver</Set>
+				<Set name="username">mms_oper</Set>
+				<Set name="password">yougou</Set>
+			</New>
+		</Arg>
+	</New>
+</Configure> 

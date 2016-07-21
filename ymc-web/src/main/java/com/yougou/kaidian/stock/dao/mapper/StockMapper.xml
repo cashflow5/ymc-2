@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yougou.kaidian.stock.dao.StockMapper" >
+  <select id="queryStorageModel" resultType="java.util.Map" parameterType="java.lang.String">
+     select ss.is_input_yougou_warehouse, ss.inventory_code,vw.id virtualId from tbl_sp_supplier ss LEFT JOIN tbl_wms_virtual_warehouse vw on ss.inventory_code=vw.virtual_warehouse_code  where ss.is_valid = 1 and ss.supplier_code =#{supplierCode}
+  </select>
+ 
+  <select id="querySafeStockQuantity" resultType="java.util.Map" parameterType="java.lang.String">
+     SELECT t.safe_stock_quantity FROM tbl_merchant_supplier_expand t WHERE t.merchant_code = #{merchant_code,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="querySafeStockQuantityCount" resultType="int" parameterType="java.lang.String">
+     SELECT count(1) FROM tbl_merchant_supplier_expand t WHERE t.merchant_code = #{merchant_code,jdbcType=VARCHAR}
+  </select>
+  
+  <update id="updateSafeStockQuantity">
+     UPDATE tbl_merchant_supplier_expand t SET t.safe_stock_quantity = #{safeStockQuantity,jdbcType=VARCHAR} WHERE t.merchant_code = #{merchantCode,jdbcType=VARCHAR}
+  </update>
+  
+  <insert id="insertSafeStockQuantity">
+     INSERT INTO tbl_merchant_supplier_expand(id,merchant_code,safe_stock_quantity,yg_contact_user_id) VALUES (#{id,jdbcType=VARCHAR},#{merchantCode,jdbcType=VARCHAR}, #{safeStockQuantity,jdbcType=VARCHAR}, null)
+  </insert>
+
+  <select id="queryInventoryForMerchant" resultType="java.util.Map" parameterType="java.lang.String">
+     SELECT t.safe_stock_quantity FROM tbl_merchant_inventory_safe t WHERE t.merchant_code = #{merchantCode,jdbcType=VARCHAR} AND t.product_no=#{productNo,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="getSafeStock" resultType="java.util.Map">
+     SELECT t.id,t.product_no,t.safe_stock_quantity,t.create_date,t.modity_date FROM tbl_merchant_inventory_safe t 
+     <where>
+     	t.merchant_code = #{merchantCode,jdbcType=VARCHAR}
+			<if test="productNo != null and productNo != ''">
+				AND t.product_no = #{productNo,jdbcType=VARCHAR} 
+			</if>
+			<if test="safeStockQuantityGe != null and safeStockQuantityGe != ''">
+				AND t.safe_stock_quantity <![CDATA[>=]]> #{safeStockQuantityGe,jdbcType=VARCHAR} 
+			</if>
+			<if test="safeStockQuantityLe != null and safeStockQuantityLe != ''">
+				AND t.safe_stock_quantity <![CDATA[<=]]> #{safeStockQuantityLe,jdbcType=VARCHAR} 
+			</if>
+		</where>
+		order by t.create_date desc 
+		<if test="query!=null">
+			limit #{query.offset},#{query.pageSize}
+		</if>
+  </select>
+  
+  <select id="getSafeStockCount" resultType="int">
+     SELECT count(t.id) FROM tbl_merchant_inventory_safe t
+     <where>
+     	t.merchant_code = #{merchantCode,jdbcType=VARCHAR}
+			<if test="productNo != null and productNo != ''">
+				AND t.product_no = #{productNo,jdbcType=VARCHAR} 
+			</if>
+			<if test="safeStockQuantityGe != null and safeStockQuantityGe != ''">
+				AND t.safe_stock_quantity <![CDATA[>=]]> #{safeStockQuantityGe,jdbcType=VARCHAR} 
+			</if>
+			<if test="safeStockQuantityLe != null and safeStockQuantityLe != ''">
+				AND t.safe_stock_quantity <![CDATA[<=]]> #{safeStockQuantityLe,jdbcType=VARCHAR} 
+			</if>
+		</where>
+  </select>
+
+  <update id="updateInventoryForMerchant">
+     UPDATE tbl_merchant_inventory_safe t SET t.safe_stock_quantity = #{safeStockQuantity,jdbcType=VARCHAR},t.modity_date=NOW() WHERE t.merchant_code = #{merchantCode,jdbcType=VARCHAR} AND t.product_no=#{productNo,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="modifySafeStock">
+     UPDATE tbl_merchant_inventory_safe t SET t.safe_stock_quantity = #{safeStockQuantity,jdbcType=VARCHAR},t.modity_date=NOW() WHERE id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <delete id="delSafeStock">
+  	delete from tbl_merchant_inventory_safe where id = #{id,jdbcType=VARCHAR}
+  </delete>
+
+  <insert id="insertInventoryForMerchant">
+     INSERT INTO tbl_merchant_inventory_safe VALUES (#{id,jdbcType=VARCHAR},#{productNo,jdbcType=VARCHAR}, #{safeStockQuantity,jdbcType=VARCHAR},#{warehouseCode,jdbcType=VARCHAR},#{merchantCode,jdbcType=VARCHAR}, NOW(),NOW())
+  </insert>
+  
+  <select id="queryWarehouseCodeByMerchantCode" resultType="java.lang.String">
+  	select inventory_code from tbl_sp_supplier
+	where  delete_flag=1 and supplier_code=#{merchantCode,jdbcType=VARCHAR}
+  </select>
+</mapper>

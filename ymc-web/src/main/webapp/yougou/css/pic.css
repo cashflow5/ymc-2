@@ -1,0 +1,78 @@
+div#rMenu {
+	position: absolute;
+	visibility: hidden;
+	top: 0;
+	background-color: #555;
+	text-align: left;
+	padding: 2px;
+}
+
+div#rMenu ul li {
+	margin: 1px 0;
+	padding: 0 5px;
+	cursor: pointer;
+	list-style: none outside none;
+	background-color: #DFDFDF;
+}
+
+.picdiv {
+	float: right;
+	width: 768px;
+	border-top: 1px solid #DEDEE0;
+	border-right: 1px solid #DEDEE0;
+	border-left: 1px solid #DEDEE0;
+	margin: 5px 0px 5px 0px;
+}
+
+.picdiv2 {
+	overflow: auto;
+	border-top: 1px solid #DEDEE0;
+	border-right: 1px solid #DEDEE0;
+	border-left: 1px solid #DEDEE0;
+	width: 200px;
+}
+
+.picdiv2 .picbtn {
+	cursor: pointer;
+	display: inline;
+	float: left;
+	height: 27px;
+}
+
+.picdiv2 .picbtn .ico_btn {
+	background: url("/yougou/images/ico.png") no-repeat;
+	cursor: pointer;
+	display: inline;
+	float: left;
+	font-size: 0;
+	height: 20px;
+	margin: 2px 0 0;
+	width: 20px;
+}
+
+.picdiv2 .picbtn .btn_txt {
+	display: inline;
+	float: left;
+	padding: 5px 5px 0 0;
+}
+
+.picdiv2 .picbtn .add {
+	background-position: -48px -40px
+}
+
+.picdiv2 .picbtn .delete {
+	background-position: -96px -40px
+}
+
+.picdiv2 .picbtn .change {
+	background-position: -504px -70px
+}
+
+.picdiv2 .picbtn .btn_l,.picdiv2 .picbtn .btn_r {
+	float: left;
+	width: 2px;
+	height: 27px;
+	font-size: 0
+}
+.adiv{display:inline-block;height:18px; position:relative;overflow:hidden;}
+.inputimg{position:absolute; right:0; top:0; opacity:0; filter:alpha(opacity=0);}

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<memcached>
+    <!-- 商品数据缓存块 -->
+    <client name="commodityclient" compressEnable="true" defaultEncoding="UTF-8" socketpool="commoditypool">
+        <errorHandler>com.alisoft.xplatform.asf.cache.memcached.MemcachedErrorHandler</errorHandler>
+    </client>
+
+    <socketpool name="commoditypool" failover="true" initConn="10" minConn="10" maxConn="3000" maintSleep="0"
+        nagle="false" socketTO="3000" aliveCheck="true">
+        <servers>${mobile.memcached.ip}:10001</servers>
+    </socketpool>
+    
+     <!-- CMS数据缓存块 -->
+    <client name="cmsclient" compressEnable="true" defaultEncoding="UTF-8" socketpool="cmspool">
+        <errorHandler>com.alisoft.xplatform.asf.cache.memcached.MemcachedErrorHandler</errorHandler>
+    </client>
+
+    <socketpool name="cmspool" failover="true" initConn="10" minConn="10" maxConn="3000" maintSleep="0"
+        nagle="false" socketTO="3000" aliveCheck="true">
+        <servers>${mobile.memcached.ip}:10002</servers>
+    </socketpool>
+     
+    <!-- 促销数据缓存块 -->
+    <client name="promotionclient" compressEnable="true" defaultEncoding="UTF-8" socketpool="promotionpool">
+        <errorHandler>com.alisoft.xplatform.asf.cache.memcached.MemcachedErrorHandler</errorHandler>
+    </client>
+
+    <socketpool name="promotionpool" failover="true" initConn="10" minConn="10" maxConn="3000" maintSleep="0"
+        nagle="false" socketTO="3000" aliveCheck="true">
+        <servers>${mobile.memcached.ip}:10003</servers>
+    </socketpool>
+    
+    <!-- 购物车数据缓存块 -->
+    <client name="shoppingcartclient" compressEnable="true" defaultEncoding="UTF-8" socketpool="shoppingcartpool">
+        <errorHandler>com.alisoft.xplatform.asf.cache.memcached.MemcachedErrorHandler</errorHandler>
+    </client>
+
+    <socketpool name="shoppingcartpool" failover="true" initConn="10" minConn="10" maxConn="3000" maintSleep="0"
+        nagle="false" socketTO="3000" aliveCheck="true">
+        <servers>${mobile.memcached.ip}:10004</servers>
+    </socketpool>
+    
+    <!-- 通用数据缓存块1 -->
+    <client name="commonclient1" compressEnable="true" defaultEncoding="UTF-8" socketpool="commonpool1">
+        <errorHandler>com.alisoft.xplatform.asf.cache.memcached.MemcachedErrorHandler</errorHandler>
+    </client>
+
+    <socketpool name="commonpool1" failover="true" initConn="10" minConn="10" maxConn="3000" maintSleep="0"
+        nagle="false" socketTO="3000" aliveCheck="true">
+        <servers>${mobile.memcached.ip}:10005</servers>
+    </socketpool>
+     
+    <!-- 通用数据缓存块2 -->
+    <client name="commonclient2" compressEnable="true" defaultEncoding="UTF-8" socketpool="commonpool2">
+        <errorHandler>com.alisoft.xplatform.asf.cache.memcached.MemcachedErrorHandler</errorHandler>
+    </client>
+
+    <socketpool name="commonpool2" failover="true" initConn="10" minConn="10" maxConn="3000" maintSleep="0"
+        nagle="false" socketTO="3000" aliveCheck="true">
+        <servers>${mobile.memcached.ip}:10006</servers>
+    </socketpool>
+    
+    <!-- 商品数据监控缓存块 -->
+    <client name="monitorclient" compressEnable="true" defaultEncoding="UTF-8" socketpool="monitorpool">
+        <errorHandler>com.alisoft.xplatform.asf.cache.memcached.MemcachedErrorHandler</errorHandler>
+    </client>
+
+    <socketpool name="monitorpool" failover="true" initConn="10" minConn="10" maxConn="3000" maintSleep="0"
+        nagle="false" socketTO="3000" aliveCheck="true">
+        <servers>${commodity.memcached.ip}:10003</servers>
+    </socketpool>
+
+</memcached>

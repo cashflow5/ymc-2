@@ -1,0 +1,33 @@
+/*index*/
+.index_main_bdc{width:650px;overflow:hidden;}
+.bsnss_inf{background:#f0f5f8;border:1px solid #cee1ee;padding:12px 15px;}
+.bsnss_inf .hd{background:#fff;padding:3px;margin-top:10px;}
+.bsnss_inf .bd{width:530px;}
+.bsnss_inf .inf_lst li{float:left;width:249px;padding-left:16px;height:27px;line-height:27px;overflow:hidden;}
+.bsnss_inf .inf_lst li span{color:#999;}
+
+.remind .box1_bd{padding:14px 14px 16px;line-height:27px;}
+.deal_now{background:#fefeda;border:1px solid #ffe8c2;padding:10px;}
+.deal_now h3{font-weight:bold;}
+.deal_now li a{display:inline-block;width:180px;}
+.deal_other{border:0px solid #CEE1EE;padding:10px;}
+.deal_other h3{font-weight:bold;}
+.deal_other li a{display:inline-block;width:180px;}
+.pro_manage h4{padding-left:11px;}
+.pro_manage ol{width:547px;}
+
+.sales_trend{padding:15px 0 20px;}
+
+.main_aside{width:320px;overflow:hidden;}
+.main_aside .tip .box1_bd{padding:5px 12px 8px;}
+.contact .box1_bd{line-height:23px;padding:20px 12px;font-family:\5FAE\8F6F\96C5\9ED1;}
+.contact .phone_num{font-style:italic;}
+.contact .other_type span{display:inline-block;width:68px;text-align:right;}
+
+.help .box1_bd{padding:0;}
+.help_itm{border-bottom:1px solid #eee;overflow:hidden;}
+.help_itm dt,.help_itm dd{float:left;height:50px;padding:3px 0;line-height:50px;}
+.help_itm dt{width:55px;border-right:1px solid #eee;font-size:16px;font-family:\5FAE\8F6F\96C5\9ED1;text-align:center;}
+.help_itm dd{width:262px;overflow:hidden;}
+.help_itm ul li{float:left;width:70px;padding-left:15px;}
+.help .pro_itm ul li{line-height:25px;}

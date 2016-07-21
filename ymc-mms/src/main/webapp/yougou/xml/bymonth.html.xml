@@ -1,0 +1,65 @@
+<graph caption="月订单销售额统计" subcaption="(5月份-2011年)" xAxisName="日期" yAxisMinValue="0" yAxisMaxValue="10000" rotateYAxisName="0" yAxisName="" decimalPrecision="0" formatNumberScale="0" numberSuffix="%D4%AA" showBorder="0" showNames="1" showValues="0" bgColor="FFFFFF" baseFontColor="278296" baseFontSize="12" canvasBorderColor="278296" canvasBorderThickness="2" showAlternateHGridColor="1" AlternateHGridColor="BBCEE4" alternateHGridAlpha="40" divLineColor="BBCEE4" hovercapbg="FFFDD7" hovercapborder="FFB400" hoverCapSepChar=", ">
+   
+   		<set name="1" value="0" hoverText="1日"/>
+   
+   		<set name="2" value="0" hoverText="2日"/>
+   
+   		<set name="3" value="0" hoverText="3日"/>
+   
+   		<set name="4" value="0" hoverText="4日"/>
+   
+   		<set name="5" value="0" hoverText="5日"/>
+   
+   		<set name="6" value="0" hoverText="6日"/>
+   
+   		<set name="7" value="0" hoverText="7日"/>
+   
+   		<set name="8" value="0" hoverText="8日"/>
+   
+   		<set name="9" value="0" hoverText="9日"/>
+   
+   		<set name="10" value="0" hoverText="10日"/>
+   
+   		<set name="11" value="0" hoverText="11日"/>
+   
+   		<set name="12" value="0" hoverText="12日"/>
+   
+   		<set name="13" value="0" hoverText="13日"/>
+   
+   		<set name="14" value="0" hoverText="14日"/>
+   
+   		<set name="15" value="0" hoverText="15日"/>
+   
+   		<set name="16" value="0" hoverText="16日"/>
+   
+   		<set name="17" value="0" hoverText="17日"/>
+   
+   		<set name="18" value="0" hoverText="18日"/>
+   
+   		<set name="19" value="0" hoverText="19日"/>
+   
+   		<set name="20" value="0" hoverText="20日"/>
+   
+   		<set name="21" value="0" hoverText="21日"/>
+   
+   		<set name="22" value="0" hoverText="22日"/>
+   
+   		<set name="23" value="0" hoverText="23日"/>
+   
+   		<set name="24" value="0" hoverText="24日"/>
+   
+   		<set name="25" value="0" hoverText="25日"/>
+   
+   		<set name="26" value="0" hoverText="26日"/>
+   
+   		<set name="27" value="0" hoverText="27日"/>
+   
+   		<set name="28" value="0" hoverText="28日"/>
+   
+   		<set name="29" value="0" hoverText="29日"/>
+   
+   		<set name="30" value="0" hoverText="30日"/>
+   
+   		<set name="31" value="0" hoverText="31日"/>
+   
+</graph>

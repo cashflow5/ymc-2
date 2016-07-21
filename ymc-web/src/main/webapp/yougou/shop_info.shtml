@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>优购-商家中心-基本信息</title>
+    <link rel="stylesheet" type="text/css" href="css/base.css" />
+    <link rel="stylesheet" type="text/css" href="css/mold.css" />
+    <link rel="stylesheet" type="text/css" href="css/merchans_center.css" />
+</head>
+
+<body>
+    <script type="text/javascript" src="js/bootstrap.js"></script>
+    <!--#include file="layout/header.shtml" -->
+    <div id="newcontent" class="wrap clearfix mt10">
+        <!--#include file="layout/sidebar.shtml" -->
+        <div id="newmain" class="main_bd fr">
+            <div class="main_container">
+                <div class="normal_box">
+                    <p class="title site">当前位置：商家中心 &gt; 设置 &gt; 店铺信息</p>
+                    <div class="tab_panel relative">
+                        <ul class="tab">
+                            <li onclick="location.href='basic_info.shtml'"><span>基本信息</span></li>
+                            <li onclick="location.href='shop_info.shtml'" class="curr"><span>店铺信息</span></li>
+                            <li onclick="location.href='contracts_info.shtml'"><span>合同信息</span></li>
+                        </ul>
+                        <div class="tab_content">
+                            <div class="info-box">
+                                <h3>店铺负责人信息</h3>
+                                <ul class="info-list clearfix">
+                                    <li><span class="stitle">姓名：</span>张三</li>
+                                    <li><span class="stitle">手机：</span>1388888888888</li>
+                                    <li><span class="stitle">电子邮箱：</span>yyh@yougou.com</li>
+                                    <li><span class="stitle">座机：</span>0755-88886666</li>
+                                    <li><span class="stitle">QQ号码：</span>12345678@qq.com</li>
+                                </ul>
+                            </div>
+                            <div class="info-box">
+                                <h3>售后退换货地址</h3>
+                                <ul class="info-list clearfix">
+                                    <li><span class="stitle">姓名：</span>张三</li>
+                                    <li><span class="stitle">收货人电话：</span>1388888888888</li>
+                                    <li><span class="stitle">收货人地区：</span>广东深圳市</li>
+                                    <li><span class="stitle">邮编号码：</span>516082</li>
+                                    <li><span class="stitle">详细地址：</span>南山区南海大道1057号科技大厦二期A栋601房</li>
+                                </ul>
+                            </div>
+                            <div class="info-box">
+                                <h3>业务联系人</h3>
+                                <ul class="info-list clearfix">
+                                    <li><span class="stitle">姓名：</span>张三</li>
+                                    <li><span class="stitle">手机：</span>1388888888888</li>
+                                    <li><span class="stitle">电子邮箱：</span>yyh@yougou.com</li>
+                                    <li><span class="stitle">座机：</span>0755-88886666</li>
+                                    <li><span class="stitle">QQ号码：</span>12345678@qq.com</li>
+                                </ul>
+                            </div>
+                            <div class="info-box">
+                                <h3>售后联系人</h3>
+                                <ul class="info-list clearfix">
+                                    <li><span class="stitle">姓名：</span>张三</li>
+                                    <li><span class="stitle">手机：</span>1388888888888</li>
+                                    <li><span class="stitle">电子邮箱：</span>yyh@yougou.com</li>
+                                    <li><span class="stitle">座机：</span>0755-88886666</li>
+                                    <li><span class="stitle">QQ号码：</span>12345678@qq.com</li>
+                                </ul>
+                            </div>
+                            <div class="info-box">
+                                <h3>财务联系人</h3>
+                                <ul class="info-list clearfix">
+                                    <li><span class="stitle">姓名：</span>张三</li>
+                                    <li><span class="stitle">手机：</span>1388888888888</li>
+                                    <li><span class="stitle">电子邮箱：</span>yyh@yougou.com</li>
+                                    <li><span class="stitle">座机：</span>0755-88886666</li>
+                                    <li><span class="stitle">QQ号码：</span>12345678@qq.com</li>
+                                </ul>
+                            </div>
+                            <div class="info-box">
+                                <h3>技术联系人</h3>
+                                <ul class="info-list clearfix">
+                                    <li><span class="stitle">姓名：</span>张三</li>
+                                    <li><span class="stitle">手机：</span>1388888888888</li>
+                                    <li><span class="stitle">电子邮箱：</span>yyh@yougou.com</li>
+                                    <li><span class="stitle">座机：</span>0755-88886666</li>
+                                    <li><span class="stitle">QQ号码：</span>12345678@qq.com</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--#include file="layout/footer.shtml" -->
+</body>
+
+</html>

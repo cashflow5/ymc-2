@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yougou.kaidian.order.dao.MerchantSalesMapper">
+
+	<resultMap id="salesResultMap" type="com.yougou.kaidian.order.model.SalesVO">
+		<result column="inside_code" property="insideCode" jdbcType="VARCHAR" />
+		<result column="no" property="no" jdbcType="VARCHAR" />
+		<result column="product_no" property="productNo" jdbcType="VARCHAR" />
+		<result column="supplier_code" property="supplierCode" jdbcType="VARCHAR" />
+		<result column="third_party_code" property="thirdPartyCode" jdbcType="VARCHAR" />
+		<result column="commodity_name" property="commodityName" jdbcType="VARCHAR" />
+		<result column="order_sub_no" property="orderSubNo" jdbcType="VARCHAR" />
+		<result column="create_time" property="timeEnd" jdbcType="VARCHAR" />
+		<result column="ship_time" property="shipTimeEnd" jdbcType="VARCHAR" />
+		<result column="express_codes" property="expressCodes" jdbcType="VARCHAR" />
+		<result column="commodity_specification_str" property="commoditySpecification" jdbcType="VARCHAR" />
+		
+		<result column="sale_price" property="salePrice" jdbcType="DOUBLE" />
+		<result column="active_price" property="activePrice" jdbcType="DOUBLE" />
+		<result column="active_name" property="activeName" jdbcType="VARCHAR" />
+		<result column="pref_total_amount" property="prefTotalAmount" jdbcType="DOUBLE" />
+		<result column="product_amount" property="productAmount" jdbcType="DOUBLE" />
+		<result column="active_pref_amount" property="activePrefAmount" jdbcType="DOUBLE" />
+		<result column="coupon_pref_amount" property="couponPrefAmount" jdbcType="DOUBLE" />
+		<result column="coupon_pref_amount5" property="couponPrefAmount5" jdbcType="DOUBLE" />
+		<result column="buy_reduction_pref_amount" property="buyReductionPrefAmount" jdbcType="DOUBLE" />
+		<result column="order_sub_id" property="orderSubId" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<!-- 查询销售信息 -->
+	<select id="queryMerchantProductList" resultMap="salesResultMap" parameterType="com.yougou.kaidian.order.model.SalesVO">
+		SELECT t5.inside_code,t4.no,t5.product_no,t4.supplier_code,t5.third_party_code,t4.commodity_name,
+			GROUP_CONCAT(t1.express_order_id) as express_codes,GROUP_CONCAT(t1.order_sub_no) as order_sub_no
+ 		FROM tbl_order_sub t1
+ 			INNER JOIN tbl_order_sub_expand t2 ON (t1.id = t2.order_sub_id)
+ 			INNER JOIN tbl_order_detail4sub t3 ON (t1.id = t3.order_sub_id)
+ 			INNER JOIN tbl_commodity_style t4 ON (t3.commodity_id = t4.id)
+ 			INNER JOIN tbl_commodity_product t5 ON (t3.commodity_id=t5.commodity_id AND t3.prod_no = t5.product_no)
+ 		WHERE t1.ship_time IS NOT NULL
+			<include refid="merchant_sales_where" />
+		GROUP BY t5.product_no
+		ORDER BY t5.product_no
+	</select>
+
+	<!-- 查询销售信息统计 -->
+	<select id="queryMerchantProductCount" resultType="int" parameterType="com.yougou.kaidian.order.model.SalesVO">
+		SELECT COUNT(1) FROM (
+			SELECT 
+				DISTINCT t5.product_no
+ 			FROM tbl_order_sub t1
+ 				INNER JOIN tbl_order_sub_expand t2 ON (t1.id = t2.order_sub_id)
+ 				INNER JOIN tbl_order_detail4sub t3 ON (t1.id = t3.order_sub_id)
+ 				INNER JOIN tbl_commodity_style t4 ON (t3.commodity_id = t4.id)
+ 				INNER JOIN tbl_commodity_product t5 ON (t3.commodity_id=t5.commodity_id AND t3.prod_no = t5.product_no)
+ 			WHERE t1.ship_time IS NOT NULL
+ 				<include refid="merchant_sales_where" />
+ 		) AS t
+	</select>
+	
+	<!-- 查询销售信息统计 -->
+	<select id="queryMerchantAllProductTotalAmount" resultType="java.math.BigDecimal" parameterType="com.yougou.kaidian.order.model.SalesVO">
+		SELECT SUM(pay_total_price) FROM (
+			SELECT 
+				DISTINCT t1.order_sub_no, t1.pay_total_price
+ 			FROM tbl_order_sub t1
+ 				INNER JOIN tbl_order_sub_expand t2 ON (t1.id = t2.order_sub_id)
+ 				INNER JOIN tbl_order_detail4sub t3 ON (t1.id = t3.order_sub_id)
+ 				INNER JOIN tbl_commodity_style t4 ON (t3.commodity_id = t4.id)
+ 				INNER JOIN tbl_commodity_product t5 ON (t3.commodity_id=t5.commodity_id AND t3.prod_no = t5.product_no)
+ 			WHERE t1.ship_time IS NOT NULL
+ 				<include refid="merchant_sales_where" />
+ 		) AS t
+	</select>
+	
+	<select id="queryMerchantProductTotalAmount" resultType="java.util.Map" parameterType="com.yougou.kaidian.order.model.SalesVO">
+		SELECT 
+			DISTINCT t1.order_sub_no, t1.pay_total_price
+		FROM tbl_order_sub t1
+			INNER JOIN tbl_order_sub_expand t2 ON (t1.id = t2.order_sub_id)
+			INNER JOIN tbl_order_detail4sub t3 ON (t1.id = t3.order_sub_id)
+			INNER JOIN tbl_commodity_style t4 ON (t3.commodity_id = t4.id)
+			INNER JOIN tbl_commodity_product t5 ON (t3.commodity_id=t5.commodity_id AND t3.prod_no = t5.product_no)
+		WHERE t1.ship_time IS NOT NULL
+			<include refid="merchant_sales_where" />
+	</select>
+
+	<select id="queryMerchantSalesExport" resultMap="salesResultMap" parameterType="com.yougou.kaidian.order.model.SalesVO">
+		SELECT t1.create_time,t1.ship_time,t1.order_sub_no,t3.commodity_no as `no`,t4.commodity_name,t4.supplier_code,t3.sale_price,
+			t3.prod_unit_price AS active_price,t5.third_party_code,t5.inside_code,t3.commodity_specification_str,t3.active_name,
+			(IFNULL(t3.active_pref_amount,0)+IFNULL(t3.member_pref_amount,0)+IFNULL(t3.coupon_pref_amount,0)+IFNULL(t3.integral_pref_amount,0)+IFNULL(t3.payment_pref_amount,0)+IFNULL(t3.coupon_pref_amount5,0)+IFNULL(t3.buy_reduction_pref_amount,0)+IFNULL(t3.globle_pref_amount,0)) AS pref_total_amount,
+			(IFNULL(t3.prod_unit_price,0)-(IFNULL(t3.active_pref_amount,0)+IFNULL(t3.member_pref_amount,0)+IFNULL(t3.coupon_pref_amount,0)+IFNULL(t3.integral_pref_amount,0)+IFNULL(t3.payment_pref_amount,0)+IFNULL(t3.coupon_pref_amount5,0)+IFNULL(t3.buy_reduction_pref_amount,0)+IFNULL(t3.globle_pref_amount,0))) AS product_amount,
+			IFNULL(t3.active_pref_amount,0) AS active_pref_amount,IFNULL(t3.coupon_pref_amount,0) AS coupon_pref_amount,IFNULL(t3.coupon_pref_amount5,0) AS coupon_pref_amount5,
+			IFNULL(t3.buy_reduction_pref_amount,0) AS buy_reduction_pref_amount,t1.express_order_id as express_codes,t5.product_no
+		FROM tbl_order_sub t1
+			INNER JOIN tbl_order_sub_expand t2 ON (t1.id = t2.order_sub_id)
+			INNER JOIN tbl_order_detail4sub t3 ON (t1.id = t3.order_sub_id)
+			INNER JOIN tbl_commodity_style t4 ON (t3.commodity_id = t4.id)
+			INNER JOIN tbl_commodity_product t5 ON (t3.commodity_id = t5.commodity_id AND t3.prod_no = t5.product_no)
+		WHERE t1.ship_time IS NOT NULL
+			<include refid="merchant_sales_where" />
+	</select>
+	
+	
+	<select id="queryMerchantSalesExportCount" resultType="int" parameterType="com.yougou.kaidian.order.model.SalesVO">
+		SELECT count(1) 
+		FROM tbl_order_sub t1
+			INNER JOIN tbl_order_sub_expand t2 ON (t1.id = t2.order_sub_id)
+			INNER JOIN tbl_order_detail4sub t3 ON (t1.id = t3.order_sub_id)
+			INNER JOIN tbl_commodity_style t4 ON (t3.commodity_id = t4.id)
+			INNER JOIN tbl_commodity_product t5 ON (t3.commodity_id = t5.commodity_id AND t3.prod_no = t5.product_no)
+		WHERE t1.ship_time IS NOT NULL
+			<include refid="merchant_sales_where" />
+	</select>
+	
+
+	<!-- 按照货品查询销售 -->
+	<select id="queryMerchantSalesByProductNo" resultMap="salesResultMap" parameterType="com.yougou.kaidian.order.model.SalesVO">
+		SELECT t1.ship_time,t1.create_time,t1.order_sub_no,t5.third_party_code,t5.inside_code,t3.commodity_specification_str,t5.product_no,
+			t1.express_order_id as express_codes
+ 		FROM tbl_order_sub t1
+ 			INNER JOIN tbl_order_sub_expand t2 ON (t1.id = t2.order_sub_id)
+ 			INNER JOIN tbl_order_detail4sub t3 ON (t1.id = t3.order_sub_id)
+ 			INNER JOIN tbl_commodity_style t4 ON (t3.commodity_id = t4.id)
+ 			INNER JOIN tbl_commodity_product t5 ON (t3.commodity_id = t5.commodity_id AND t3.prod_no = t5.product_no)
+ 		WHERE t1.ship_time IS NOT NULL
+			<include refid="merchant_sales_where" />
+	</select>
+
+	<!-- 按照货品查询销售统计 -->
+	<select id="queryMerchantSalesByProductNoCount" resultType="int" parameterType="com.yougou.kaidian.order.model.SalesVO">
+		SELECT 
+			COUNT(1)
+		FROM tbl_order_sub t1
+			INNER JOIN tbl_order_sub_expand t2 ON (t1.id = t2.order_sub_id)
+			INNER JOIN tbl_order_detail4sub t3 ON (t1.id = t3.order_sub_id)
+			INNER JOIN tbl_commodity_style t4 ON (t3.commodity_id = t4.id)
+			INNER JOIN tbl_commodity_product t5 ON (t3.commodity_id=t5.commodity_id AND t3.prod_no = t5.product_no)
+		WHERE t1.ship_time IS NOT NULL
+			<include refid="merchant_sales_where" />
+	</select>
+	
+	<select id="queryMerchantSalesDetailExport" resultMap="salesResultMap" parameterType="com.yougou.kaidian.order.model.SalesVO">
+		SELECT t1.id AS order_sub_id,t1.create_time,t1.ship_time,t1.order_sub_no,t4.supplier_code,t5.third_party_code,t5.inside_code,
+			t4.commodity_name,t3.commodity_specification_str,t1.express_order_id AS express_codes,t5.product_no
+		FROM tbl_order_sub t1
+			INNER JOIN tbl_order_sub_expand t2 ON (t1.id = t2.order_sub_id)
+			INNER JOIN tbl_order_detail4sub t3 ON (t1.id = t3.order_sub_id)
+			INNER JOIN tbl_commodity_style t4 ON (t3.commodity_id = t4.id)
+			INNER JOIN tbl_commodity_product t5 ON (t3.commodity_id = t5.commodity_id AND t3.prod_no = t5.product_no)
+		WHERE t1.ship_time IS NOT NULL
+			<include refid="merchant_sales_where" />
+	</select>
+
+	<!-- 按照货品查询拒收数量 -->
+	<select id="getInRejectionProductQuantity" resultType="int">
+		SELECT IFNULL(SUM(t2.quantity),0) AS quantity
+		FROM tbl_wms_rejection_quality_inspection t1
+			INNER JOIN tbl_wms_rejection_quality_inspection_detail t2 ON t1.id = t2.rejection_id
+		WHERE t1.express_code IN
+			<foreach collection="lstExpressCode" item="expressCode" open="(" separator="," close=")">  
+        		#{expressCode,jdbcType=VARCHAR}
+     		</foreach>
+			AND t2.commodity_code = #{productNo,jdbcType=VARCHAR} AND t1.status = 1 AND (t1.is_cancel != 1 OR t1.is_cancel IS NULL)
+	</select>
+
+	<!-- 按照货品查询退换货数量 -->
+	<select id="getInReturnProductQuantity" resultType="int">
+		SELECT IFNULL(SUM(t2.qa_quantity),0) AS quantity
+		FROM tbl_wms_return_qa_product t1 INNER JOIN tbl_wms_return_qa_product_detail t2 ON t1.id = t2.return_qa_product_id
+		WHERE t2.order_sub_no IN
+			<foreach collection="lstOrderSubNo" item="orderSubNo" open="(" separator="," close=")">  
+        		#{orderSubNo,jdbcType=VARCHAR}
+     		</foreach>
+			AND t2.product_no = #{productNo,jdbcType=VARCHAR}
+			AND t1.return_status = 'CONFIRMED' AND (t1.is_cancel != 1 OR t1.is_cancel IS NULL)
+	</select>
+
+	<!-- 按照货品查询拒收数量 -->
+	<select id="getRejectionProductQuantity" resultType="int">
+		SELECT IFNULL(SUM(t2.quantity),0) AS quantity
+		FROM tbl_wms_rejection_quality_inspection t1
+			INNER JOIN tbl_wms_rejection_quality_inspection_detail t2 ON t1.id = t2.rejection_id
+		WHERE t1.express_code = #{expressCode,jdbcType=VARCHAR}
+			AND t2.commodity_code = #{productNo,jdbcType=VARCHAR} AND t1.status = 1 AND (t1.is_cancel != 1 OR t1.is_cancel IS NULL)
+	</select>
+
+	<!-- 按照货品查询退换货数量 -->
+	<select id="getReturnProductQuantity" resultType="int">
+		SELECT IFNULL(SUM(t2.qa_quantity),0) AS quantity
+		FROM tbl_wms_return_qa_product t1 INNER JOIN tbl_wms_return_qa_product_detail t2 ON t1.id = t2.return_qa_product_id
+		WHERE t2.order_sub_no = #{orderSubNo,jdbcType=VARCHAR}
+			AND t2.product_no = #{productNo,jdbcType=VARCHAR}
+			AND t1.return_status = 'CONFIRMED' AND (t1.is_cancel != 1 OR t1.is_cancel IS NULL)
+	</select>
+
+	<!-- 查询条件 -->
+	<sql id="merchant_sales_where" >
+		<if test="merchantCode != null and merchantCode != ''">
+	 		AND t3.merchant_code = #{merchantCode,jdbcType=VARCHAR}
+		</if>
+		<if test="merchantCode == null or merchantCode == ''">
+	 		AND 1 = 0
+		</if>
+		<if test="commodityName != null and commodityName != ''">
+		 	AND t4.commodity_name LIKE CONCAT('%','${commodityName}','%')
+		</if>
+		<if test="no != null and no != ''">
+		 	AND t4.no = #{no,jdbcType=VARCHAR} 
+		</if>
+		<if test="productNo != null and productNo != ''">
+		 	AND t5.product_no = #{productNo,jdbcType=VARCHAR} 
+		</if>
+		<if test="supplierCode != null and supplierCode != ''">
+		 	AND t4.supplier_code = #{supplierCode,jdbcType=VARCHAR} 
+		</if>
+		<if test="thirdPartyCode != null and thirdPartyCode != ''">
+		 	AND t5.third_party_code = #{thirdPartyCode,jdbcType=VARCHAR} 
+		</if>
+		<if test="orderSubNo != null and orderSubNo != ''">
+		 	AND t1.order_sub_no LIKE CONCAT('%','${orderSubNo}','%')
+		</if>
+		<!-- 下单时间 -->
+		<if test="timeStart != null and timeStart != ''">
+			<![CDATA[ AND t1.create_time >= #{timeStart,jdbcType=VARCHAR}   ]]>
+		</if>
+		<if test="timeEnd != null and timeEnd != ''">
+			<![CDATA[ AND t1.create_time <= #{timeEnd,jdbcType=VARCHAR}   ]]>
+		</if>
+		<!-- 发货时间 -->
+		<if test="shipTimeStart != null and shipTimeStart != ''">
+			<![CDATA[ AND t1.ship_time >= #{shipTimeStart,jdbcType=VARCHAR}   ]]>
+		</if>
+		<if test="shipTimeEnd != null and shipTimeEnd != ''">
+			<![CDATA[ AND t1.ship_time <= #{shipTimeEnd,jdbcType=VARCHAR}   ]]>
+		</if>
+	</sql>
+</mapper>

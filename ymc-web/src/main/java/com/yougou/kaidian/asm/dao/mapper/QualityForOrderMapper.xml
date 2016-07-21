@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yougou.kaidian.asm.dao.QualityForOrderMapper">
+	<resultMap type="com.yougou.kaidian.asm.model.OrderProductQuantityVo" id="orderAsmDetailMapper">
+	    <result column="id" property="id" jdbcType="VARCHAR" />
+		<result column="order_sub_no" property="order_sub_no" jdbcType="VARCHAR" />
+		<result column="quality_type" property="quality_type" jdbcType="VARCHAR" />
+		<result column="express_code" property="express_code" jdbcType="VARCHAR" />
+		<result column="express_name" property="express_name" jdbcType="VARCHAR" />
+		<result column="express_charges" property="express_charges" jdbcType="VARCHAR" />
+		<result column="qa_person" property="qa_person" jdbcType="VARCHAR" />
+		<result column="qa_date" property="qa_date" jdbcType="TIMESTAMP" />
+		<result column="user_name" property="user_name" jdbcType="VARCHAR" />
+		<result column="mobile_phone" property="mobile_phone" jdbcType="VARCHAR" />
+		<result column="is_exception" property="is_exception" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="reason" property="reason" jdbcType="VARCHAR" />
+		<result column="out_order_id" property="out_order_id" jdbcType="VARCHAR" />
+		<result column="commodity_code" property="commodity_code" jdbcType="VARCHAR" />
+		<result column="qa_inside_code" property="qa_inside_code" jdbcType="VARCHAR" />
+		<result column="supplier_code" property="supplier_code" jdbcType="VARCHAR" />
+		<result column="commodity_name" property="commodity_name" jdbcType="VARCHAR" />
+		<result column="description" property="description" jdbcType="VARCHAR" />
+		<result column="is_passed" property="is_passed" jdbcType="VARCHAR" />
+		<result column="size_name" property="size_name" jdbcType="VARCHAR" />
+		<result column="shstatus" property="shstatus" jdbcType="VARCHAR" />
+		<result column="commodity_id" property="commodity_id" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="queryOrderAsmInfo" parameterType="com.yougou.kaidian.asm.vo.QualityVo" resultMap="orderAsmDetailMapper">
+		 SELECT DISTINCT
+			    p.id,
+				d.order_sub_no,
+				CASE p.return_type WHEN 'TRADE_GOODS' THEN '换货' WHEN 'QUIT_GOODS' THEN '退货' ELSE '先质检,后有申请单' END AS quality_type,
+				p.express_code,
+				p.express_name,
+	      p.express_charges,
+				p.qa_person,
+				p.qa_date,
+				t4.user_name, 
+				t4.mobile_phone,
+				CASE p.is_exception when 'NO' then '正常收货' when 'YES' then '异常收货' else '正常收货' end as is_exception,
+				if(p.is_cancel = 1, '已作废', case p.return_status when 'CONFIRMED' then '已确认' when 'WAIT_CONFIRM' then '待确认' else '未知' end) as status,
+	      d.question_cause as reason,
+				t2.out_order_id,
+				d.qa_product_no as commodity_code,
+				d.qa_inside_code,
+				d.qa_third_party_code as supplier_code,
+				d.qa_goods_name as commodity_name,
+	      d.qa_description as description,
+				CASE is_passed when 1 then '质检通过' when 0 then '质检不通过' ELSE '' end as is_passed,
+	      cs.size_name,
+	      sa.`status` as shstatus,
+	      cs.commodity_id as commodity_id
+			FROM tbl_wms_return_qa_product p
+			INNER JOIN tbl_wms_return_qa_product_detail d ON (p.id = d.return_qa_product_id)
+			INNER JOIN tbl_order_sub t2 ON (t2.order_sub_no = d.order_sub_no)
+			INNER JOIN tbl_order_consignee_info t4 ON (t2.consignee_id = t4.id)
+			INNER JOIN tbl_order_sub_expand e ON (t2.id = e.order_sub_id)
+	    INNER JOIN tbl_commodity_product cs ON (d.qa_product_no = cs.product_no)
+	    left JOIN tbl_order_sale_apply_bill sa ON (d.apply_no = sa.apply_no)
+			WHERE e.merchant_code = #{merchantCode,jdbcType=VARCHAR} and d.order_sub_no=#{orderNo,jdbcType=VARCHAR}
+			UNION 
+			SELECT DISTINCT
+			    i.id,
+				de.order_sub_no,
+				'拒收' as quality_type,
+				i.express_code,
+				s.logistics_name as express_name,
+	      i.expressfee as express_charges,
+				i.creator as qa_person,
+				i.create_date as qa_date,
+				c.user_name,
+				c.mobile_phone,
+				CASE i.error_type when 0 then '正常收货' when 1 then '异常收货' else '正常收货' end as is_exception,
+				if(i.is_cancel = 1, '已作废', case i.`STATUS` when 1 then '已确认' when 0 then '待确认' else '未知' end) as status,
+	      de.problem_reason as reason,
+				s.out_order_id,
+				de.commodity_code as commodity_code,
+				de.supplier_code as qa_inside_code,
+				de.invitemno as supplier_code,
+				de.goods_name as commodity_name,
+	      de.descr as description,
+				'质检通过' as is_passed,
+	      cs2.size_name,
+	      '' as shstatus,
+	      cs2.commodity_id as commodity_id
+			FROM tbl_wms_rejection_quality_inspection i
+			INNER JOIN tbl_wms_rejection_quality_inspection_detail de ON (i.id = de.rejection_id)
+			INNER JOIN tbl_order_sub s ON (s.express_order_id = i.express_code)
+			INNER JOIN tbl_order_consignee_info c ON (s.consignee_id = c.id)
+			INNER JOIN tbl_order_sub_expand e1 ON (s.id = e1.order_sub_id)
+	    INNER JOIN tbl_commodity_product cs2 ON (de.commodity_code = cs2.product_no)
+			WHERE e1.merchant_code = #{merchantCode,jdbcType=VARCHAR} and de.order_sub_no=#{orderNo,jdbcType=VARCHAR} 
+		order by qa_date
+	</select>
+</mapper>

@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>优购-商家中心-官方活动报名</title>
+    <link rel="stylesheet" type="text/css" href="css/base.css" />
+    <link rel="stylesheet" type="text/css" href="css/mold.css" />
+</head>
+
+<body>
+    <script type="text/javascript" src="js/bootstrap.js"></script>
+    <!--#include file="layout/header.shtml" -->
+    <div id="newcontent" class="wrap clearfix mt10">
+        <!--#include file="layout/sidebar.shtml" -->
+        <div id="newmain" class="main_bd fr">
+            <div class="main_container">
+                <div class="normal_box">
+                    <p class="title site">当前位置：商家中心 &gt; 营销中心 &gt; 官方活动报名</p>
+                    <div class="tab_panel">
+                        <ul class="tab">
+                            <li onclick="location.href='registrationList.shtml'" class="curr"><span>可参与报名</span></li>
+                            <li onclick="location.href='myRegistration.shtml'"><span>我的报名</span></li>
+                        </ul>
+                        <div class="tab_content">
+                            <!--搜索start-->
+                            <div class="search_box">
+                                <form action="#" id="queryVoform" name="queryVoform" method="post">
+                                    <p>
+                                        <span>
+                                            <label style="width:110px;">活动名称：</label>
+                                            <input type="text" name="orderSubNo" id="orderSubNo" class="inputtxt" value="" />
+                                        </span>
+                                        <span>
+                                            <label style="width:110px;">报名开始时间：</label>
+                                            <select style="width:130px;">
+                                                <option value="">请选择</option>
+                                                <option value="" selected>60天内</option>
+                                            </select>
+                                        </span>
+                                        <span>
+                                            <label style="width:110px;">活动类型：</label>
+                                            <select style="width:130px;">
+                                                <option value="">请选择</option>
+                                                <option value="">满减</option>
+                                                <option value="">活动优惠</option>
+                                            </select>
+                                        </span>
+                                        <span>
+                                            <a class="button" id="mySubmit" onclick="mysubmit()"><span>搜索</span></a>
+                                        </span>
+                                    </p>
+                                </form>
+                            </div>
+                            <!--搜索end-->
+                            <!--列表start-->
+                            <table class="list_table">
+                                <thead>
+                                    <tr>
+                                        <th>活动名称</th>
+                                        <th>活动类型</th>
+                                        <th>报名时间</th>
+                                        <th>活动时间</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><a href="#">625年中大促女鞋会场</a></td>
+                                        <td>满减</td>
+                                        <td>15年06月01日 - 15年06月5日</td>
+                                        <td>15年06月25日 - 15年06月26日</td>
+                                        <td><a href="">立即报名</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="#">女鞋99元任选2件</a></td>
+                                        <td>组合优惠</td>
+                                        <td>15年06月15日 - 15年06月20日 </td>
+                                        <td>15年07月02日 - 15年07月08日</td>
+                                        <td><a href="">立即报名</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="#">双十一年终大促女鞋会场</a></td>
+                                        <td>满减</td>
+                                        <td>15年10月5日 - 15年10月15日 </td>
+                                        <td>15年11月11日 - 15年11月11日</td>
+                                        <td><a href="">立即报名</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <!--列表end-->
+                            <div class="gray-box">
+                                <div class="fr">总记录行数：<span class="cred">3</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--#include file="layout/footer.shtml" -->
+    <script>
+    // $.dialog.open('basic_info.shtml',{title:'提醒'});
+    $(function() {
+        $('.flag').click(function() {
+            var $this = $(this);
+            ygdg.dialog({
+                title: "添加备注信息",
+                content: '<dl class="flagForm_dl clearfix"><dt class="label">标记：</dt><dd class="pt3"><input type="radio" id="mark1" class="flagradio" name="mark" value="flag_red" /><label class="flaglabel flag flag_red" for="mark1"></label><input type="radio" id="mark2" class="flagradio" name="mark" value="flag_yellow" /><label class="flaglabel flag flag_yellow" for="mark2"></label><input type="radio" id="mark3" class="flagradio" name="mark" value="flag_green" /><label class="flaglabel flag flag_green" for="mark3"></label><input type="radio" id="mark4" class="flagradio" name="mark" value="flag_blue"/><label class="flaglabel flag flag_blue" for="mark4"></label><input type="radio" id="mark5" class="flagradio" name="mark" value="flag_purple"/><label class="flaglabel flag flag_purple" for="mark5"></label></dd></dl><dl class="flagForm_dl clearfix"><dt class="label">内容：</dt><dd><textarea class="flag_textarea"></textarea></dd></dl>',
+                max: false,
+                min: false,
+                width: '420px',
+                height: '205px',
+                lock: true,
+                ok: function() {
+                    var radio_val = $('input[name="mark"]:checked').val();
+                    if (radio_val) {
+                        $this.attr('class', "flag " + radio_val);
+                    }
+                }
+            });
+        }).hover(function() {
+            var flag_class = $(this).attr('class');
+            if (flag_class.length != 4) {
+                $(this).siblings('.flag_tip').removeClass('hide');
+            }
+        }, function() {
+            $(this).siblings('.flag_tip').addClass('hide');
+        })
+    });
+    </script>
+</body>
+
+</html>

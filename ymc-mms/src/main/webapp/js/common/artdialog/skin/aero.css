@@ -1,0 +1,49 @@
+/* artDialog aero.css*/
+a {outline: none;}
+a:active {star:expression(this.onFocus=this.blur());}
+:focus { outline:0; }
+.aui_aero .aui_td_title, .aui_aero .aui_td_buttons input{font-size:12px;}
+.aui_aero .aui_content_table { min-width:9em; background:#FFF; }
+.aui_aero .aui_title_wrap { width:100%; height:30px; position:absolute; top:3px; left:0; _left:auto; }
+.aui_aero .aui_title { height:29px; line-height:29px; padding:0 30px 0 25px; _padding:0 0 0 15px;  color:#666; font-weight:bold;}
+.aui_aero .aui_loading_tip { width:16px; height:16px; margin:-8px 0 0 -8px; text-indent:-9999em; background:url(aero/loading.gif) no-repeat center center; }
+.aui_aero .aui_left_top, .aui_aero .aui_right_top, .aui_aero .aui_left_bottom, .aui_aero .aui_right_bottom, .aui_aero .aui_top, .aui_aero .aui_bottom, .aui_aero .aui_title_icon, .aui_aero .aui_close { background-image:url(aero/aero_s.png); background-repeat:no-repeat; }
+.aui_aero .aui_left_top { width:14px; height:34px; background-position: 0 0; _ie6png:aero/ie6/aui_left_top.png; }
+.aui_aero .aui_right_top { width:14px; height:34px; background-position: -14px 0; _ie6png:aero/ie6/aui_right_top.png; }
+.aui_aero .aui_left_bottom { width:14px; height:14px; background-position: 0 -34px; _ie6png:aero/ie6/aui_left_bottom.png; }
+.aui_aero .aui_right_bottom { width:14px; height:14px; background-position: -14px -34px; _ie6png:aero/ie6/aui_right_bottom.png; }
+.aui_aero .aui_title_icon { width:11px; height:11px; position:absolute; left:10px; _left:0px; top:9px; background-position:0 -109px; _ie6png:aero/ie6/aui_title_icon.png; }
+.aui_aero .aui_close { top:7px; right:12px; _right:0; _z-index:1; width:13px; height:13px; background-position:left -96px; _font-size:0; _line-height:0; text-indent:-9999em; _ie6png:aero/ie6/aui_close.png; }
+.aui_aero .aui_close:hover { background-position:right -96px; _ie6png:aero/ie6/aui_close.hover.png; }
+.aui_aero .aui_top, .aui_aero .aui_bottom { background-repeat:repeat-x; }
+.aui_aero .aui_top { background-position: 0 -48px; _ie6png:aero/ie6/aui_top.png; }
+.aui_aero .aui_bottom { background-position: 0 -82px; _ie6png:aero/ie6/aui_bottom.png; }
+.aui_aero .aui_left, .aui_aero .aui_right { background-image:url(aero/aero_s2.png); background-repeat:repeat-y; }
+.aui_aero .aui_left { background-position:left top; _ie6png:aero/ie6/aui_left.png; }
+.aui_aero .aui_right { background-position: right bottom; _ie6png:aero/ie6/aui_right.png; }
+.aui_aero .aui_buttons_wrap { background-color:#F6F6F6; -moz-border-radius:5px; -webkit-border-radius: 5px; border-radius:5px; }
+.aui_aero .aui_buttons_wrap span, .aui_aero .aui_buttons_wrap input { background-color:transparent; background-image:url(aero/btns.png); background-repeat:no-repeat; border:none; min-width:35px; height:25px; line-height:25px; padding-right:5px; }
+.aui_aero .aui_buttons_wrap span { padding:0 0 0 6px; overflow:hidden; background-position:left -187px; }
+/*.aui_aero .aui_buttons_wrap span:hover { background-position:left -217px; }*/
+.aui_aero .aui_buttons_wrap input { height:24px; line-height:24px; padding:0 12px 0 6px; max-width:200px; border:none 0; }
+.aui_aero .aui_buttons_wrap span input { color:#666; background-position:right -63px; }
+.aui_aero .aui_buttons_wrap span:hover button { background-position:right -93px; }
+.aui_aero .aui_buttons_wrap .aui_yes { background-position:left -124px; }
+/*.aui_aero .aui_buttons_wrap .aui_yes:hover { background-position:left -155px; }*/
+.aui_aero .aui_buttons_wrap .aui_yes input { color:#f0f0f0; background-position:right 0; border:none; }
+*.aui_aero .aui_buttons_wrap .aui_yes:hover input { background-position:right -30px; }
+html:hover .aui_aero .aui_buttons_wrap button:focus { outline:none 0; }
+
+.aui_aero .aui_icon { width:48px; height:48px; margin:10px 0 10px 10px; background-image:url(aero/icons.png); background-repeat:no-repeat; }
+.aui_aero .art_alert { background-position:0 -96px; }
+.aui_aero .art_succeed { background-position:0 0;}
+.aui_aero .art_error { background-position:0 -48px; }
+.aui_aero .art_confirm { background-position:0 -144px; }
+
+
+.r0d0, .r0d2, .r2d0, .r2d2, .r0d1, .r2d1, .ui_resize { background-image:url(aero/aero_s.png); background-repeat:no-repeat;}
+.r0d0 { width:14px; height:34px; background-position: 0 0; }
+.r0d2 { width:14px; height:34px; background-position: -14px 0; }
+.r2d0 { width:14px; height:14px; background-position: 0 -34px; }
+.r2d2 { width:14px; height:14px; background-position: -14px -34px; }
+.ui_resize { width:12px; height:12px; background-position:right bottom; position:absolute;right:15px;bottom:15px;_right:8px;_bottom:8px;z-index:1;cursor:nw-resize;_font-size:0;_ie6png:aero/ie6/aui_resize.png;}

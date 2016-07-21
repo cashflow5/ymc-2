@@ -1,0 +1,3 @@
+$(function(){
+    loadPropFun($("#catId").val());
+});

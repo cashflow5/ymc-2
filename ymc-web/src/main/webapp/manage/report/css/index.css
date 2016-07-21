@@ -1,0 +1,287 @@
+/*背景色btn颜色*/
+/*字体颜色登陆会员显示信息*/
+/*字体颜色 Blue*/
+/*detail颜色*/
+/*左侧菜单背景色*/
+/*导航条选中的颜色*/
+/*边框颜色*/
+/*灰色字体颜色*/
+/*字体颜色*/
+/*背景颜色*/
+/*淡灰色背景*/
+.realtime-indicators {
+  padding: 0 12px 18px 12px;
+  *zoom: 1;
+}
+.realtime-indicators:before,
+.realtime-indicators:after {
+  content: "\20";
+  display: table;
+  line-height: 0;
+}
+.realtime-indicators:after {
+  clear: both;
+}
+.realtime-indicators .tags li {
+  display: block;
+  float: left;
+  width: 380px;
+  height: 150px;
+  margin-right: 10px;
+}
+.realtime-indicators .tags li.last {
+  margin-right: 0;
+}
+.realtime-indicators .tags .hd {
+  height: 110px;
+  background: url("../images/tags-bg.png") 0 0 no-repeat;
+  text-align: center;
+  color: #ffffff;
+}
+.realtime-indicators .tags .hd.blue2 {
+  background-position: 0 -115px;
+}
+.realtime-indicators .tags .hd.blue3 {
+  background-position: 0 -230px;
+}
+.realtime-indicators .tags .hd h1,
+.realtime-indicators .tags .hd h3 {
+  font-family: "microsoft yahei";
+}
+.realtime-indicators .tags .hd h1 {
+  font-size: 28px;
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+.realtime-indicators .tags .hd h3 {
+  padding-top: 16px;
+  font-size: 16px;
+}
+.realtime-indicators .tags .hd h3 i.iconfont {
+  font-size: 17px;
+  margin-left: 10px;
+  cursor: pointer;
+  font-weight: normal;
+}
+.realtime-indicators .tags .bd {
+  line-height: 12px;
+  padding: 14px 10px 13px 10px;
+  text-align: center;
+  border: 1px solid #f0f0f0;
+  border-top: 0;
+}
+.nav-default .nav-title {
+  padding-top: 15px;
+  font-size: 16px;
+  font-family: "microsoft yahei";
+}
+.nav-default .nav-title .iconfont {
+  font-size: 14px;
+  margin-left: 5px;
+}
+.nav-default .nav-info {
+  padding-top: 10px;
+  font-size: 18px;
+  color: #0b80ed;
+  font-weight: bold;
+}
+.filter-box {
+  *zoom: 1;
+  padding-top: 15px;
+  position: relative;
+  z-index: 2;
+}
+.filter-box:before,
+.filter-box:after {
+  content: "\20";
+  display: table;
+  line-height: 0;
+}
+.filter-box:after {
+  clear: both;
+}
+.filter-box .filter-data {
+  margin-right: 10px;
+  text-align: right;
+  height: 20px;
+  line-height: 20px;
+  font-weight: bold;
+  font-size: 14px;
+  color: #808080;
+}
+.filter-box .filter-data span {
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  padding: 0 5px;
+}
+.filter-box .filter-select {
+  *zoom: 1;
+  position: absolute;
+  bottom: -30px;
+  left: 27px;
+  z-index: 999999;
+}
+.filter-box .filter-select:before,
+.filter-box .filter-select:after {
+  content: "\20";
+  display: table;
+  line-height: 0;
+}
+.filter-box .filter-select:after {
+  clear: both;
+}
+.item-container {
+  height: 400px;
+  width: 100%;
+  visibility: visible;
+}
+.yg-senior {
+  margin: 0 25px 0 15px;
+  cursor: pointer;
+}
+.yg-query {
+  background: #f5f5f5;
+  margin: 0 auto;
+  width: 1120px;
+  padding: 5px 10px;
+  border-bottom: 1px solid #f0f0f0;
+  display: none;
+}
+.yg-query ul.query-list {
+  *zoom: 1;
+}
+.yg-query ul.query-list:before,
+.yg-query ul.query-list:after {
+  content: "\20";
+  display: table;
+  line-height: 0;
+}
+.yg-query ul.query-list:after {
+  clear: both;
+}
+.yg-query ul.query-list li.query-item {
+  float: left;
+  height: 26px;
+  line-height: 26px;
+  *line-height: none;
+  padding: 10px 0;
+  *zoom: 1;
+}
+.yg-query ul.query-list li.query-item:before,
+.yg-query ul.query-list li.query-item:after {
+  content: "\20";
+  display: table;
+  line-height: 0;
+}
+.yg-query ul.query-list li.query-item:after {
+  clear: both;
+}
+.yg-query ul.query-list li.query-item.pd9 {
+  *padding-top: 8px;
+  *padding-bottom: 12px;
+}
+.yg-query ul.query-list li.query-item label.title {
+  text-align: right;
+  padding: 0 5px 0 15px;
+  display: inline-block;
+  *display: inline;
+  *float: left;
+  *zoom: 1;
+  *padding: 0 5px 0 14px;
+}
+.yg-query ul.query-list li.query-item .yg-dropdown {
+  *display: inline;
+  *float: left;
+}
+.yg-query ul.query-list li.query-item .btn-default {
+  padding: 5px 10px;
+}
+.yg-query ul.query-list input.number {
+  width: 35px;
+  margin-left: 5px;
+}
+.quota-box {
+  width: 630px;
+  border: 1px solid #ccc;
+  position: absolute;
+  top: 40px;
+  right: 0;
+  z-index: 999;
+  padding: 10px;
+  background-color: #ffffff;
+}
+.quota-box h1.quota-title {
+  font-size: 12px;
+  font-weight: bold;
+}
+.quota-box h1.quota-title span.normal {
+  font-weight: normal;
+  font-size: 12px;
+  padding-left: 5px;
+}
+.quota-box input[type="checkbox"] {
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+}
+.quota-box label {
+  margin-left: 5px;
+  *margin-left: 0;
+  font-weight: normal;
+  cursor: pointer;
+}
+.quota-box .quota-all {
+  padding: 10px 0 5px 0;
+}
+.quota-box ul.quota-list {
+  *zoom: 1;
+}
+.quota-box ul.quota-list:before,
+.quota-box ul.quota-list:after {
+  content: "\20";
+  display: table;
+  line-height: 0;
+}
+.quota-box ul.quota-list:after {
+  clear: both;
+}
+.quota-box ul.quota-list li {
+  width: 105px;
+  float: left;
+  padding: 5px 0;
+}
+.quota-box ul.quota-list li.w105 {
+  width: 105px;
+}
+.quota-box .quota-drop-box {
+  height: 26px;
+  line-height: 25px;
+  padding: 15px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+.quota-box .quota-drop-box .yg-dropdown {
+  margin: 0;
+}
+.quota-box .quota-btn-box {
+  *zoom: 1;
+  text-align: right;
+  margin: 10px 0;
+  height: 26px;
+  line-height: 26px;
+}
+.quota-box .quota-btn-box:before,
+.quota-box .quota-btn-box:after {
+  content: "\20";
+  display: table;
+  line-height: 0;
+}
+.quota-box .quota-btn-box:after {
+  clear: both;
+}
+.quota-box .quota-btn-box .checked-item {
+  float: left;
+}
+.yg-page {
+  padding: 0 30px;
+}

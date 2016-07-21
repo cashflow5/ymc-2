@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Review id="2015-06-18 CodeReview">
+  <ReviewIssue id="IB1RGZCN">
+    <ReviewIssueMeta>
+      <CreationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-18 :: 13:42:47:543 CST</CreationDate>
+      <LastModificationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-18 :: 13:59:14:407 CST</LastModificationDate>
+    </ReviewIssueMeta>
+    <ReviewerId>li.j1</ReviewerId>
+    <AssignedTo>li.j1</AssignedTo>
+    <File line="1023">src/main/java/com/yougou/kaidian/order/web/OrderController.java</File>
+    <Type>item.label.unset</Type>
+    <Severity>item.label.unset</Severity>
+    <Summary>map参数既是入参，又是返回值</Summary>
+    <Description>涉及getPrintNewModel，getDocumentPrintingModelMap方法。</Description>
+    <Annotation></Annotation>
+    <Revision></Revision>
+    <Resolution>item.label.unset</Resolution>
+    <Status>item.status.label.open</Status>
+  </ReviewIssue>
+  <ReviewIssue id="IB1S4HVV">
+    <ReviewIssueMeta>
+      <CreationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-18 :: 14:01:04:651 CST</CreationDate>
+      <LastModificationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-18 :: 14:49:10:428 CST</LastModificationDate>
+    </ReviewIssueMeta>
+    <ReviewerId>li.j1</ReviewerId>
+    <AssignedTo>li.j1</AssignedTo>
+    <File line="1397">src/main/java/com/yougou/kaidian/order/web/OrderController.java</File>
+    <Type>item.type.label.usability</Type>
+    <Severity>item.severity.label.major</Severity>
+    <Summary>不应该抛出异常，会造成页面跳转到error页面</Summary>
+    <Description>不应该抛出异常，会造成页面跳转到error页面</Description>
+    <Annotation></Annotation>
+    <Revision></Revision>
+    <Resolution>item.label.unset</Resolution>
+    <Status>item.status.label.open</Status>
+  </ReviewIssue>
+  <ReviewIssue id="IB1S5YJX">
+    <ReviewIssueMeta>
+      <CreationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-18 :: 14:02:12:909 CST</CreationDate>
+      <LastModificationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-18 :: 14:02:26:878 CST</LastModificationDate>
+    </ReviewIssueMeta>
+    <ReviewerId>li.j1</ReviewerId>
+    <AssignedTo>li.j1</AssignedTo>
+    <File line="1416">src/main/java/com/yougou/kaidian/order/web/OrderController.java</File>
+    <Type>item.label.unset</Type>
+    <Severity>item.label.unset</Severity>
+    <Summary>建议使用工具类</Summary>
+    <Description>建议使用工具类</Description>
+    <Annotation></Annotation>
+    <Revision></Revision>
+    <Resolution>item.label.unset</Resolution>
+    <Status>item.status.label.open</Status>
+  </ReviewIssue>
+  <ReviewIssue id="IB1T4JS6">
+    <ReviewIssueMeta>
+      <CreationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-18 :: 14:29:06:726 CST</CreationDate>
+      <LastModificationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-18 :: 14:48:57:708 CST</LastModificationDate>
+    </ReviewIssueMeta>
+    <ReviewerId>li.j1</ReviewerId>
+    <AssignedTo>li.j1</AssignedTo>
+    <File line="1592">src/main/java/com/yougou/kaidian/order/web/OrderController.java</File>
+    <Type>item.type.label.codingStandards</Type>
+    <Severity>item.severity.label.critical</Severity>
+    <Summary>orderSub可能为null</Summary>
+    <Description>orderSub可能为null，存在空指针异常风险</Description>
+    <Annotation></Annotation>
+    <Revision></Revision>
+    <Resolution>item.label.unset</Resolution>
+    <Status>item.status.label.open</Status>
+  </ReviewIssue>
+  <ReviewIssue id="IB1TT3DY">
+    <ReviewIssueMeta>
+      <CreationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-18 :: 14:48:11:878 CST</CreationDate>
+      <LastModificationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-18 :: 14:48:48:438 CST</LastModificationDate>
+    </ReviewIssueMeta>
+    <ReviewerId>li.j1</ReviewerId>
+    <AssignedTo>li.j1</AssignedTo>
+    <File line="299">src/main/java/com/yougou/kaidian/order/web/OrderController.java</File>
+    <Type>item.type.label.codingStandards</Type>
+    <Severity>item.severity.label.critical</Severity>
+    <Summary>_commodity可能为null</Summary>
+    <Description>_commodity可能为null，此处出现空指针异常。</Description>
+    <Annotation></Annotation>
+    <Revision></Revision>
+    <Resolution>item.label.unset</Resolution>
+    <Status>item.status.label.open</Status>
+  </ReviewIssue>
+  <ReviewIssue id="IB1U4H0J">
+    <ReviewIssueMeta>
+      <CreationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-18 :: 14:57:02:755 CST</CreationDate>
+      <LastModificationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-18 :: 14:57:35:924 CST</LastModificationDate>
+    </ReviewIssueMeta>
+    <ReviewerId>li.j1</ReviewerId>
+    <AssignedTo>li.j1</AssignedTo>
+    <File line="385">src/main/java/com/yougou/kaidian/order/web/OrderController.java</File>
+    <Type>item.type.label.codingStandards</Type>
+    <Severity>item.severity.label.major</Severity>
+    <Summary>死代码，永远都不会执行到</Summary>
+    <Description>else {
+            vo.setRemark(ExceptionType.HOUSE_LACK.getName());
+        }
+死代码，永远都不会执行到</Description>
+    <Annotation></Annotation>
+    <Revision></Revision>
+    <Resolution>item.label.unset</Resolution>
+    <Status>item.status.label.open</Status>
+  </ReviewIssue>
+  <ReviewIssue id="IB1U67I4">
+    <ReviewIssueMeta>
+      <CreationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-18 :: 14:58:23:740 CST</CreationDate>
+      <LastModificationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-18 :: 14:59:17:656 CST</LastModificationDate>
+    </ReviewIssueMeta>
+    <ReviewerId>li.j1</ReviewerId>
+    <AssignedTo>li.j1</AssignedTo>
+    <File line="341">src/main/java/com/yougou/kaidian/order/web/OrderController.java</File>
+    <Type>item.type.label.codingStandards</Type>
+    <Severity>item.severity.label.minor</Severity>
+    <Summary>一行就可以搞定的，为什么分两行</Summary>
+    <Description>StringBuffer tempBuffer = null;
+tempBuffer = new StringBuffer();
+一行就可以搞定的，为什么分两行</Description>
+    <Annotation></Annotation>
+    <Revision></Revision>
+    <Resolution>item.label.unset</Resolution>
+    <Status>item.status.label.open</Status>
+  </ReviewIssue>
+  <ReviewIssue id="IB1UKPX8">
+    <ReviewIssueMeta>
+      <CreationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-18 :: 15:09:40:796 CST</CreationDate>
+      <LastModificationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-18 :: 15:10:08:660 CST</LastModificationDate>
+    </ReviewIssueMeta>
+    <ReviewerId>li.j1</ReviewerId>
+    <AssignedTo>li.j1</AssignedTo>
+    <File line="529">src/main/java/com/yougou/kaidian/order/web/OrderController.java</File>
+    <Type>item.type.label.codingStandards</Type>
+    <Severity>item.severity.label.major</Severity>
+    <Summary>productCommodity可能为null</Summary>
+    <Description>productCommodity可能为null，存在空指针异常风险</Description>
+    <Annotation></Annotation>
+    <Revision></Revision>
+    <Resolution>item.label.unset</Resolution>
+    <Status>item.status.label.open</Status>
+  </ReviewIssue>
+  <ReviewIssue id="IB1VAF69">
+    <ReviewIssueMeta>
+      <CreationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-18 :: 15:29:39:921 CST</CreationDate>
+      <LastModificationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-18 :: 15:29:56:284 CST</LastModificationDate>
+    </ReviewIssueMeta>
+    <ReviewerId>li.j1</ReviewerId>
+    <AssignedTo>li.j1</AssignedTo>
+    <File line="2961">src/main/java/com/yougou/kaidian/order/web/OrderController.java</File>
+    <Type>item.type.label.codingStandards</Type>
+    <Severity>item.severity.label.minor</Severity>
+    <Summary>无效代码</Summary>
+    <Description>无效代码</Description>
+    <Annotation></Annotation>
+    <Revision></Revision>
+    <Resolution>item.label.unset</Resolution>
+    <Status>item.status.label.open</Status>
+  </ReviewIssue>
+  <ReviewIssue id="IB1VKU24">
+    <ReviewIssueMeta>
+      <CreationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-18 :: 15:37:45:772 CST</CreationDate>
+      <LastModificationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-18 :: 15:38:26:394 CST</LastModificationDate>
+    </ReviewIssueMeta>
+    <ReviewerId>li.j1</ReviewerId>
+    <AssignedTo>li.j1</AssignedTo>
+    <File line="2520">src/main/java/com/yougou/kaidian/order/web/OrderController.java</File>
+    <Type>item.label.unset</Type>
+    <Severity>item.label.unset</Severity>
+    <Summary>logisticsName加个判断是否为null</Summary>
+    <Description>logisticsName加个判断是否为null</Description>
+    <Annotation></Annotation>
+    <Revision></Revision>
+    <Resolution>item.label.unset</Resolution>
+    <Status>item.status.label.open</Status>
+  </ReviewIssue>
+  <ReviewIssue id="IB1VPY9G">
+    <ReviewIssueMeta>
+      <CreationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-18 :: 15:41:44:500 CST</CreationDate>
+      <LastModificationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-18 :: 15:42:55:129 CST</LastModificationDate>
+    </ReviewIssueMeta>
+    <ReviewerId>li.j1</ReviewerId>
+    <AssignedTo>li.j1</AssignedTo>
+    <File line="2533">src/main/java/com/yougou/kaidian/order/web/OrderController.java</File>
+    <Type>item.type.label.usability</Type>
+    <Severity>item.severity.label.normal</Severity>
+    <Summary>校验不严谨，快递单号</Summary>
+    <Description>校验不严谨，快递单号</Description>
+    <Annotation></Annotation>
+    <Revision></Revision>
+    <Resolution>item.label.unset</Resolution>
+    <Status>item.status.label.open</Status>
+  </ReviewIssue>
+  <ReviewIssue id="IB1VTTVX">
+    <ReviewIssueMeta>
+      <CreationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-18 :: 15:44:45:453 CST</CreationDate>
+      <LastModificationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-18 :: 15:45:34:095 CST</LastModificationDate>
+    </ReviewIssueMeta>
+    <ReviewerId>li.j1</ReviewerId>
+    <AssignedTo>li.j1</AssignedTo>
+    <File line="2542">src/main/java/com/yougou/kaidian/order/web/OrderController.java</File>
+    <Type>item.type.label.codingStandards</Type>
+    <Severity>item.severity.label.normal</Severity>
+    <Summary>URL不应该这样写死在代码里面</Summary>
+    <Description>URL不应该这样写死在代码里面，写到常量类或者配置中</Description>
+    <Annotation></Annotation>
+    <Revision></Revision>
+    <Resolution>item.label.unset</Resolution>
+    <Status>item.status.label.open</Status>
+  </ReviewIssue>
+  <ReviewIssue id="IB1W2W7B">
+    <ReviewIssueMeta>
+      <CreationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-18 :: 15:51:48:359 CST</CreationDate>
+      <LastModificationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-18 :: 15:52:13:381 CST</LastModificationDate>
+    </ReviewIssueMeta>
+    <ReviewerId>li.j1</ReviewerId>
+    <AssignedTo>li.j1</AssignedTo>
+    <File line="2749">src/main/java/com/yougou/kaidian/order/web/OrderController.java</File>
+    <Type>item.label.unset</Type>
+    <Severity>item.label.unset</Severity>
+    <Summary>应该使用equals方法</Summary>
+    <Description>template.get("number").toString() != ""
+
+应该使用equals方法</Description>
+    <Annotation></Annotation>
+    <Revision></Revision>
+    <Resolution>item.label.unset</Resolution>
+    <Status>item.status.label.open</Status>
+  </ReviewIssue>
+  <ReviewIssue id="IB1WCNAY">
+    <ReviewIssueMeta>
+      <CreationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-18 :: 15:59:23:386 CST</CreationDate>
+      <LastModificationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-18 :: 15:59:41:088 CST</LastModificationDate>
+    </ReviewIssueMeta>
+    <ReviewerId>li.j1</ReviewerId>
+    <AssignedTo>li.j1</AssignedTo>
+    <File line="1769">src/main/java/com/yougou/kaidian/order/web/OrderController.java</File>
+    <Type>item.type.label.programLogic</Type>
+    <Severity>item.severity.label.major</Severity>
+    <Summary>不应该抛出异常</Summary>
+    <Description>不应该抛出异常</Description>
+    <Annotation></Annotation>
+    <Revision></Revision>
+    <Resolution>item.label.unset</Resolution>
+    <Status>item.status.label.open</Status>
+  </ReviewIssue>
+  <ReviewIssue id="IB2Z8RHY">
+    <ReviewIssueMeta>
+      <CreationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-19 :: 10:08:07:222 CST</CreationDate>
+      <LastModificationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-19 :: 10:08:30:544 CST</LastModificationDate>
+    </ReviewIssueMeta>
+    <ReviewerId>li.j1</ReviewerId>
+    <AssignedTo>li.j1</AssignedTo>
+    <File line="143">src/main/java/com/yougou/kaidian/order/web/FastDeliveryController.java</File>
+    <Type>item.type.label.codingStandards</Type>
+    <Severity>item.severity.label.normal</Severity>
+    <Summary>不应该抛出异常</Summary>
+    <Description>不应该抛出异常</Description>
+    <Annotation></Annotation>
+    <Revision></Revision>
+    <Resolution>item.label.unset</Resolution>
+    <Status>item.status.label.open</Status>
+  </ReviewIssue>
+  <ReviewIssue id="IB2ZAE04">
+    <ReviewIssueMeta>
+      <CreationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-19 :: 10:09:23:044 CST</CreationDate>
+      <LastModificationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-19 :: 10:09:48:152 CST</LastModificationDate>
+    </ReviewIssueMeta>
+    <ReviewerId>li.j1</ReviewerId>
+    <AssignedTo>li.j1</AssignedTo>
+    <File line="275">src/main/java/com/yougou/kaidian/order/web/FastDeliveryController.java</File>
+    <Type>item.type.label.codingStandards</Type>
+    <Severity>item.severity.label.normal</Severity>
+    <Summary>改用工具类</Summary>
+    <Description>改用工具类</Description>
+    <Annotation></Annotation>
+    <Revision></Revision>
+    <Resolution>item.label.unset</Resolution>
+    <Status>item.status.label.open</Status>
+  </ReviewIssue>
+</Review>

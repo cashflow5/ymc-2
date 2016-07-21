@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context" xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:p="http://www.springframework.org/schema/p" 
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/tx  http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+	http://www.springframework.org/schema/jee  http://www.springframework.org/schema/jee/spring-jee-3.0.xsd
+	http://www.springframework.org/schema/context  http://www.springframework.org/schema/context/spring-context-3.0.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd"
+	default-lazy-init="true">
+
+	<!-- 开启注解 -->
+	<context:annotation-config />
+
+	<!-- 使用annotation 自动注册bean -->
+	<context:component-scan base-package="com.yougou.kaidian">
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+
+	<!-- 定义受环境影响易变的变量 -->
+	<bean id="configBean" class="com.yougou.kaidian.image.util.CustomizedPropertyConfigurer">
+		<property name="ignoreResourceNotFound" value="true" />
+		<property name="locations">
+			<!-- 禁止调整加载顺序(注：系统以list最后一个有效的value元素为准) -->
+			<list>
+				<!-- 本地开发环境配置 -->
+				<value>classpath:config.properties</value>
+				<!-- 服务器生产环境配置 -->
+				<value>file:/etc/yougouconf/kd_image_config.properties</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+		<property name="maxActive" value="32"></property>
+		<property name="maxIdle" value="6"></property>
+		<property name="maxWait" value="1000"></property>
+		<property name="testOnBorrow" value="false"></property>
+	</bean>
+	
+	<!-- Jedis ConnectionFactory -->
+	<bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory" p:host-name="${redis.host}" p:port="${redis.port}">
+		<property name="poolConfig" ref="jedisPoolConfig"></property>
+	</bean>
+
+	<bean id="stringRedisSerializer" class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
+
+    <!-- redis template definition -->
+	<bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate" p:connection-factory-ref="jedisConnectionFactory">
+	    <property name="keySerializer" ref="stringRedisSerializer"/>
+	    <property name="hashKeySerializer" ref="stringRedisSerializer"/>
+	</bean>
+	
+	<!-- 提醒邮件发送方 -->
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host">
+			<value>smtp.163.com</value>
+		</property>
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.smtp.auth">true</prop>
+				<prop key="mail.smtp.timeout">25000</prop>
+			</props>
+		</property>
+		<property name="username">
+			<value>yougou_kaidian@163.com</value>
+		</property>
+		<property name="password">
+			<value>1q2w3e</value>
+		</property>
+	</bean>
+	
+	<!-- 读取本地一些常用配置和变量-->
+	<bean id="localConfig" class="com.yougou.kaidian.image.beans.LocalConfigBean">
+		<property name="receiveMailAddress">
+			<list>  
+		        <value>li.j1@yougou.com</value>   
+		        <value>luo.q@yougou.com</value>
+		        <value>zhang.f@yougou.com</value>
+		        <value>wu.y1@yougou.com</value>
+           </list>  
+		</property>
+	</bean>
+</beans>

@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context" 
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:p="http://www.springframework.org/schema/p" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc  
+	http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+	http://www.springframework.org/schema/tx  
+	http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+    http://www.springframework.org/schema/beans  
+    http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+    http://www.springframework.org/schema/context  
+    http://www.springframework.org/schema/context/spring-context-3.2.xsd
+    http://www.springframework.org/schema/aop  
+    http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+    http://www.springframework.org/schema/task 
+	http://www.springframework.org/schema/task/spring-task-3.2.xsd"
+	default-autowire="byName">
+
+	<!-- 自动搜索@Controller标注的类 -->
+<!-- 
+	<context:component-scan use-default-filters="false" base-package="com.yougou">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+-->
+	<context:component-scan base-package="com.yougou.kaidian" />
+	
+	<task:annotation-driven />
+	<!-- 开启自动切面代理 -->
+	<aop:aspectj-autoproxy />
+
+	<!-- 系统异常处理 -->
+	<bean class="com.yougou.kaidian.framework.exception.DefaultHandlerExceptionResolver" />
+	
+	<!-- 资源文件 -->
+	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basename" value="YougouMerchant" />
+	</bean>
+	
+	<bean id="commonInterceptor" class="com.yougou.kaidian.framework.interceptor.CommonInterceptor" />
+	
+	<bean id="ymcInterceptor" class="com.yougou.kaidian.framework.interceptor.YmcInterceptor" />
+	
+	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" >  
+        <property name="interceptors">  
+           <!-- 多个拦截器,顺序执行 -->  
+           <list>  
+              <ref bean="commonInterceptor"/>  
+              <ref bean="ymcInterceptor"/>  
+           </list>  
+        </property>  
+    </bean>
+    
+	<!-- Spring 注释类上注解处理者 -->
+	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" />
+
+	<!-- <bean id="jacksonMessageConverter" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+	   <property name="supportedMediaTypes">  
+	        <list>  
+	            <value>text/html;charset=UTF-8</value>
+	        </list> 
+        </property>
+	</bean>
+	
+	JSR-303 Validator
+	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
+	
+	<bean  class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<bean
+					class="org.springframework.http.converter.StringHttpMessageConverter">
+					<property name="supportedMediaTypes">
+						<list>
+							<value>text/plain;charset=UTF-8</value>
+						</list>
+					</property>
+					<property name="writeAcceptCharset" value="false"/>
+				</bean>
+			    <ref bean="jacksonMessageConverter" />
+			</list>
+		</property>
+
+		验证框架配置
+		<property name="webBindingInitializer">
+			<bean class="org.springframework.web.bind.support.ConfigurableWebBindingInitializer">
+				<property name="validator" ref="validator" />
+			</bean>
+		</property>
+	</bean> -->
+
+	<!-- Spring 注释类方法上注解处理者 -->
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+		    <!-- 将StringHttpMessageConverter的默认编码设为UTF-8 -->
+			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+			    <constructor-arg value="UTF-8" />
+				<property name="supportedMediaTypes">
+					<list>
+						<value>text/plain;charset=UTF-8</value>
+						<value>text/html;charset=UTF-8</value>
+					</list>
+				</property>
+			</bean>
+			</list>
+		</property>
+	</bean>
+
+	<!-- 配置对文件上传的支持 -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
+	
+	
+	<bean id="tilesViewResolver"
+		class="org.springframework.web.servlet.view.tiles3.TilesViewResolver"
+		p:order="1" />
+
+	<bean id="tilesConfigurer"
+		class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+		<property name="definitions">
+			<list>
+				<value>/WEB-INF/tiles.xml</value>
+			</list>
+		</property>
+		<property name="tilesInitializer" ref="myTilesInitializer"/>
+	</bean>
+	<bean id="myTilesInitializer"
+		class="com.yougou.kaidian.framework.util.YMCTilesInitializer">
+	</bean>
+
+	<!-- 模板配置 -->
+	<bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+		<property name="templateLoaderPath" value="/" />
+		<property name="defaultEncoding" value="UTF-8" />
+		<property name="freemarkerSettings">
+			<props>
+				<prop key="template_update_delay">0</prop>
+				<prop key="locale">zh_CN</prop>
+				<prop key="default_encoding">UTF-8</prop>
+			</props>
+		</property>
+		<!-- 全局变量部分 -->
+		<property name="freemarkerVariables">
+			<map>
+				<entry key="BasePath" value="${BasePath}" />
+			</map>
+		</property>
+	</bean>
+
+	<!-- 定义 FreeMaker Bean 包装器 -->
+	<bean id="freemarkerBeansWrapper" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="staticMethod">
+			<value>freemarker.ext.beans.BeansWrapper.getDefaultInstance</value>
+		</property>
+	</bean>
+	
+	<bean id="ftlviewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+		<property name="viewClass" value="org.springframework.web.servlet.view.freemarker.FreeMarkerView" />
+		<property name="contentType" value="text/html;charset=UTF-8" />
+		<property name="cache" value="true" />
+		<property name="prefix" value="" />
+		<property name="suffix" value=".ftl" />
+		<property name="attributesMap">
+			<map key-type="java.lang.String" value-type="freemarker.template.TemplateMethodModel">
+				<entry key="statics">
+					<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+						<property name="targetObject">
+							<ref local="freemarkerBeansWrapper"/>
+						</property>
+						<property name="targetMethod">
+							<value>getStaticModels</value>
+						</property>
+					</bean>
+				</entry>
+				<entry key="enums">
+					<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+						<property name="targetObject">
+							<ref local="freemarkerBeansWrapper"/>
+						</property>
+						<property name="targetMethod">
+							<value>getEnumModels</value>
+						</property>
+					</bean>
+				</entry>
+			</map>
+		</property>
+	</bean>
+</beans>

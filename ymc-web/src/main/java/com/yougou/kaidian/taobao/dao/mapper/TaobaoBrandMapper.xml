@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yougou.kaidian.taobao.dao.TaobaoBrandMapper">
+
+	<!-- 淘宝品牌属性表 -->
+	<resultMap id="taobaoBrand" type="com.yougou.kaidian.taobao.model.TaobaoBrand">
+		<result column="bid" property="bid" jdbcType="CHAR" />
+		<result column="vid" property="vid" jdbcType="BIGINT" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		
+		<result column="pid" property="pid" jdbcType="BIGINT" />
+		<result column="prop_name" property="propName" jdbcType="VARCHAR" />
+		<result column="operater" property="operater" jdbcType="VARCHAR" />
+		<result column="operated" property="operated" jdbcType="VARCHAR" />
+		
+		
+	</resultMap>
+
+    <!-- 批量插入淘宝品牌数据 -->
+    <insert id="insertTaobaoBrandList" parameterType="java.util.List">
+        insert into tbl_merchant_taobao_brand ( bid, vid, name, pid, prop_name, operater, operated )
+        values 
+        <foreach collection="list" item="item" index="index" separator=","> 
+          (
+             #{item.bid,jdbcType=CHAR},
+             #{item.vid,jdbcType=BIGINT},
+             #{item.name,jdbcType=VARCHAR},
+             #{item.pid,jdbcType=BIGINT},
+             #{item.propName,jdbcType=VARCHAR},
+             #{item.operater,jdbcType=VARCHAR},
+             #{item.operated,jdbcType=VARCHAR}
+          )
+        </foreach>
+    </insert>
+    
+    <!-- 根据淘宝pid、vid查询淘宝品牌 -->
+    <select id="getTaobaoBrandByPidVid" resultMap="taobaoBrand">
+    	SELECT bid, vid, name, pid, prop_name, operater, operated
+    	FROM tbl_merchant_taobao_brand
+    	WHERE pid = #{pid, jdbcType=BIGINT} AND vid = #{vid, jdbcType=BIGINT};
+    </select>
+
+    <!-- 查询全部淘宝品牌 -->
+    <select id="getTaobaoBrandPV" resultType="java.lang.String">
+    	SELECT CONCAT(pid, vid) FROM tbl_merchant_taobao_brand
+    </select>
+
+	<!-- 淘宝优购品牌绑定中间表 -->
+	<resultMap id="taobaoYougouBrand" type="com.yougou.kaidian.taobao.model.TaobaoYougouBrand">
+		<result column="id" property="id" jdbcType="CHAR" />
+		<result column="taobao_bid" property="taobaoBid" jdbcType="CHAR" />
+		<result column="yougou_brand_no" property="yougouBrandNo" jdbcType="VARCHAR" />
+		<result column="yougou_brand_name" property="yougouBrandName" jdbcType="VARCHAR" />
+		<result column="merchant_code" property="merchantCode" jdbcType="VARCHAR" />
+		<result column="operater" property="operater" jdbcType="VARCHAR" />
+		<result column="operated" property="operated" jdbcType="VARCHAR" />
+		<result column="taobao_brand_name" property="taobaoBrandName" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	
+	<sql id="condition4TaoBaoYougouBrand" >
+	    <if test="null!=params" >
+	      <if test="null!=params.id and ''!=params.id" >
+	       	 and b.id  =  #{params.id,jdbcType=VARCHAR}
+	      </if>
+	      <if test="null!=params.nickName and ''!=params.nickName" >
+	       	 and a.top_visitor_nick like '%${params.nickName}%'
+	      </if>
+	      <if test="null!=params.brandName and ''!=params.brandName" >
+	       	 and (tb.name like '%${params.brandName}%' or b.yougou_brand_name like '%${params.brandName}%')
+	      </if>
+	      <!-- 是否已经绑定  Y 已经绑定  N 没有绑定 -->
+	      <if test="null!=params.bindType and 'Y'.toString()==params.bindType" >
+	       	 and (b.yougou_brand_no is not null and b.yougou_brand_no != '')
+	      </if>
+	      <if test="null!=params.bindType and 'N'.toString()==params.bindType" >
+	       	 and (b.yougou_brand_no is  null or  b.yougou_brand_no = '')
+	      </if>
+	      <if test="null!=params.merchantCode and ''!=params.merchantCode" >
+	       	 and b.merchant_code = #{params.merchantCode,jdbcType=VARCHAR}
+	      </if>
+	      
+	      
+	    </if>
+	</sql>
+	
+    <!-- 批量插入优购类目绑定中间数据 -->
+    <insert id="insertTaobaoYougouBrandList" parameterType="java.util.List">
+        insert into tbl_merchant_taobao_yougou_brand ( id, taobao_bid, yougou_brand_no, nick_id, merchant_code, operater, operated )
+        values 
+        <foreach collection="list" item="item" index="index" separator=","> 
+          (
+             #{item.id,jdbcType=CHAR},
+             #{item.taobaoBid,jdbcType=CHAR},
+             #{item.yougouBrandNo,jdbcType=VARCHAR},
+             #{item.nickId,jdbcType=VARCHAR},
+             #{item.merchantCode,jdbcType=VARCHAR},
+             #{item.operater,jdbcType=VARCHAR},
+             #{item.operated,jdbcType=VARCHAR}
+          )
+        </foreach>
+    </insert>
+    
+    <!-- 插入优购类目绑定中间数据 -->
+    <insert id="insertTaobaoYougouBrand" parameterType="com.yougou.kaidian.taobao.model.TaobaoYougouBrand">
+        insert into tbl_merchant_taobao_yougou_brand ( id, taobao_bid, yougou_brand_no, yougou_brand_name,nick_id, merchant_code, operater, operated )
+        values 
+          (
+             #{id,jdbcType=CHAR},
+             #{taobaoBid,jdbcType=CHAR},
+             #{yougouBrandNo,jdbcType=VARCHAR},
+             #{yougouBrandName,jdbcType=VARCHAR},
+             #{nickId,jdbcType=VARCHAR},
+             #{merchantCode,jdbcType=VARCHAR},
+             #{operater,jdbcType=VARCHAR},
+             #{operated,jdbcType=VARCHAR}
+          )
+    </insert>
+    
+    <!-- 根据商家编码、淘宝品牌bid查询绑定品牌数据 -->
+    <select id="getTaobaoYougouBrandByBid" resultMap="taobaoYougouBrand">
+    	SELECT id, taobao_bid, yougou_brand_no, merchant_code, operater, operated
+    	FROM tbl_merchant_taobao_yougou_brand
+    	WHERE merchant_code = #{merchantCode, jdbcType=VARCHAR} AND nick_id = #{nickId, jdbcType=BIGINT} AND taobao_bid = #{bid, jdbcType=CHAR};
+    </select>
+    
+    <!--查询优购品牌列表 -->
+    <select id="selectTaobaoYougouBrandCount" resultType="java.lang.Integer">
+    	select count(1) from tbl_merchant_taobao_yougou_brand b inner join tbl_merchant_taobao_authinfo a
+    	on a.top_visitor_id = b.nick_id inner join tbl_merchant_taobao_brand tb on tb.bid = b.taobao_bid
+    	where 1=1
+    	<include refid="condition4TaoBaoYougouBrand" />
+    </select>
+    <select id="selectTaobaoYougouBrandList" resultMap="taobaoYougouBrand">
+    	select b.id,a.top_visitor_nick nickName,b.yougou_brand_name,tb.name taobaoBrandName,b.yougou_brand_no,b.operated
+    	from tbl_merchant_taobao_yougou_brand b inner join tbl_merchant_taobao_authinfo a
+    	on a.top_visitor_id = b.nick_id inner join tbl_merchant_taobao_brand tb on tb.bid = b.taobao_bid
+    	where 1=1
+    	<include refid="condition4TaoBaoYougouBrand" />
+    	order by b.operated desc 
+    </select>
+    
+    <!-- 批量绑定品牌 -->
+    <update id="updateTaobaoYougouBrand">
+	  	  update tbl_merchant_taobao_yougou_brand set yougou_brand_no =  #{yougouBrandNo,jdbcType=VARCHAR},
+	  	  yougou_brand_name = #{yougouBrandName,jdbcType=VARCHAR} where id =  #{id,jdbcType=CHAR} and 
+	  	  merchant_code = #{merchantCode,jdbcType=VARCHAR}
+    </update>
+    
+        <!-- 批量绑定品牌 -->
+    <update id="updateTaobaoYougouBrandByTaobaoBid">
+	  	  update tbl_merchant_taobao_yougou_brand set yougou_brand_no =  #{yougouBrandNo,jdbcType=VARCHAR},
+	  	  yougou_brand_name = #{yougouBrandName,jdbcType=VARCHAR} where taobao_bid =  #{taobaoBid,jdbcType=CHAR} and 
+	  	  merchant_code = #{merchantCode,jdbcType=VARCHAR}
+    </update>
+    
+    <!-- 根据商家编码、淘宝店铺主账号ID、淘宝pid、vid判定是否存在有优购绑定品牌 -->
+    <select id="getYougouBrandNoByTaobaoNickIdAndPidVid" resultType="java.lang.String">
+	    SELECT t2.yougou_brand_no
+		FROM tbl_merchant_taobao_brand t1 
+		INNER JOIN tbl_merchant_taobao_yougou_brand t2
+		ON t1.bid = t2.taobao_bid
+		WHERE t2.merchant_code = #{merchantCode,jdbcType=VARCHAR}
+			AND t2.nick_id = #{nickId,jdbcType=BIGINT}
+			AND t1.pid = #{pid,jdbcType=BIGINT}
+			AND t1.vid = #{vid,jdbcType=BIGINT}
+    </select>
+    
+    <!-- 根据vid查询品牌是否存在 -->
+	<select id="getBrandMapperByBid" resultMap="taobaoYougouBrand">
+		select
+		b.id,b.taobao_bid,b.taobao_brand_name,b.yougou_brand_no,b.yougou_brand_name,b.operater,b.operated
+		from tbl_merchant_taobao_yougou_brand_templet b where
+		b.taobao_bid=#{taobao_bid,jdbcType=VARCHAR}
+	</select>
+</mapper>

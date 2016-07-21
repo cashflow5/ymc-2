@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>优购-商家中心-关联版式设置</title>
+    <link rel="stylesheet" type="text/css" href="css/base.css" />
+    <link rel="stylesheet" type="text/css" href="css/mold.css" />
+</head>
+
+<body>
+    <script type="text/javascript" src="js/bootstrap.js"></script>
+    <!--#include file="layout/header.shtml" -->
+    <div id="newcontent" class="wrap clearfix mt10">
+        <!--#include file="layout/sidebar.shtml" -->
+        <div id="newmain" class="main_bd fr">
+            <div class="main_container">
+                <div class="normal_box">
+                    <p class="title site">当前位置：商家中心 &gt; 设置模块 &gt; 关联版式设置</p>
+                    <div class="box-contain">
+                        <div class="c-h-row">
+                            <label>选择版式：</label>
+                            <select name="" id="">
+                                <option value="1">自定义</option>
+                                <option value="0">固定模版</option>
+                            </select>
+                            <select style="margin-left:10px;">
+                                <option value="1">百丽女鞋</option>
+                                <option value="0">女包配件</option>
+                            </select>
+                            <div class="c-h-row-fl opbutton">
+                                <a class="button addTmp" onclick="javascript:;"><span>添加版式</span></a>
+                                <a class="button updateTmp" onclick="javascript:;"><span>修改版式</span></a>
+                                <a class="button" onclick="javascript:;"><span>删除版式</span></a></div>
+                            <div class="c-h-row-fl tpupdate" style="display:none;">
+                                <label class="ml10">选择版式：</label>
+                                <input type="text" class="inputtxt" />
+                                <a class="button tmpSave" onclick="javascript:;"><span>保存</span></a>
+                                <a class="button tmpCancel" onclick="javascript:;"><span>取消</span></a>
+                                <span class="ml10">最长8个汉字！</span>
+                            </div>
+                        </div>
+                        <div class="c-h-row">
+                            <label>选择商品：</label>
+                            <select id="goodsSelectType">
+                                <option value="1">全部商品</option>
+                                <option value="0">部分商品</option>
+                            </select>
+                            <div class="c-h-row-fl partgoods" style="display:none;">
+                                <input type="text" class="inputtxt ml10" style="width:188px;" placeholder="输入商品编码，用“，”隔开" />
+                                <a class="button" onclick="javascript:;"><span>浏览</span></a>
+                                <a class="ml10" href="javascript:;">下载csv模板</a>
+                            </div>
+                        </div>
+                        <div class="c-h-row f_gray">
+                            自定义版式：宽度为790px,高度不限,不允许有外链接图片
+                        </div>
+                        <div>
+                            <textarea id="customerTemplate" cols="30" rows="10"></textarea>
+                        </div>
+                        <div class="mt20 tc" style="line-height:25px; width:800px;">
+                            <a class="button" onclick="javascript:;" style="vertical-align: top;"><span>保存</span></a>
+                            <a class="ml10" href="javascript:;">点击预览</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--#include file="layout/footer.shtml" -->
+    <script type="text/javascript" src="js/zclip/jquery.zclip.min.js"></script>
+    <script type="text/javascript" src="js/kindeditor/kindeditor.min.js"></script>
+    <script type="text/javascript" src="js/yguib.js"></script>
+    <script>
+    $(function() {
+        KindEditor.ready(function(K) {
+            editor = K.create('#customerTemplate', {
+                width: '800px',
+                height: '410px',
+                resizeType: 0,
+                allowPreviewEmoticons: false,
+                allowImageUpload: false,
+                allowFlashUpload: false,
+                allowMediaUpload: false,
+                allowFileUpload: false,
+                newlineTag: 'br',
+                htmlTags: {
+                    font: ['color', 'size', 'face', '.background-color'],
+                    span: ['style'],
+                    div: ['class', 'align', 'style'],
+                    table: ['class', 'border', 'cellspacing', 'cellpadding', 'width', 'height', 'align', 'style'],
+                    'td,th': ['class', 'align', 'valign', 'width', 'height', 'colspan', 'rowspan', 'bgcolor', 'style'],
+                    a: ['class', 'href', 'target', 'name', 'style'],
+                    embed: ['src', 'width', 'height', 'type', 'loop', 'autostart', 'quality',
+                        'style', 'align', 'allowscriptaccess', '/'
+                    ],
+                    img: ['src', 'width', 'height', 'border', 'alt', 'title', 'align', 'style', '/', 'usemap'],
+                    hr: ['class', '/'],
+                    br: ['/'],
+                    'p,ol,ul,li,blockquote,h1,h2,h3,h4,h5,h6': ['align', 'style'],
+                    'tbody,tr,strong,b,sub,sup,em,i,u,strike': [],
+                    'map': ['id', 'name'],
+                    'area': ['alt', 'coords', 'href', 'nohref', 'shape', 'target']
+                },
+                items: [
+                    'source', '|',
+                    'undo', 'redo', '|',
+                    'preview', 'cut', 'copy', 'paste', 'plainpaste', 'wordpaste', '|',
+                    'justifyleft', 'justifycenter', 'justifyright', 'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript', 'superscript', 'clearhtml', 'selectall', '/',
+                    'formatblock', 'fontname', 'fontsize', '|',
+                    'forecolor', 'hilitecolor', 'bold', 'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|',
+                    'table', 'hr', 'anchor', 'link', 'unlink'
+                ]
+            });
+        });
+
+        $('.addTmp, .updateTmp').on('click', function() {
+            $('.tpupdate').show();
+            $('.opbutton').hide();
+        });
+        $('.tmpSave, .tmpCancel').on('click', function() {
+            $('.tpupdate').hide();
+            $('.opbutton').show();
+        });
+
+        $('#goodsSelectType').on('change', function() {
+            if ($(this).val() == 0) {
+                $('.partgoods').show();
+            } else {
+                $('.partgoods').hide();
+            }
+        });
+    })
+    </script>
+</body>
+
+</html>

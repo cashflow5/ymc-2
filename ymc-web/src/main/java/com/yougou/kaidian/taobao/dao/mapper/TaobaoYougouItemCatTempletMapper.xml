@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yougou.kaidian.taobao.dao.TaobaoYougouItemCatTempletMapper">
+    
+	<resultMap id="taobaoYougouItemCatTemplet" type="com.yougou.kaidian.taobao.model.TaobaoYougouItemCatTemplet">
+		<result column="id" property="id" jdbcType="CHAR" />
+		<result column="taobao_cid" property="taobaoCid" jdbcType="BIGINT" />
+		<result column="taobao_cat_full_name" property="taobaoCatFullName" jdbcType="VARCHAR" />
+		<result column="yougou_cat_no" property="yougouCatNo" jdbcType="VARCHAR" />
+		<result column="yougou_cat_struct" property="yougouCatStruct" jdbcType="VARCHAR" />
+		<result column="yougou_cat_full_name" property="yougouCatFullName" jdbcType="VARCHAR" />
+		<result column="operater" property="operater" jdbcType="VARCHAR" />
+		<result column="operated" property="operated" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="condition4TaoBaoYougouItemCatTemplet" >
+	    <if test="null!=params" >
+	      <if test="null!=params.id and ''!=params.id" >
+	       	 and b.id  =  #{params.id,jdbcType=VARCHAR}
+	      </if>
+	      <if test="null!=params.yougouCatNo and ''!=params.yougouCatNo" >
+	       	 and b.yougou_cat_no  =  #{params.yougouCatNo,jdbcType=VARCHAR}
+	      </if>
+	      <if test="null!=params.taobaoCid and ''!=params.taobaoCid" >
+	       	 and b.taobao_cid  =  #{params.taobaoCid,jdbcType=VARCHAR}
+	      </if>
+	    </if>
+	</sql>
+
+	<select id="selectTaobaoYougouItemCatTempletByCats" resultMap="taobaoYougouItemCatTemplet">
+		select * from tbl_merchant_taobao_yougou_itemcat_templet b
+		where yougou_cat_no in
+		<foreach collection="cats" open="(" close=")" separator="," item="cat">
+			  #{cat.no,jdbcType=VARCHAR}
+		</foreach>
+	 	<include refid="condition4TaoBaoYougouItemCatTemplet" />
+		order by operated desc
+	 	limit #{query.offset},#{query.pageSize} 
+	</select>
+	
+	<select id="selectTaobaoYougouItemCatTempletCountByCats" resultType="java.lang.Integer">
+		select count(1) from tbl_merchant_taobao_yougou_itemcat_templet b
+		where yougou_cat_no in
+		<foreach collection="cats" open="(" close=")" separator="," item="cat">
+			  #{cat.no,jdbcType=VARCHAR}
+		</foreach>
+		<include refid="condition4TaoBaoYougouItemCatTemplet" />
+	</select>
+	
+	<select id="selectTaobaoYougouItemCatTempletById" resultMap="taobaoYougouItemCatTemplet">
+		select * from tbl_merchant_taobao_yougou_itemcat_templet b
+		where b.id = #{id,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 淘宝分类 -->
+  	<resultMap id="taobaoItemCat" type="com.yougou.kaidian.taobao.model.TaobaoItemCat">
+		<result column="cid" property="cid" jdbcType="BIGINT" />
+		<result column="parent_cid" property="parentCid" jdbcType="BIGINT" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="is_parent" property="isParent" jdbcType="TINYINT" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="sort_order" property="sortOrder" jdbcType="SMALLINT" />
+		<result column="operater" property="operater" jdbcType="VARCHAR" />
+		<result column="operated" property="operated" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="condition4TaoBaoItemCat" >
+	    <if test="null!=params" >
+	      <if test="null!=params.parentCid and ''!=params.parentCid" >
+				and c.parent_cid  =  #{params.parentCid,jdbcType=VARCHAR}
+	      </if>
+	    </if>
+	</sql>
+	<!-- 查询淘宝分类 -->
+	<select id="selectTaobaoItemCatList" resultMap="taobaoItemCat">
+    	select c.cid,c.parent_cid,c.name,c.is_parent from tbl_merchant_taobao_itemcat c
+    	where 1=1 
+    	<include refid="condition4TaoBaoItemCat" />
+    	order by c.sort_order desc
+    </select>
+    
+    
+    
+    <sql id="condition4TaobaoYougouItemCatPropTemplet" >
+	    <if test="null!=params" >
+	      <if test="null!=params.taobaoCid and ''!=params.taobaoCid" >
+				and t.taobao_cid = #{params.taobaoCid,jdbcType=VARCHAR}
+	      </if>
+	    </if>
+	</sql>
+    <!-- 优购淘宝分类属性 -->
+    <select id="selectTaobaoYougouItemCatPropTemplet" resultType="com.yougou.kaidian.taobao.model.TaobaoYougouItemPropTemplet">
+		select t.taobao_pid taobaoPid,p.name taobaoPName,t.yougou_prop_item_no yougouPropItemNo from tbl_merchant_taobao_yougou_item_prop_templet t
+		inner join tbl_merchant_taobao_item_prop p on p.pid = t.taobao_pid
+		where 1=1
+		<include refid="condition4TaobaoYougouItemCatPropTemplet" />
+	</select>
+	
+	<!-- 查询淘宝属性值模板 -->
+	<select id="selectTaobaoYougouItemCatPropValueTempletByTaobaoPid" resultType="com.yougou.kaidian.taobao.model.TaobaoYougouItemPropValueTemplet">
+		select t.yougou_prop_value_no yougouPropValueNo,p.name taobaoVName from tbl_merchant_taobao_yougou_item_prop_value_templet t
+		inner join tbl_merchant_taobao_item_prop_value p on p.vid = t.taobao_vid
+		where t.taobao_pid =  #{taobaoPid,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 属性数据模板copy -->
+	<insert id="copyItemPropTemplet2YougouItemPropByCid" >
+		INSERT tbl_merchant_taobao_yougou_item_prop (
+		id,
+		taobao_cid,
+		taobao_pid,
+		yougou_cat_no,
+		yougou_prop_item_no,
+		is_yougou_must,
+		nick_id,
+		merchant_code,
+		operater,
+		operated
+		) SELECT
+		md5(concat(uuid(), id)) AS id,
+		pt.taobao_cid,
+		pt.taobao_pid,
+		pt.yougou_cat_no,
+		pt.yougou_prop_item_no,
+		pt.is_yougou_must,#{nick_id,jdbcType=VARCHAR},#{merchant_code,jdbcType=VARCHAR},#{operater,jdbcType=VARCHAR},#{operated,jdbcType=VARCHAR}
+		FROM
+		tbl_merchant_taobao_yougou_item_prop_templet pt
+		WHERE
+		pt.taobao_cid = #{taobao_cid,jdbcType=VARCHAR}
+	</insert>
+
+	<select id="selectTaobaoYougouItemPropValueByCid" resultType="java.lang.Integer">
+		select count(1) from tbl_merchant_taobao_yougou_item_prop_value t
+		where t.taobao_cid = #{taobao_cid,jdbcType=VARCHAR} and
+		t.merchant_code=#{merchant_code,jdbcType=VARCHAR} and
+		t.nick_id=#{nick_id,jdbcType=VARCHAR}
+	</select>
+	
+	<insert id="copyItemPropValueTemplet2YougouItemPropValueByCid" >
+		INSERT tbl_merchant_taobao_yougou_item_prop_value (
+		id,
+		taobao_cid,
+		taobao_pid,
+		taobao_vid,
+		yougou_cat_no,
+		yougou_prop_item_no,
+		yougou_prop_value_no,
+		nick_id,
+		merchant_code,
+		operater,
+		operated
+		) SELECT
+		md5(concat(uuid(), id)) AS id,
+		pt.taobao_cid,
+		pt.taobao_pid,
+		pt.taobao_vid,
+		pt.yougou_cat_no,
+		pt.yougou_prop_item_no,
+		pt.yougou_prop_value_no,#{nick_id,jdbcType=VARCHAR},#{merchant_code,jdbcType=VARCHAR},#{operater,jdbcType=VARCHAR},#{operated,jdbcType=VARCHAR}
+		FROM
+		tbl_merchant_taobao_yougou_item_prop_value_templet pt
+		WHERE
+		pt.taobao_cid = #{taobao_cid,jdbcType=VARCHAR}
+	</insert>
+</mapper>

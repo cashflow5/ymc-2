@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.belle.yitiansystem.taobao.dao.mapper.TaobaoYougouBrandMapper">
+    
+	<!-- 淘宝品牌属性表 -->
+	<resultMap id="taobaoYougouBrand" type="com.belle.yitiansystem.taobao.model.TaobaoYougouBrand">
+		<result column="id" property="id" jdbcType="CHAR" />
+		<result column="taobao_bid" property="taobaoBid" jdbcType="CHAR" />
+		<result column="taobao_brand_name" property="taobaoBrandName" jdbcType="VARCHAR" />
+		<result column="yougou_brand_no" property="yougouBrandNo" jdbcType="VARCHAR" />
+		<result column="yougou_brand_name" property="yougouBrandName" jdbcType="VARCHAR" />
+		<result column="operater" property="operater" jdbcType="VARCHAR" />
+		<result column="operated" property="operated" jdbcType="VARCHAR" />
+		<result column="vid" property="vid" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="condition4TaoBaoYougouBrand" >
+	    <if test="null!=params" >
+	      <if test="null!=params.id and ''!=params.id" >
+	       	 and b.id  =  #{params.id,jdbcType=VARCHAR}
+	      </if>
+	      <if test="null!=params.taobaoBrandName and ''!=params.taobaoBrandName" >
+	       	 and b.taobao_brand_name like '%${params.taobaoBrandName}%' 
+	      </if>
+	       <if test="null!=params.yougouBrandName and ''!=params.yougouBrandName" >
+	       	 and b.yougou_brand_name like '%${params.yougouBrandName}%' 
+	      </if>
+	      <if test="null!=params.yougouBrandNo and ''!=params.yougouBrandNo" >
+	       	 and b.yougou_brand_no = #{params.yougouBrandNo,jdbcType=VARCHAR}
+	      </if>
+	      <if test="null!=params.vid and ''!=params.vid" >
+		       	 and tb.vid  =  #{params.vid,jdbcType=VARCHAR}
+		      </if>
+	    </if>
+	</sql>
+    <!-- 模糊查询淘宝品牌 -->
+    
+    <select id="selectTaobaoBrandList" resultType="com.belle.yitiansystem.taobao.model.TaobaoBrand">
+    	select bid,name from tbl_merchant_taobao_brand b where name like '%${taobaoBrandName}%'
+    	and NOT EXISTS(SELECT 1 FROM tbl_merchant_taobao_yougou_brand_templet t where t.taobao_bid = b.bid) 
+    </select>
+    
+    <!-- 查询集合 -->
+    <select id="selectTaoaoYougouBrandList" resultMap="taobaoYougouBrand">
+    	select b.*,tb.vid from tbl_merchant_taobao_yougou_brand_templet b left join tbl_merchant_taobao_brand tb 
+    	on b.taobao_bid = tb.bid where 1=1
+    	<include refid="condition4TaoBaoYougouBrand"/>
+    </select>
+    
+    <!-- 查询数量 -->
+    <select id="selectTaoaoYougouBrandCount" resultType="java.lang.Integer">
+    	select count(1) from tbl_merchant_taobao_yougou_brand_templet b left join tbl_merchant_taobao_brand tb 
+    	on b.taobao_bid = tb.bid where 1=1
+    	<include refid="condition4TaoBaoYougouBrand"/>
+    </select>
+
+	<!-- 批量插入 -->
+	<insert id="insertTaobaoYougouBrandBatch" parameterType="java.util.List">
+		insert tbl_merchant_taobao_yougou_brand_templet(id,taobao_bid,taobao_brand_name,yougou_brand_no,yougou_brand_name,operater,operated)
+		values
+		<foreach collection="list" item="brand" separator=",">
+		 	(#{brand.id,jdbcType=CHAR},
+			 #{brand.taobaoBid,jdbcType=CHAR},
+			 #{brand.taobaoBrandName,jdbcType=VARCHAR},
+			 #{brand.yougouBrandNo,jdbcType=VARCHAR},
+			 #{brand.yougouBrandName,jdbcType=VARCHAR},
+             #{brand.operater,jdbcType=VARCHAR},
+             #{brand.operated,jdbcType=VARCHAR})
+		</foreach>
+	</insert>
+	
+	<!-- 删除 -->
+	<delete id="deleteBatch" parameterType="java.util.List">
+		delete from tbl_merchant_taobao_yougou_brand_templet where id in
+		<foreach collection="list" item="id" open="(" close=")" separator=",">
+		 	 #{id,jdbcType=CHAR}
+		</foreach>
+	</delete>
+	
+	<!-- 根据ID查询对应信息单条记录 -->
+	
+	<select id="selectTYBById" resultMap="taobaoYougouBrand" parameterType="java.lang.String">
+		select  * from tbl_merchant_taobao_yougou_brand_templet
+		 where id = #{id}
+	</select>
+</mapper>

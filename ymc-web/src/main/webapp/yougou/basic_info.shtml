@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>优购-商家中心-基本信息</title>
+    <link rel="stylesheet" type="text/css" href="css/base.css" />
+    <link rel="stylesheet" type="text/css" href="css/mold.css" />
+    <link rel="stylesheet" type="text/css" href="css/merchans_center.css" />
+</head>
+
+<body>
+    <script type="text/javascript" src="js/bootstrap.js"></script>
+    <!--#include file="layout/header.shtml" -->
+    <div id="newcontent" class="wrap clearfix mt10">
+        <!--#include file="layout/sidebar.shtml" -->
+        <div id="newmain" class="main_bd fr">
+            <div class="main_container">
+                <div class="normal_box">
+                    <p class="title site">当前位置：商家中心 &gt; 设置 &gt; 基本信息</p>
+                    <div class="tab_panel relative">
+                        <ul class="tab">
+                            <li onclick="location.href='basic_info.shtml'" class="curr"><span>基本信息</span></li>
+                            <li onclick="location.href='shop_info.shtml'"><span>店铺信息</span></li>
+                            <li onclick="location.href='contracts_info.shtml'"><span>合同信息</span></li>
+                        </ul>
+                        <div class="tab_content">
+                            <div class="info-box">
+                                <h3>公司信息</h3>
+                                <ul class="info-list clearfix">
+                                    <li><span class="stitle">公司名称：</span>优购科技有限公司</li>
+                                    <li><span class="stitle">公司简称：</span>优购</li>
+                                    <li><span class="stitle">营业执照经营范围：</span>服装、鞋类、包包等</li>
+                                    <li><span class="stitle">营业执照注册号：</span>440301503395860</li>
+                                    <li><span class="stitle">注册所在地址：</span>广东深圳市</li>
+                                    <li><span class="stitle">营业执照有效期：</span>从 2014-02-21 至 2031-03-22(<span class="red">已过期，请立即更新</span>)
+                                    </li>
+                                    <li><span class="stitle">详细地址：</span>南山区南海大道1057号科技大厦二期A栋601房</li>
+                                    <li><span class="stitle">营业执照副本：</span>[<a href="javascript:;">查看</a>]</li>
+                                </ul>
+                            </div>
+                            <div class="info-box">
+                                <h3>组织机构代码证</h3>
+                                <ul class="info-list clearfix">
+                                    <li><span class="stitle">组织机构代码：</span>56851973-7</li>
+                                    <li><span class="stitle">组织机构代码证：</span>[<a href="javascript:;">查看</a>]</li>
+                                    <li><span class="stitle">组织机构代码证有效期：</span>从 2011-06-23 至 2015-06-22（<span class="yellow">即将过期，请及时更新</span>）</li>
+                                </ul>
+                            </div>
+                            <div class="info-box">
+                                <h3>税务登记证</h3>
+                                <ul class="info-list clearfix">
+                                    <li><span class="stitle">纳税人识别号：</span>440300568519737</li>
+                                    <li><span class="stitle">税务登记证：</span>[<a href="javascript:;">查看</a>]</li>
+                                    <li><span class="stitle">纳税人类型：</span>一般纳税人</li>
+                                    <li><span class="stitle">增值税专用发票：</span>是</li>
+                                    <li><span class="stitle">增值税税率：</span>7%</li>
+                                    <li><span class="stitle">一般纳税人资格证：</span>[<a href="javascript:;">查看</a>]</li>   
+                                </ul>
+                            </div>
+                            <div class="info-box">
+                                <h3>开户银行信息</h3>
+                                <ul class="info-list clearfix">
+                                    <li><span class="stitle">银行开户名：</span>优购科技有限公司</li>
+                                    <li><span class="stitle">开户行支行名称：</span>中国工商银行深圳市蛇口支行</li>
+                                    <li><span class="stitle">开户银行所在地：</span>广东深圳市</li>
+                                    <li><span class="stitle">银行开户许可证：</span>[<a href="javascript:;">查看</a>]</li>
+                                    <li><span class="stitle">银行账号：</span>4000024109200180788</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--#include file="layout/footer.shtml" -->
+</body>
+
+</html>

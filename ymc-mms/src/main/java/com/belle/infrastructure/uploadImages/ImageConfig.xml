@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<belle>
+	<description>图片配置文件</description>
+	<ImageConfig>	
+		<uploadLimit>1024</uploadLimit>
+		<watermarkImagePath>/upload/image/watermark.jpg</watermarkImagePath>
+		<watermarkPosition>bottomRight</watermarkPosition>
+		<watermarkAlpha>50</watermarkAlpha>
+		<bigProductImageWidth>500</bigProductImageWidth>
+		<bigProductImageHeight>500</bigProductImageHeight>
+		<smallProductImageWidth>300</smallProductImageWidth>
+		<smallProductImageHeight>300</smallProductImageHeight>
+		<thumbnailProductImageWidth>140</thumbnailProductImageWidth>
+		<thumbnailProductImageHeight>140</thumbnailProductImageHeight>
+		<defaultBigProductImagePath>/upload/image/default_big_product_image.jpg</defaultBigProductImagePath>
+		<defaultSmallProductImagePath>/upload/image/default_small_product_image.jpg</defaultSmallProductImagePath>
+		<defaultThumbnailProductImagePath>/upload/image/default_thumbnail_product_image.jpg</defaultThumbnailProductImagePath>
+		<allowedUploadImageExtension>jpg,jpge,bmp,gif,png</allowedUploadImageExtension>
+		<allowedUploadMediaExtension></allowedUploadMediaExtension>
+		<allowedUploadFileExtension></allowedUploadFileExtension>
+	</ImageConfig>
+</belle>

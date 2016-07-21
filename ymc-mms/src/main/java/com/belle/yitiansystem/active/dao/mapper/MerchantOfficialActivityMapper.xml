@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.belle.yitiansystem.active.dao.MerchantOfficialActivityMapper">
+	<!-- 查询官方商家活动列表 -->
+	<select id="queryMerchant" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+			select * from tbl_merchant_active_signup
+			where active_id=#{activeId}
+			<if test=" start != null and pageSize != null">
+			 limit #{start},#{pageSize}	
+			</if>
+	</select>
+	
+	<select id="queryMerchantCount" parameterType="int" resultType="java.util.HashMap">
+			select count(*) from tbl_merchant_active_signup
+			where active_id=#{activeId}
+	</select>
+	<!-- 查询官方商家活动列表 -->
+	<select id="queryCommodity" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		
+		select s.no,s.commodity_name,s.brand_name ,s.public_price ,s.sale_price  from tbl_merchant_active_commodity c ,tbl_commodity_style s ,
+			tbl_merchant_active_signup m  where active_id=#{activeId}   and 
+			    m.id=c.signup_id  and c.comodity_no=s.no
+		
+			<if test=" start != null and pageSize != null">
+			 limit #{start},#{pageSize}	
+			 
+			</if>
+	</select>
+	<select id="queryCommodityCount" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		
+		select count(*)  from tbl_merchant_active_commodity c ,tbl_commodity_style s ,
+			tbl_merchant_active_signup m  where active_id=#{activeId}   and 
+			    m.id=c.signup_id  and c.comodity_no=s.no
+	</select>
+</mapper>

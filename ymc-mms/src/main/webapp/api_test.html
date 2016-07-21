@@ -1,0 +1,236 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>优购网上鞋城 招商 API 测试页</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="refresh" content="0; url=apitools.sc" />
+<meta name="Generator" content="EditPlus">
+<meta name="Author" content="YougouMerchantTeam">
+<style type="text/css">
+.key_input {
+	width: 150px;
+}
+
+.val_input {
+	width: 300px;
+}
+
+.red_error {
+	border: 2px solid red;
+}
+</style>
+<script type="text/javascript">
+	function $(id) {
+		return document.getElementById(id);
+	}
+	function trim(str) {
+		return str.replace(/(^\s*|\s*$)/g, '');
+	}
+	function addParameter() {
+		var row = $('parameter_table').insertRow(-1);
+		row.insertCell(-1).innerHTML = '<input type="text" class="key_input"/>';
+		row.insertCell(-1).innerHTML = '<input type="text" class="val_input"/><input type="button" value="删除参数" onclick="delParameter(this)"/>';
+	}
+	function delParameter(button) {
+		$('parameter_table').deleteRow(button.parentNode.parentNode.rowIndex);
+	}
+	function resolveValue(component) {
+		var tagName = component.tagName.toUpperCase();
+		if (tagName == 'INPUT') {
+			return trim(component.value);
+		} else if (tagName == 'SELECT') {
+			return trim(component.options[component.selectedIndex].value);
+		} else if (tagName == 'TEXTAREA') {
+			return trim(component.value);
+		} else {
+			return null;
+		}
+	}
+	function submitTest() {
+		try {
+			var inputs = $('inputs');
+			var table = $('parameter_table');
+			inputs.innerHTML = '';
+			// validate input value and create component
+			for ( var i = 1; i < table.rows.length; i++) {
+				// do validate
+				for ( var j = table.rows[i].cells.length - 1; j >= 0; j--) {
+					var component = table.rows[i].cells[j].childNodes[0];
+					// add error class
+					if (resolveValue(component) == '') {
+						component.className += ' red_error';
+						return false;
+					}
+					// clear error class
+					while (component.className.indexOf('red_error') != -1) {
+						component.className = component.className.replace('red_error', '');
+					}
+				}
+				// do create
+				var input = document.createElement('input');
+				input.type = 'hidden';
+				input.name = resolveValue(table.rows[i].cells[0].childNodes[0]);
+				input.value = resolveValue(table.rows[i].cells[1].childNodes[0]);
+				inputs.appendChild(input);
+			}
+			// validate repeated value
+			for ( var i = 1; i < table.rows.length; i++) {
+				for ( var j = i + 1; j < table.rows.length; j++) {
+					if (resolveValue(table.rows[i].cells[0].childNodes[0]) == resolveValue(table.rows[j].cells[0].childNodes[0])) {
+						table.rows[i].cells[0].childNodes[0].className += ' red_error';
+						table.rows[j].cells[0].childNodes[0].className += ' red_error';
+						return false;
+					}
+				}
+			}
+			return true;
+		} catch (e) {
+			throw e;
+			return false;
+		}
+	}
+
+	function initTimestamp() {
+		var date = new Date();
+		var dateString = '';
+		dateString += date.getFullYear() + '-';
+		dateString += (date.getMonth() + 1) + '-';
+		dateString += date.getDate() + ' ';
+		dateString += date.getHours() + ':';
+		dateString += date.getMinutes() + ':';
+		dateString += date.getSeconds() + '';
+		$('timestamp').value = dateString;
+	}
+</script>
+</head>
+
+<body onload="javascript:window.setInterval('initTimestamp()', 1000);">
+	<h1>招商 API 测试页面</h1>
+	<font color="red">提示：参数名称不能重复，参数输入框中的值不能为空。</font>
+
+	<form id="parameter_form" method="post" action="do_api_test.sc"
+		onsubmit="return submitTest();"
+		style="border: 1px solid #ccc; width: 600px; margin: 20px 0 0 0; padding: 10px;">
+		<table id="parameter_table">
+			<thead>
+				<tr>
+					<td width="100">参数名称</td>
+					<td width="400">参数值</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><input type="text" value="method" class="key_input"
+						readonly="readonly" /></td>
+					<td><select class="val_input">
+							<optgroup label="库存API">
+								<option value="yougou.inventory.update" title="更新货品库存">yougou.inventory.update</option>
+								<option value="yougou.inventory.query" title="查询货品库存">yougou.inventory.query</option>
+							</optgroup>
+							<optgroup label="订单API">
+								<option value="yougou.order.query" title="查询订单列表">yougou.order.query</option>
+								<option value="yougou.order.get" title="查询订单明细">yougou.order.get</option>
+								<option value="yougou.order.canceled.query" title="查询客服取消订单">yougou.order.canceled.query</option>
+								<option value="yougou.order.stockout.update" title="更新订单状态为缺货">yougou.order.stockout.update</option>
+								<option value="yougou.order.completed.update" title="更新订单状态为已发货">yougou.order.completed.update</option>
+								<option value="yougou.order.nondelivery.update" title="更新订单状态为终止发货">yougou.order.nondelivery.update</option>
+								<option value="yougou.order.barcode.get" title="获取订单条形码">yougou.order.barcode.get</option>
+							</optgroup>
+							<optgroup label="商品API">
+								<option value="yougou.commodity.query" title="查询商品列表">yougou.commodity.query</option>
+								<option value="yougou.price.commodity.update" title="更新商品价格">yougou.price.commodity.update</option>
+								<option value="yougou.shelves.commodity" title="上架商品">yougou.shelves.commodity</option>
+							</optgroup>
+							<optgroup label="类目API">
+								<option value="yougou.brand.query" title="查询品牌列表">yougou.brand.query</option>
+								<option value="yougou.cat.query" title="查询分类列表">yougou.cat.query</option>
+							</optgroup>
+							<optgroup label="物流API">
+								<option value="yougou.logisticscompany.get" title="查询物流公司列表">yougou.logisticscompany.get</option>
+							</optgroup>
+					</select> <font color="red">*</font></td>
+				</tr>
+				<tr>
+					<td><input type="text" value="format" class="key_input"
+						readonly="readonly" /></td>
+					<td><select class="val_input">
+							<option value="xml">xml</option>
+							<option value="json">json</option>
+					</select> <font color="red">*</font></td>
+				</tr>
+				<tr>
+					<td><input type="text" value="timestamp" class="key_input"
+						readonly="readonly" /></td>
+					<td><input id="timestamp" type="text" class="val_input"
+						readonly="readonly" /> <font color="red">*</font></td>
+				</tr>
+				<tr>
+					<td><input type="text" value="app_key" class="key_input"
+						readonly="readonly" /></td>
+					<td><input type="text" class="val_input"
+						value="SP20110626359061" /> <font color="red">*</font></td>
+				</tr>
+				<tr>
+					<td><input type="text" value="app_secret" class="key_input"
+						readonly="readonly" /></td>
+					<td><input type="text" class="val_input" value="0F3H9R4j9jyh5d536KD2" />
+						<font color="red">*</font></td>
+				</tr>
+			</tbody>
+		</table>
+		<input type="button" value="新增参数" onclick="addParameter()" /> <input
+			type="submit" value="开始测试" /> <input type="button" value="查看示例"
+			onclick="javascript:$('user_case').style.display = 'block';" />
+		<div id="inputs"></div>
+	</form>
+
+	<div id="user_case"
+		style="border: 1px solid #ccc; width: 600px; margin: 20px 0 0 0; padding: 10px; display: none;">
+		<table align="center">
+			<thead>
+				<tr>
+					<td width="100">参数名称</td>
+					<td width="400">参数值</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><input type="text" value="method" readonly="readonly"
+						class="key_input" /></td>
+					<td><input type="text" value="yougou.inventory.query"
+						readonly="readonly" class="val_input" /></td>
+				</tr>
+				<tr>
+					<td><input type="text" value="format" readonly="readonly"
+						class="key_input" /></td>
+					<td><input type="text" value="xml" readonly="readonly"
+						class="val_input" /></td>
+				</tr>
+				<tr>
+					<td><input type="text" value="timestamp" readonly="readonly"
+						class="key_input" /></td>
+					<td><input type="text" value="2012-03-28 16:00:00"
+						readonly="readonly" class="val_input" /></td>
+				</tr>
+				<tr>
+					<td><input type="text" value="app_key" readonly="readonly"
+						class="key_input" /></td>
+					<td><input type="text" value="123456" readonly="readonly"
+						class="val_input" /></td>
+				</tr>
+				<tr>
+					<td><input type="text" value="app_secret" readonly="readonly"
+						class="key_input" /></td>
+					<td><input type="text" value="123456" readonly="readonly"
+						class="val_input" /></td>
+				</tr>
+				<tr>
+					<td colspan="2"><b>以上示例数据为“查询商家库存”API输入参数列表。</b> <a
+						href="javascript:$('user_case').style.display = 'none'; void(0);">关闭</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</body>
+</html>

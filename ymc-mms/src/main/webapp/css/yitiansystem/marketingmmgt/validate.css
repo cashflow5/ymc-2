@@ -1,0 +1,13 @@
+.fo_border{
+	border:1px solid #000000;
+ }
+.fo_border_need{
+	border:1px solid #00CC00;
+ }
+.fo_border_error{
+	border:2px dotted red;
+}
+
+.fo_border_success{
+	border:1px solid blue;
+}

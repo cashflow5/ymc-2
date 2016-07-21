@@ -1,0 +1,1025 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yougou.kaidian.order.dao.MerchantOrderMapper">
+
+	<resultMap id="notMerchantOrderMap" type="com.yougou.kaidian.order.model.NotMerchantOrderBean">
+		<result column="order_sub_id" property="orderSubID" jdbcType="VARCHAR" />
+		<result column="order_main_no" property="orderMainNo" jdbcType="VARCHAR" />
+		<result column="order_sub_no" property="orderSubNo" jdbcType="VARCHAR" />
+		<result column="consignee_id" property="consigneeID" jdbcType="VARCHAR" />
+		<result column="modity_date" property="modityDate" jdbcType="DATE" />
+	</resultMap>
+
+	<!-- 查询非商家订单 -->
+	<select id="queryNotMerchantOrderList" resultMap="notMerchantOrderMap">
+		SELECT
+			a.id AS order_sub_id,
+			a.order_sub_no AS order_sub_no,
+			a.consignee_id AS consignee_id,
+			a.order_main_no AS order_main_no
+		FROM
+			tbl_order_sub a
+		LEFT JOIN tbl_order_detail4sub b ON a.id = b.order_sub_id
+		AND b.merchant_code IS NOT NULL
+		AND b.merchant_code != ''
+		WHERE
+			b.id IS NULL
+		AND a.modity_date <![CDATA[<]]> subdate(now(), INTERVAL 7 DAY)
+	</select>
+	
+		<!-- 查询非商家订单 -->
+	<select id="queryNotMerchantOrderCount" resultType="int">
+		SELECT
+				count(1) AS count
+			FROM
+				tbl_order_sub a
+			LEFT JOIN tbl_order_detail4sub b ON a.id = b.order_sub_id
+			AND b.merchant_code IS NOT NULL
+			AND b.merchant_code != ''
+			WHERE
+				b.id IS NULL 
+	    AND a.modity_date <![CDATA[<]]> subdate(now(), INTERVAL 7 DAY)
+	</select>
+	
+	<!-- 1删除取消的货品信息 -->
+	<delete id="deleteOrderCancelGoods" parameterType="string">
+        DELETE i
+		FROM
+			tbl_order_cancel_goods_info i
+		LEFT JOIN tbl_order_detail4sub s ON i.order_detail14_sub_id = s.id
+		where s.order_sub_id=#{order_sub_id}
+	</delete>
+	
+		<!-- 2删除订单申请退款 -->
+	<delete id="deleteOrderApplyRefund" parameterType="string">
+		DELETE
+		FROM
+			tbl_order_apply_refund 
+		WHERE
+			order_no = #{order_sub_no};
+	</delete>
+	
+		<!-- 3删除订单收货人信息 -->
+	<delete id="deleteOrderConsignee" parameterType="string">
+		DELETE i
+		FROM
+			tbl_order_consignee_info i
+		WHERE
+			EXISTS (
+				SELECT
+					*
+				FROM
+					(
+						SELECT
+							count(1) AS count
+						FROM
+							tbl_order_sub s
+						WHERE
+							s.consignee_id = #{consignee_id}
+					) AS cc
+				WHERE
+					cc.count = 1
+			)
+		AND i.id = #{consignee_id}
+	</delete>
+	
+		<!-- 4删除订单详细 -->
+	<delete id="deleteOrderDetail4sub" parameterType="string">
+		DELETE
+		FROM
+			tbl_order_detail4sub
+		WHERE
+			order_sub_id = #{order_sub_id}
+	</delete>
+	
+		<!-- 5删除订单退换货入库记录 -->
+	<delete id="deleteOrderSaleApplyBill" parameterType="string">
+		DELETE
+		FROM
+			tbl_order_sale_apply_bill
+		WHERE
+			order_sub_id = #{order_sub_id}
+	</delete>
+	
+		<!-- 6删除子订单信息 -->
+	<delete id="deleteOrderSub" parameterType="string">
+		DELETE
+		FROM
+			tbl_order_sub
+		WHERE
+			id = #{id}
+	</delete>
+	
+		<!-- 7删除子订单扩展信息 -->
+	<delete id="deleteOrderSubExpand" parameterType="string">
+		DELETE
+		FROM
+			tbl_order_sub_expand
+		WHERE
+			order_sub_id = #{order_sub_id}
+	</delete>
+	
+	<!-- 8删除订单购买人信息 -->
+	<delete id="deleteOrderBuyInfo" parameterType="string">
+		DELETE
+		FROM
+			tbl_order_buy_info
+		WHERE
+		EXISTS (
+				SELECT
+					*
+				FROM
+					(
+						SELECT
+							count(1) AS count
+						FROM
+							tbl_order_sub s
+						WHERE
+							s.order_main_no = #{order_main_no}
+					) AS cc
+				WHERE
+					cc.count = 1
+			)
+		AND order_main_no = #{order_main_no}
+	</delete>
+	
+	<!-- 参照订单mapper -->
+	<!-- 根据条件查询打印清单 -->
+	<resultMap type="com.yougou.kaidian.order.model.MerchantQueryOrderPrintOutputDto" id="orderPrintOutputMap">
+		<result column="order_sub_id" property="orderSubId" jdbcType="VARCHAR" />
+		<result column="base_status" property="baseStatus" jdbcType="INTEGER" />
+		<result column="ship_time" property="shipTime" jdbcType="TIMESTAMP" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="order_sub_no" property="orderSubNo" jdbcType="VARCHAR" />
+		<result column="original_order_no" property="originalOrderNo" jdbcType="VARCHAR" />
+		<result column="order_pay_total_amont" property="orderPayTotalAmont" jdbcType="DOUBLE" />
+		<result column="discount_amount" property="discountAmount" jdbcType="DOUBLE" />
+		<result column="actual_postage" property="actualPostage" jdbcType="DOUBLE" />
+		<result column="province" property="province" jdbcType="VARCHAR" />
+		<result column="city" property="city" jdbcType="VARCHAR" />
+		<result column="area" property="area" jdbcType="VARCHAR" />
+		<result column="consignee_address" property="consigneeAddress" jdbcType="VARCHAR" />
+		<result column="exported_date" property="exportedDate" jdbcType="TIMESTAMP" />
+		<result column="print_shoppinglist_count" property="printShoppinglistCount" jdbcType="INTEGER" />
+		<result column="print_logisticslist_count" property="printLogisticslistCount" jdbcType="INTEGER" />
+		<result column="backorder_date" property="backorderDate" jdbcType="TIMESTAMP" />
+		<result column="express_order_id" property="expressOrderId" jdbcType="VARCHAR" />
+		<result column="logistics_name" property="logisticsName" jdbcType="VARCHAR" />
+		<result column="logistics_code" property="logisticsCode" jdbcType="VARCHAR" />
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="mobile_phone" property="consigneeMobile" jdbcType="VARCHAR" />
+		<result column="order_source_name" property="orderSourceName" jdbcType="VARCHAR" />
+		<result column="order_source_no" property="orderSourceNo" jdbcType="VARCHAR" />
+		<result column="prod_count" property="prodCount" jdbcType="INTEGER" />
+		<result column="coupon_pref_amount5" property="couponPrefAmount" jdbcType="DOUBLE" />
+		<result column="total_price" property="totalPrice" jdbcType="DOUBLE" />
+		<result column="order_status" property="orderStatus" jdbcType="INTEGER" />
+		<result column="is_paid" property="isPaid" jdbcType="INTEGER" />
+		<result column="is_exception" property="isException" jdbcType="INTEGER" />
+	</resultMap>
+	
+	<select id="queryCountOrderPrintList" parameterType="com.yougou.kaidian.order.model.MerchantOrderPrintInputDto" 
+	    resultType="map">
+	   select 
+	       distinct t1.order_sub_id orderSubId, CONCAT(t5.user_name,t5.province, t5.city, t5.area, 
+               t5.consignee_address, t5.mobile_phone) consigneeInfo 
+	   from
+		    tbl_order_sub_expand t1
+	   inner join
+			tbl_order_sub t2 on(t2.id = t1.order_sub_id)
+	   inner join
+			tbl_order_detail4sub t3 on(t3.order_sub_id = t2.id)
+	   inner join
+			tbl_order_consignee_info t5 on(t5.id = t2.consignee_id)
+			
+		<include refid="query_print_where" />
+			
+	</select>
+	
+	<select id="queryCountOrderPrintNum" parameterType="com.yougou.kaidian.order.model.MerchantOrderPrintInputDto" resultType="int">
+	
+		 select 
+	       count( distinct t1.order_sub_id )
+	   from
+		    tbl_order_sub_expand t1
+	   inner join
+			tbl_order_sub t2 on(t2.id = t1.order_sub_id)
+	   inner join
+			tbl_order_detail4sub t3 on(t3.order_sub_id = t2.id)
+	   inner join
+			tbl_order_consignee_info t5 on(t5.id = t2.consignee_id)
+			
+		<include refid="query_print_where" />
+	
+	</select>
+	
+	<!-- <select id="queryDataOrderPrintList" parameterType="com.yougou.kaidian.order.model.MerchantOrderPrintInputDto" 
+	     resultMap="orderPrintOutputMap">
+		select distinct 
+			t2.id as order_sub_id,
+			t2.base_status,
+			t2.ship_time,
+			t2.create_time,
+			t2.order_sub_no,
+			t2.original_order_no,
+			t2.order_pay_total_amont,
+			t2.discount_amount,
+			t2.actual_postage,
+			t2.total_price,
+			t2.order_status,
+			t2.is_paid,
+			t5.province,
+			t5.city,
+			t5.area,
+			t5.consignee_address,
+			t1.exported_date,
+			t1.print_shoppinglist_count,
+			t1.print_logisticslist_count, 
+			t1.backorder_date,
+			t2.express_order_id,
+			t2.logistics_name,
+			t2.logistics_code,
+			t5.user_name,
+			t5.mobile_phone,
+			(select sum(commodity_num) from tbl_order_detail4sub where tbl_order_detail4sub.order_sub_id = t2.id) as prod_count,
+			t2.out_shop_name as order_source_name,
+			t2.order_source_no,
+			t2.coupon_pref_amount5,
+			t2.is_exception
+		from
+		    tbl_order_sub_expand t1
+		inner join
+			tbl_order_sub t2 on(t2.id = t1.order_sub_id)
+		inner join
+			tbl_order_detail4sub t3 on(t3.order_sub_id = t2.id)
+		inner join
+			tbl_order_consignee_info t5 on(t5.id = t2.consignee_id)
+		<if test="orderSubNo ==null or orderSubNo ==''">
+			<if test="orderSubIds !=null and tempKeyWord != null">
+			inner join 
+			    tbl_order_search_info_temp t6 on (t6.order_sub_id = t2.id) 
+			</if>
+		</if>
+		
+			
+		<include refid="query_print_where" />
+		
+		<choose>
+		    <when test="mergerCargo != null and mergerCargo == 1">
+		        order by t5.user_name asc,t5.province asc ,t5.city asc ,t5.area asc , 
+                t5.consignee_address asc  ,t5.mobile_phone asc , t2.create_time asc
+		    </when>
+			<when test="orderBy != null and orderBy == 1">
+				order by t2.create_time asc
+			</when>
+			<when test="orderBy != null and orderBy == 2">
+				order by t2.ship_time desc
+			</when>
+			<when test="orderBy != null and orderBy == 3">
+				order by t1.backorder_date desc, t2.create_time desc
+			</when>
+			<when test="orderBy != null and orderBy == 4">
+			     order by t2.create_time desc 
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+		limit  #{offset}, #{pageSize}
+	</select>-->
+	
+	<select id="queryDataOrderPrintList" parameterType="com.yougou.kaidian.order.model.MerchantOrderPrintInputDto" 
+	     resultMap="orderPrintOutputMap">
+		select <!--distinct--> 
+			t2.id as order_sub_id,
+			t2.base_status,
+			t2.ship_time,
+			t2.create_time,
+			t2.order_sub_no,
+			t2.original_order_no,
+			t2.order_pay_total_amont,
+			t2.discount_amount,
+			t2.actual_postage,
+			t2.total_price,
+			t2.order_status,
+			t2.is_paid,
+			t5.province,
+			t5.city,
+			t5.area,
+			t5.consignee_address,
+			t1.exported_date,
+			t1.print_shoppinglist_count,
+			t1.print_logisticslist_count, 
+			t1.backorder_date,
+			t2.express_order_id,
+			t2.logistics_name,
+			t2.logistics_code,
+			t5.user_name,
+			t5.mobile_phone,
+			(select sum(commodity_num) from tbl_order_detail4sub where tbl_order_detail4sub.order_sub_id = t2.id) as prod_count,
+			t2.out_shop_name as order_source_name,
+			t2.order_source_no,
+			t2.coupon_pref_amount5,
+			t2.is_exception
+		from
+		    tbl_order_sub_expand t1
+		inner join
+			tbl_order_sub t2 on(t2.id = t1.order_sub_id)
+				<!-- 商家款色编码不为空 -->
+			<if test="(commodityNo !=null and commodityNo !='') or (thirdPartyCode != null and thirdPartyCode != '')">
+				 inner join tbl_order_detail4sub t3 on(t3.order_sub_id = t2.id) 
+			</if>
+		inner join
+			tbl_order_consignee_info t5 on(t5.id = t2.consignee_id)
+
+		<include refid="query_print_where" />
+		
+		<choose>
+		    <when test="mergerCargo != null and mergerCargo == 1">
+		        order by t5.user_name asc,t5.province asc ,t5.city asc ,t5.area asc , 
+                t5.consignee_address asc  ,t5.mobile_phone asc , t2.create_time asc
+		    </when>
+			<when test="orderBy != null and orderBy == 1">
+				order by t2.create_time asc
+			</when>
+			<when test="orderBy != null and orderBy == 2">
+				order by t2.ship_time desc
+			</when>
+			<when test="orderBy != null and orderBy == 3">
+				order by t1.backorder_date desc, t2.create_time desc
+			</when>
+			<when test="orderBy != null and orderBy == 4">
+			     order by t2.create_time desc 
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+		limit  #{offset}, #{pageSize}
+	</select>
+	
+	<sql id="query_print_where">
+		<where>
+		 	1=1 
+		 	<if test="orderSubNo ==null or orderSubNo ==''">
+				<if test="orderSubIds !=null and orderSubIds.size()>0">
+				and t2.id in <foreach collection="orderSubIds" item="item" separator="," open="(" close=")">
+					 #{item}
+				</foreach>
+				</if>
+			</if>
+			<if test="orderSubNos !=null">
+				and t2.order_sub_no in <foreach collection="orderSubNos" item="orderNo" index="index"
+				separator="," open="(" close=")"> #{orderNo} </foreach>
+			</if>
+			<!--  关联商家仓库 -->
+			<if test="warehouseCode !=null and warehouseCode !=''">
+				and t2.warehouse_code=#{warehouseCode}
+			</if>
+			<!-- 商家编码不为空 -->
+			<if test="merchantCode !=null and merchantCode !=''">
+				and t1.merchant_code=#{merchantCode}
+			</if>
+			<!-- 条件不成立 不查询任何信息 系统出现异常 -->
+			<if test="merchantCode ==null or merchantCode ==''">
+				and 1=0
+			</if>
+			<!-- 商家款色编码不为空 -->
+			<if test="commodityNo !=null and commodityNo !=''">
+				and t3.commodity_no=#{commodityNo}
+			</if>
+			<!-- 商家货品条码不为空 -->
+			<if test=" thirdPartyCode != null and thirdPartyCode != '' ">
+				and t3.level_code=#{thirdPartyCode}
+			</if>
+			<if test="orderStatus !=null">
+				<choose>
+					<when test="orderStatus ==4">
+					   <!-- 订单组没有整理完，先用旧状态顶着 -->
+					   and ((t2.base_status=1 and t2.is_exception in (10,12,14)) or (t2.base_status=3 and t2.suspend_type=1))
+					</when>
+					<when test="orderStatus ==12">
+					   and (t2.order_status=12 or t2.order_status=7 or t2.order_status=5) 
+					</when>
+					<otherwise>
+		                and t2.order_status=#{orderStatus,jdbcType=INTEGER}
+		            </otherwise>
+				</choose>
+			</if>		
+			<!-- 配送状态不为空 
+			<if test="deliveryStatus !=null and deliveryStatus !=''">
+				and t2.delivery_status=#{deliveryStatus,jdbcType=INTEGER}
+			</if>
+			-->
+			<!-- 订单状态不为空 
+			<choose>
+			<when test="baseStatus !=null and baseStatus !=''">
+				<if test="withApplyInterruptForMerchant == true">
+					and (t2.base_status=#{baseStatus,jdbcType=INTEGER} or t2.base_status = 7)
+				</if>
+				<if test="withApplyInterruptForMerchant == false">
+					and t2.base_status=#{baseStatus,jdbcType=INTEGER}
+				</if>
+			</when>
+			<otherwise>
+                and t2.base_status != '1'
+            </otherwise>
+			</choose>
+			-->
+			<!-- 挂起状态不为空 -->
+			<if test="suspendType !=null and suspendType !=''">
+				and t2.suspend_type=#{suspendType,jdbcType=INTEGER}
+			</if>
+			<!-- 订单号不为空 -->
+			<if test="orderSubNo !=null and orderSubNo !=''">
+				and t2.order_sub_no like CONCAT('${orderSubNo}','%')
+			</if>
+			<!-- 原始订单号不为空 -->
+			<if test="originalOrderNo !=null and originalOrderNo !=''">
+				and t2.original_order_no=#{originalOrderNo,jdbcType=VARCHAR}
+			</if>
+			<!-- 收货地区 省不为空 -->
+			<if test=" province != null and province != '-1' ">
+				and t5.province=#{province}
+			</if>
+			<!-- 收货地区 市不为空 -->
+			<if test=" city != null and city != '-1' ">
+				and t5.city=#{city}
+			</if>
+			<!-- 收货地区 区不为空 -->
+			<if test=" area != null and area != '-1' ">
+				and t5.area=#{area}
+			</if>
+			<!-- 物流公司不为空 -->
+			<if test="logisticsName !=null and logisticsName !=''">
+				and t2.logistics_name=#{logisticsName}
+			</if>
+			<!-- 物流公司编码不为空 -->
+			<if test="logisticsCode !=null and logisticsCode !=''">
+				and t2.logistics_code=#{logisticsCode}
+			</if>
+			<!-- 快递单号不为空 -->
+			<if test="expressOrderId !=null and expressOrderId !=''">
+				and t2.express_order_id=#{expressOrderId}
+			</if>
+			<!-- 是 一单一货 -->
+			<if test="singleCargo !=null and singleCargo ==1">
+				and (1=(SELECT count(1) FROM tbl_order_detail4sub t7 WHERE t7.order_sub_id=t2.id ))
+			</if> 
+			<!-- 开始时间 下单时间 -->
+			<if test=" timeStart != null and timeStart != '' ">
+				<![CDATA[  and t2.create_time >= CONCAT('${timeStart}',' 00:00:00')   ]]>
+			</if>
+			<!-- 结束时间 下单时间 -->
+			<if test=" timeEnd != null and timeEnd != '' ">
+				<![CDATA[  and t2.create_time <= CONCAT('${timeEnd}',' 23:59:59')   ]]>
+			</if>
+			<!-- 下单时间都为空 默认查询15天 -->
+			<if test="(orderSubNo ==null or orderSubNo =='') and (timeStart == null or timeStart == '') and ( timeEnd == null or timeEnd == '' )">
+				<![CDATA[  and t2.create_time > DATE_ADD(CURDATE(), interval -15 day)]]>
+			</if>
+			<!-- 发货时间 开始时间 不为空 -->
+			<if test=" timeStartShipTime != null and timeStartShipTime != '' ">
+				<![CDATA[  and t2.ship_time >= CONCAT('${timeStartShipTime}',' 00:00:00')]]>
+			</if>
+			<!-- 发货时间 结束时间 不为空 -->
+			<if test=" timeEndShipTime != null and timeEndShipTime != '' ">
+				<![CDATA[  and t2.ship_time <= CONCAT('${timeEndShipTime}',' 23:59:59')   ]]>
+			</if>
+			<!-- 开始时间 缺货时间 -->
+			<if test=" timeStartOutStock != null and timeStartOutStock != '' ">
+				<![CDATA[  and t1.backorder_date >= CONCAT('${timeStartOutStock}',' 00:00:00')  ]]>
+			</if>
+			<!-- 结束时间 缺货时间 -->
+			<if test=" timeEndOutStock != null and timeEndOutStock != '' ">
+				<![CDATA[  and t1.backorder_date <= CONCAT('${timeEndOutStock}',' 23:59:59')   ]]>
+			</if>
+			<choose>
+				<!-- 打印状态不为空 查询已打印的 快递单打印次数大于0 购物清单打印次数大于0 -->
+				<when test="orderPrintedStatus != null and orderPrintedStatus == 1">
+					and (t1.print_shoppinglist_count > 0 and t1.print_logisticslist_count > 0)
+				</when>
+				<!-- 打印状态不为空 查询未打印的 快递单打印次数=0或者为null 购物清单打印次数=0或者为null -->
+				<when test="orderPrintedStatus != null and orderPrintedStatus == 0">
+					and (t1.print_shoppinglist_count = 0 or t1.print_logisticslist_count = 0)
+				</when>
+				<otherwise>
+				</otherwise>
+			</choose>
+			
+			<choose>
+				<!-- 订单导出状态：未导出 -->
+				<when test="orderExportedStatus != null and orderExportedStatus == 0">
+					and (t1.order_exported_status = 0 or t1.order_exported_status is null)
+				</when>
+				<!-- 订单导出状态：已导出 -->
+				<when test="orderExportedStatus != null and orderExportedStatus == 1">
+					and t1.order_exported_status = 1
+				</when>
+			</choose>
+			<!-- 收货人联系电话 -->
+			<if test="consigneeMobile!=null and consigneeMobile!=''">
+				and t5.mobile_phone=#{consigneeMobile} 
+			</if>
+			<!-- 查询没有被删除的订单 -->
+			and t2.del_flag=1 and t2.is_paid=2
+			
+		</where>
+	</sql>
+
+   <!-- 根据条件查询 备货清单-->
+	<resultMap type="com.yougou.kaidian.order.model.MerchantQueryOrderStockOutputDto" id="orderStockOutputMap">
+		<result column="id" property="id" jdbcType="VARCHAR" />
+		<result column="order_exported_status" property="orderExportedStatus" jdbcType="INTEGER" />
+		<result column="stocking_date" property="exportedDate" jdbcType="TIMESTAMP" />
+		<result column="exported_date" property="stockingDate" jdbcType="TIMESTAMP" />
+		<result column="backorder_date" property="backorderDate" jdbcType="TIMESTAMP" />
+		<result column="backup_no" property="backupNo" jdbcType="VARCHAR" />
+		<result column="order_sub_id" property="orderSubId" jdbcType="VARCHAR" />
+		<result column="order_sub_no" property="orderSubNo" jdbcType="VARCHAR" />
+		<result column="payment" property="payment" jdbcType="VARCHAR" />
+		<result column="product_total_quantity" property="productTotalQuantity" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="base_status" property="baseStatus" jdbcType="INTEGER" />
+		<result column="is_exception" property="isException" jdbcType="INTEGER" />		
+	</resultMap>
+	
+	<select id="getCountOrderStock" parameterType="com.yougou.ordercenter.vo.merchant.input.QueryStockInputDto" resultType="int">
+		select count(1)
+		from 
+			tbl_order_sub_expand t1 
+		left join 
+			tbl_order_sub t2 on(t1.order_sub_id = t2.id)
+			
+		<include refid="query_list_where" />
+	</select>
+		
+	<select id="getDataOrderStock" parameterType="com.yougou.ordercenter.vo.merchant.input.QueryStockInputDto" resultMap="orderStockOutputMap">
+		select
+			t1.id,
+			t1.order_exported_status,
+			t1.exported_date,
+			t1.stocking_date,
+			t1.backorder_date,
+			t1.backup_no,
+			t2.id as order_sub_id,
+			t2.create_time,
+			t2.order_sub_no,
+			t2.product_total_quantity,
+			t2.payment,
+			t2.base_status,
+			t2.is_exception
+		from 
+			tbl_order_sub_expand t1 
+		left join 
+			tbl_order_sub t2 on(t1.order_sub_id = t2.id)
+
+		<include refid="query_list_where" />
+		
+		<choose>
+			<!-- 未导出：导出状态为0, 基本状态为已确认 订单货品配送方 1商家 商家仓库id -->
+			<when test="tabNum == 1">
+				<!-- 根据下单时间升序 -->
+				order by t2.create_time asc
+			</when>
+			<!--已导出 -->
+			<when test="tabNum == 2">
+				<!-- 根据 导出时间升序 下单时间升序 -->
+				order by t1.exported_date asc, t2.create_time asc
+			</when>
+			<!--已 备货 -->
+			<when test="tabNum == 3">
+				<!-- 根据备货时间降序 下单时间升序 -->
+				order by t1.stocking_date desc, t2.create_time asc
+			</when>
+			<!-- 缺货状态 -->
+			<when test="tabNum == 4">
+				<!-- 根据缺货时间降序 下单时间降序 -->
+				order by t1.backorder_date desc, t2.create_time desc
+			</when>
+			<!-- 其他状态 -->
+			<when test="tabNum == 5">
+			    <!-- 根据备货时间降序 下单时间升序 -->
+				order by t1.stocking_date desc, t2.create_time asc
+			</when>
+			<otherwise></otherwise>
+		</choose>
+	</select>
+	 <sql id="query_list_where">
+		<where>
+		
+		    <!-- 商家仓库编码不为空 -->
+			<if test="warehouseCode !=null and warehouseCode !=''">
+			    t2.warehouse_code=#{warehouseCode}
+			</if>
+			<!-- 商家编码不为空 -->
+			<if test="merchantCode !=null and merchantCode !=''">
+				and t1.merchant_code=#{merchantCode}
+			</if>
+			<!-- 条件不成立 不查询任何信息 系统出现异常 -->
+			<if test="merchantCode ==null or merchantCode ==''">
+				and 1=0
+			</if>
+            <!-- 订单号不为空 -->
+			<if test="orderSubNo !=null and orderSubNo !=''">
+				and t2.order_sub_no=#{orderSubNo,jdbcType=VARCHAR}
+			</if>		
+			<!-- 原始订单号不为空 -->
+			<if test="originalOrderNo !=null and originalOrderNo !=''">
+				and t2.original_order_no=#{originalOrderNo,jdbcType=VARCHAR}
+			</if>
+			<!-- 备货单号不为空 -->
+			<if test="backupNo !=null and backupNo !=''">
+				and t1.backup_no=#{backupNo,jdbcType=VARCHAR}
+			</if>
+			<!-- 开始时间 下单时间 -->
+			<if test=" timeStart != null and timeStart != '' ">
+				<![CDATA[  and t2.create_time >= CONCAT('${timeStart}',' 00:00:00')   ]]>
+			</if>
+			<!-- 结束时间 下单时间 -->
+			<if test=" timeEnd != null and timeEnd != '' ">
+				<![CDATA[  and t2.create_time <= CONCAT('${timeEnd}',' 23:59:59')   ]]>
+			</if>
+			
+			<!-- 开始时间 导出时间 -->
+			<if test=" timeStartExport != null and timeStartExport != '' ">
+				<![CDATA[  and t1.exported_date >= CONCAT('${timeStartExport}',' 00:00:00')  ]]>
+			</if>
+			<!-- 结束时间 导出时间 -->
+			<if test=" timeEndExport != null and timeEndExport != '' ">
+				<![CDATA[  and t1.exported_date <= CONCAT('${timeEndExport}',' 23:59:59')   ]]>
+			</if>
+
+			<!-- 开始时间 备货时间 -->
+			<if test=" timeStartStocking != null and timeStartStocking != '' ">
+				<![CDATA[  and t1.stocking_date >= CONCAT('${timeStartStocking}',' 00:00:00')  ]]>
+			</if>
+			<!-- 结束时间 备货时间 -->
+			<if test=" timeEndStocking != null and timeEndStocking != '' ">
+				<![CDATA[  and t1.stocking_date <= CONCAT('${timeEndStocking}',' 23:59:59')   ]]>
+			</if>
+
+			<!-- 开始时间 缺货时间 -->
+			<if test=" timeStartOutStock != null and timeStartOutStock != '' ">
+				<![CDATA[  and t1.backorder_date >= CONCAT('${timeStartOutStock}',' 00:00:00')  ]]>
+			</if>
+			<!-- 结束时间 缺货时间 -->
+			<if test=" timeEndOutStock != null and timeEndOutStock != '' ">
+				<![CDATA[  and t1.backorder_date <= CONCAT('${timeEndOutStock}',' 23:59:59')   ]]>
+			</if>
+			
+			 <!--订单货品配送方 1商家 商家仓库id 
+			<choose>
+				 未导出：导出状态为0 基本状态为已确认 
+				<when test="tabNum == 1">
+					and (t1.order_exported_status = 0 or t1.order_exported_status is null) and t2.base_status = 2
+				</when>
+				已导出：导出状态为1 基本状态为已确认 
+				<when test="tabNum == 2">
+					and t1.order_exported_status = 1 and t2.base_status = 2
+				</when>
+				 已备货：导出状态为2 基本状态为已确认 
+				<when test="tabNum == 3">
+					and t1.order_exported_status = 2 and t2.base_status in(2, 4)
+				</when>
+				 缺货：导出状态为3 
+				<when test="tabNum == 4">
+					and t2.base_status = 3
+				</when>
+				<otherwise>
+				</otherwise>
+			</choose>
+			-->
+		</where>
+	</sql>
+	
+	<!--根据条件  查询拣货清单列表 -->
+	<resultMap type="com.yougou.ordercenter.vo.merchant.output.QueryOrderPickOutputDto" id="orderPickOutputMap">
+		<result column="order_sub_no" property="orderSubNo" jdbcType="VARCHAR" />
+		<result column="level_code" property="insideCode" jdbcType="VARCHAR" />
+		<result column="brand_name" property="brandName" jdbcType="VARCHAR" />
+		<result column="prod_total_amt" property="prodTotalAmt" jdbcType="DOUBLE" />
+		<result column="total_price" property="totalPrice" jdbcType="DOUBLE" />
+		<result column="message" property="message" jdbcType="VARCHAR" />
+		<result column="prod_no" property="prodNo" jdbcType="VARCHAR" />
+		<result column="prod_name" property="prodName" jdbcType="VARCHAR" />
+		<result column="backup_no" property="backupNo" jdbcType="VARCHAR" />
+		<result column="supplier_code" property="supplierCode" jdbcType="VARCHAR" />
+		<result column="third_party_code" property="thirdPartyCode" jdbcType="VARCHAR" />
+		<result column="exported_date" property="exportedDate" jdbcType="TIMESTAMP" />
+		<result column="order_exported_status" property="orderExportedStatus" jdbcType="INTEGER" />
+		<result column="commodity_specification_str" property="commoditySpecificationStr" jdbcType="VARCHAR" />
+		<result column="commodity_num" property="commodityNum" jdbcType="INTEGER" />
+	    <result column="discount_amount" property="discountAmount" jdbcType="DOUBLE" />
+	    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="mobile_phone" property="mobilePhone" jdbcType="VARCHAR" />
+		<result column="province" property="province" jdbcType="VARCHAR" />
+		<result column="city" property="city" jdbcType="VARCHAR" />
+		<result column="area" property="area" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="consignee_address" property="consigneeAddress" jdbcType="VARCHAR" />
+		<result column="zip_code" property="zipCode" jdbcType="VARCHAR" />
+		
+	</resultMap>
+	
+	<select id="queryPickingOrderList" parameterType="map" resultMap="orderPickOutputMap">
+	     select 
+		    t2.exported_date,                  
+		    t2.order_exported_status,  
+		    t2.backup_no,
+		    t1.create_time,        
+		    t1.order_sub_no,
+		    t1.total_price,        
+			t1.discount_amount, 
+			t1.message,     
+	        t4.prod_total_amt, 
+	        t4.prod_no,    
+			t4.prod_name,          
+			t4.level_code,        
+			t4.commodity_specification_str,    
+			t4.commodity_num,                  
+			t3.user_name,          
+			t3.mobile_phone,
+			t3.province,
+			t3.city,
+			t3.area,
+			t3.consignee_address,   
+			t3.zip_code  
+		from
+		   tbl_order_sub t1
+		inner join  tbl_order_sub_expand t2 ON t1.id = t2.order_sub_id
+		inner join  tbl_order_consignee_info t3 ON t1.consignee_id = t3.id
+		inner join  tbl_order_detail4sub t4 ON t1.id = t4.order_sub_id
+		where
+		 <if test="warehouseCode !=null and warehouseCode !=''">
+			 t1.warehouse_code=#{warehouseCode}
+		 </if>       
+		<if test="merchantCode !=null and merchantCode !=''">
+			 and t2.merchant_code = #{merchantCode}
+		</if>
+	    <if test="orderSubNos !=null">
+			 and t1.order_sub_no in <foreach collection="orderSubNos" item="orderNo" index="index"
+			 separator="," open="(" close=")"> #{orderNo} </foreach>  
+		</if>
+	    <if test="orderSubNos == null">
+	         and (t2.order_exported_status = 0 OR t2.order_exported_status IS NULL)
+	    </if>
+	    limit 20000
+	</select>
+	
+	<!-- 查询查询订单的基本数据-->
+	<select id="getOrderSubInfoByNewOrderNo" parameterType="string" resultType="com.yougou.ordercenter.vo.order.OrderSubInfoVo">
+	     select 
+	         t1.order_sub_no as orderCode,
+	         t1.original_order_no as originalOrderNo,
+	         t1.express_order_id as expressOrderId,
+			 t1.logistics_name as logisticsName,  
+	         t1.total_price as totalPrice,
+	         t1.pay_total_price as payTotalPrice,
+			 t1.payment as payment,
+			 t1.pay_status as payStatus, 
+			 t1.base_status as baseStatus,
+			 t1.ship_time as shipTime,
+			 t1.warehouse_code as warehouseCode,
+			 t2.commodity_id as commodityId,
+			 t2.commodity_no as commodityNo,
+			 t2.prod_no as prodNo,
+			 t2.prod_name as prodName,
+			 t2.prod_type as prodType,
+			 t2.commodity_specification_str as commoditySpecificationStr,
+			 t2.prod_discount_amount as prodDiscountAmount,
+			 t2.sale_price as salePrice,
+			 t2.active_price as activePrice,
+			 t2.active_name as activeName,
+			 t2.usable_num as usableNum,
+			 t2.active_pref_amount as activePrefAmount,
+			 t2.coupon_pref_amount as couponPrefAmount,
+			 t2.member_pref_amount as memberPrefAmount,
+			 t2.integral_pref_amount as integralPrefAmount,
+			 t2.globle_pref_amount as globlePrefAmount,
+			 t2.buy_reduction_pref_amount as buyReductionPrefAmount,
+			 t2.coupon_pref_amount5 as couponPrefAmount5,
+			 t2.payment_pref_amount as paymentPrefAmount,
+			 t3.id as consigneeId,
+			 t3.user_name as userName,
+			 t3.mobile_phone as mobilePhone,
+			 t3.delivery_costs as deliveryCosts,
+			 t3.province as province,
+			 t3.city as city,
+			 t3.area as area,
+			 t3.consignee_address as consigneeAddress,
+			 t3.zip_code as zipCode,
+			 t3.delivery_date as deliveryDate	   
+		 FROM 
+		     tbl_order_sub t1 
+		 INNER JOIN 
+		     tbl_order_detail4sub t2 ON t2.order_sub_id=t1.id 
+		 INNER JOIN 
+		     tbl_order_consignee_info t3 ON t1.consignee_id=t3.id 
+		 WHERE	
+	         t1.order_sub_no = #{newOrderNo}
+	
+	</select>
+	
+	<resultMap type="com.yougou.ordercenter.model.order.OrderSearchTemp" id="OrderSearchTempMap">
+        <id column="id" property="id" jdbcType="VARCHAR" />
+        <result column="temp_key_word" property="tempKeyWord" jdbcType="VARCHAR" />
+		<result column="order_sub_id" property="orderSubId" jdbcType="VARCHAR" />
+    </resultMap>
+   
+    <sql id="Base_Column_List">
+		id, 
+		temp_key_word,
+		order_sub_id
+	</sql>
+	
+    <!-- 订单号批量插入临时表 -->
+    <insert id="insertOrderSearchTemp" parameterType="java.util.List">
+        insert into tbl_order_search_info_temp 
+        (  
+           id,
+           temp_key_word, 
+           order_sub_id 
+        )
+        values 
+        <foreach collection="list" item="item" index="index" separator=","> 
+          (
+             #{item.id,jdbcType=VARCHAR},
+             #{item.tempKeyWord,jdbcType=VARCHAR},
+             #{item.orderSubId,jdbcType=VARCHAR}
+          )
+        </foreach>
+    </insert>
+    
+    <!-- 根据tempKeyWord删除查询信息 -->
+    <delete id="deleteOrderSearchTemp" parameterType="string">
+        delete from tbl_order_search_info_temp 
+        where temp_key_word = #{tempKeyWord}
+    </delete>
+    
+    <!--根据状态查询订单数量-->
+    <select id="selectOrderCountByStatus" resultType="int">
+    	select count(1) FROM tbl_order_sub_expand t1 INNER JOIN tbl_order_sub t2 ON (t2.id = t1.order_sub_id)
+    	and t1.merchant_code = #{merchantCode} AND t2.del_flag = 1 AND t2.is_paid = 2
+   		<if test="orderStatus !=null">
+			<choose>
+				<when test="orderStatus ==4">
+				   <!-- 订单组没有整理完，先用旧状态顶着 -->
+				   and ((t2.base_status=1 and t2.is_exception in (10,12,14)) or (t2.base_status=3 and t2.suspend_type=1))
+				</when>
+				<when test="orderStatus ==12">
+				   and (t2.order_status=12 or t2.order_status=7 or t2.order_status=5) 
+				</when>
+				<otherwise>
+	                and t2.order_status=#{orderStatus}
+	            </otherwise>
+			</choose>
+		</if>
+    </select>
+    
+    <resultMap id="asmProductMap" type="com.yougou.kaidian.order.model.AsmProduct">
+		<result column="id" property="commodityProductId" jdbcType="VARCHAR" />
+		<result column="prod_no" property="productNo" jdbcType="VARCHAR" />
+		<result column="prod_name" property="commodityName" jdbcType="VARCHAR" />
+		<result column="commodity_specification_str" property="specification" jdbcType="VARCHAR" />
+		<result column="supplier_code" property="supplierCode" jdbcType="VARCHAR" />
+		<result column="level_code" property="orderInsideCode" jdbcType="VARCHAR" />
+		<result column="third_party_code" property="commodityInsideCode" jdbcType="VARCHAR" />
+	</resultMap>
+    <!--根据订单明细货品条码+订单号查询订单数量-->
+    <select id="selectProductByLevelCode" resultMap="asmProductMap">
+		SELECT
+			p.id,d.prod_no,d.prod_name,d.commodity_specification_str,c.supplier_code,d.level_code,p.third_party_code 
+		FROM
+			tbl_order_detail4sub d
+		INNER JOIN tbl_order_sub s ON d.order_sub_id = s.id
+		INNER JOIN tbl_commodity_product p ON p.product_no=d.prod_no
+		INNER JOIN tbl_commodity_style c ON d.commodity_id=c.id
+		WHERE
+			(s.order_sub_no = #{order_sub_no} or s.express_order_id=#{order_sub_no}) and d.level_code=#{level_code} limit 1;
+    </select>
+    
+    <resultMap id="ExpandBaseResultMap" type="com.yougou.kaidian.order.model.MerchantOrderExpand" >
+	    <id column="id" property="id" jdbcType="VARCHAR" />
+	    <result column="order_sub_id" property="orderSubId" jdbcType="VARCHAR" />
+	    <result column="merchant_code" property="merchantCode" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+	    <result column="mark_color" property="markColor" jdbcType="VARCHAR" />
+	    <result column="mark_note" property="markNote" jdbcType="VARCHAR" />
+	  </resultMap>
+  
+     <select id="selectByOrderSubNo" resultMap="ExpandBaseResultMap" parameterType="java.lang.String" >
+	    select 
+	     id, order_sub_id, merchant_code, create_time, update_time, mark_color, mark_note
+	    from tbl_merchant_order_expand
+	    where order_sub_id = #{orderSubId,jdbcType=VARCHAR}
+	  </select>
+  
+  	<select id ="selectByOrders" resultMap="ExpandBaseResultMap" >
+  		select 
+	     	id, order_sub_id, merchant_code, create_time, update_time, mark_color, mark_note
+	    from tbl_merchant_order_expand
+	    <if test="orders != null and orders.size()>0" >
+	   	 where order_sub_id in
+	    	<foreach collection="orders" item="order" open="(" separator="," close=")" >
+	    		#{order}
+	    	</foreach>
+	    </if>
+  	</select>
+  	
+  	<update id="updateByPrimaryKeySelective" parameterType="com.yougou.kaidian.order.model.MerchantOrderExpand" >
+    
+    	update tbl_merchant_order_expand
+	    <set >
+	      <if test="updateTime != null" >
+	        update_time = #{updateTime,jdbcType=TIMESTAMP},
+	      </if>
+	      <if test="markColor != null" >
+	        mark_color = #{markColor,jdbcType=VARCHAR},
+	      </if>
+	      <if test="markNote != null" >
+	        mark_note = #{markNote,jdbcType=VARCHAR},
+	      </if>
+	    </set>
+	    where id = #{id,jdbcType=VARCHAR}
+     </update>
+  
+  <insert id="insertSelective" parameterType="com.yougou.kaidian.order.model.MerchantOrderExpand" >
+	    insert into tbl_merchant_order_expand
+	    <trim prefix="(" suffix=")" suffixOverrides="," >
+	      <if test="id != null" >
+	        id,
+	      </if>
+	      <if test="orderSubId != null" >
+	        order_sub_id,
+	      </if>
+	      <if test="merchantCode != null" >
+	        merchant_code,
+	      </if>
+	      <if test="createTime != null" >
+	        create_time,
+	      </if>
+	      <if test="updateTime != null" >
+	        update_time,
+	      </if>
+	      <if test="markColor != null" >
+	        mark_color,
+	      </if>
+	      <if test="markNote != null" >
+	        mark_note,
+	      </if>
+	    </trim>
+	    <trim prefix="values (" suffix=")" suffixOverrides="," >
+	      <if test="id != null" >
+	        #{id,jdbcType=VARCHAR},
+	      </if>
+	      <if test="orderSubId != null" >
+	        #{orderSubId,jdbcType=VARCHAR},
+	      </if>
+	      <if test="merchantCode != null" >
+	        #{merchantCode,jdbcType=VARCHAR},
+	      </if>
+	      <if test="createTime != null" >
+	        #{createTime,jdbcType=TIMESTAMP},
+	      </if>
+	      <if test="updateTime != null" >
+	        #{updateTime,jdbcType=TIMESTAMP},
+	      </if>
+	      <if test="markColor != null" >
+	        #{markColor,jdbcType=VARCHAR},
+	      </if>
+	      <if test="markNote != null" >
+	        #{markNote,jdbcType=VARCHAR},
+	      </if>
+	    </trim>
+	  </insert>
+	  
+	  <update id="updateExportStatus">
+	  	update tbl_order_sub_expand ose inner join tbl_order_sub os on ose.order_sub_id = os.id 
+	  	set order_exported_status = 1,exported_date=#{now,jdbcType=TIMESTAMP} where ose.merchant_code=#{merchantCode} 
+	  	and os.order_sub_no in 
+	  	<foreach collection="orderNos" item="item" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	  </update>
+	  
+	  <update id="updatePrintExpressSize">
+	  	update tbl_order_sub_expand ose inner join tbl_order_sub os on ose.order_sub_id = os.id 
+	  	set print_logisticslist_count = print_logisticslist_count+1 where ose.merchant_code=#{merchantCode} 
+	  	and os.order_sub_no = #{orderNo}
+	  </update>
+	  
+	  <update id="updatePrintShopSize">
+	  	update tbl_order_sub_expand ose inner join tbl_order_sub os on ose.order_sub_id = os.id 
+	  	set print_shoppinglist_count = print_shoppinglist_count+1 where ose.merchant_code=#{merchantCode} 
+	  	and os.order_sub_no in 
+	  	<foreach collection="orderNos" item="item" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	  </update>
+	  
+	  <update id="updateOutStoreStatus">
+	  	update tbl_order_sub os inner join tbl_order_sub_expand ose on ose.order_sub_id = os.id 
+	  	set os.order_status = 13,os.ship_time = #{outShopDate,jdbcType=TIMESTAMP} 
+	  	where ose.merchant_code = #{merchantCode} and os.order_sub_no = #{orderNo}
+	  </update>
+</mapper>

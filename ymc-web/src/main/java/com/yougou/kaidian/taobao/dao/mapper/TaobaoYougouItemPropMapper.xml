@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yougou.kaidian.taobao.dao.TaobaoYougouItemPropMapper">
+	<!-- 分类属性绑定表 -->
+	<resultMap id="taobaoYougouItemProp" type="com.yougou.kaidian.taobao.model.TaobaoYougouItemProp">
+		<result column="id" property="id" jdbcType="CHAR" />
+		<result column="taobao_cid" property="taobaoCid" jdbcType="BIGINT" />
+		<result column="taobao_pid" property="taobaoPid" jdbcType="BIGINT" />
+		<result column="yougou_cat_no" property="yougouCatNo" jdbcType="VARCHAR" />
+		<result column="yougou_prop_item_no" property="yougouPropItemNo" jdbcType="VARCHAR" />
+		<result column="is_yougou_must" property="isYougouMust" jdbcType="BIGINT" />
+		<result column="merchant_code" property="merchantCode" jdbcType="VARCHAR" />
+		<result column="operater" property="operater" jdbcType="VARCHAR" />
+		<result column="operated" property="operated" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<sql id="condition4taobaoYougouItemProp" >
+	    <if test="null!=params" >
+	      <if test="null!=params.id and ''!=params.id" >
+	       	 and p.id  =  #{params.id,jdbcType=VARCHAR}
+	      </if>
+	      <if test="null!=params.taobaoCid and ''!=params.taobaoCid" >
+	       	 and p.taobao_cid = #{params.taobaoCid,jdbcType=VARCHAR}
+	      </if>
+	      <if test="null!=params.taobaoPid and ''!=params.taobaoPid" >
+	       	 and p.taobao_pid = #{params.taobaoPid,jdbcType=VARCHAR}
+	      </if>
+	      <if test="null!=params.yougouCatNo and ''!=params.yougouCatNo" >
+	       	 and p.yougou_cat_no = #{params.yougouCatNo,jdbcType=VARCHAR}
+	      </if>
+	      <if test="null!=params.yougouPropItemNo and ''!=params.yougouPropItemNo" >
+	       	 and p.yougou_prop_item_no = #{params.yougouPropItemNo,jdbcType=VARCHAR}
+	      </if>
+	      <if test="null!=params.merchantCode and ''!=params.merchantCode" >
+	       	 and p.merchant_code = #{params.merchantCode,jdbcType=VARCHAR}
+	      </if>
+	      <if test="null!=params.nickId and ''!=params.nickId" >
+	       	 and p.nick_id = #{params.nickId,jdbcType=VARCHAR}
+	      </if>
+	      <if test="null!=params.isYougouMust and ''!=params.isYougouMust" >
+	       	 and p.is_yougou_must = #{params.isYougouMust,jdbcType=VARCHAR}
+	      </if>
+	    </if>
+	</sql>
+	
+	<!-- 绑定分类属性 -->
+	<insert id="insertTaobaoYougouItemProp" parameterType="com.yougou.kaidian.taobao.model.TaobaoYougouItemProp">
+        insert into tbl_merchant_taobao_yougou_item_prop (id, taobao_cid, taobao_pid, yougou_cat_no, yougou_prop_item_no, is_yougou_must, merchant_code,operater,operated)
+        values 
+        (
+             #{id,jdbcType=CHAR},
+             #{taobaoCid,jdbcType=BIGINT},
+             #{taobaoPid,jdbcType=BIGINT},
+             #{yougouCatNo,jdbcType=VARCHAR},
+             #{yougouPropItemNo,jdbcType=VARCHAR}, 
+             #{isYougouMust,jdbcType=BIGINT},
+             #{merchantCode,jdbcType=VARCHAR},
+             #{operater,jdbcType=VARCHAR},
+             #{operated,jdbcType=VARCHAR}
+        )
+    </insert>
+	<!-- 批量绑定分类属性 -->
+	<insert id="insertTaobaoYougouItemPropBatch" parameterType="java.util.List">
+        insert into tbl_merchant_taobao_yougou_item_prop (id, taobao_cid, taobao_pid, yougou_cat_no, yougou_prop_item_no, is_yougou_must,nick_id,merchant_code,operater,operated)
+        values 
+        <foreach collection="list" item="item" index="index" separator=",">
+        (
+             #{item.id,jdbcType=CHAR},
+             #{item.taobaoCid,jdbcType=BIGINT},
+             #{item.taobaoPid,jdbcType=BIGINT},
+             #{item.yougouCatNo,jdbcType=VARCHAR},
+             #{item.yougouPropItemNo,jdbcType=VARCHAR}, 
+             #{item.isYougouMust,jdbcType=BIGINT},
+             #{item.nickId,jdbcType=BIGINT},
+             #{item.merchantCode,jdbcType=VARCHAR},
+             #{item.operater,jdbcType=VARCHAR},
+             #{item.operated,jdbcType=VARCHAR}
+        )
+        </foreach>
+    </insert>
+	
+	<!-- 更新分类绑定属性 -->
+	<update id="updateTaobaoYougouItemProp" parameterType="com.yougou.kaidian.taobao.model.TaobaoYougouItemProp">
+    	update tbl_merchant_taobao_yougou_item_prop
+	    <set >
+	      <if test="taobaoCid != null" >
+	        taobao_cid = #{taobaoCid,jdbcType=BIGINT},
+	      </if>
+	      <if test="taobaoPid != null" >
+	        taobao_pid = #{taobaoPid,jdbcType=BIGINT},
+	      </if>
+	      <if test="yougouCatNo != null" >
+	        yougou_cat_no = #{yougouCatNo,jdbcType=VARCHAR},
+	      </if>
+	      <if test="yougouPropItemNo != null" >
+	        yougou_prop_item_no = #{yougouPropItemNo,jdbcType=VARCHAR},
+	      </if>
+	      <if test="operated != null" >
+	        operated = #{operated,jdbcType=VARCHAR},
+	      </if>
+	    </set>
+	    where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<!-- 根据条件查询分类绑定属性 -->
+	<select id="selectTaobaoYougouItemPropList" parameterType="java.util.Map" resultMap="taobaoYougouItemProp">
+		select p.* from tbl_merchant_taobao_yougou_item_prop p where 1=1
+		<include refid="condition4taobaoYougouItemProp" />
+    	order by p.operated desc 
+	</select>
+	
+	
+		<!-- 批量绑定分类属性值 -->
+	<insert id="insertTaobaoYougouItemPropValueBatch" parameterType="java.util.List">
+        insert into tbl_merchant_taobao_yougou_item_prop_value (id, taobao_cid, taobao_pid,taobao_vid,yougou_cat_no,yougou_prop_item_no,yougou_prop_value_no,nick_id,merchant_code,operater,operated)
+        values 
+        <foreach collection="list" item="item" index="index" separator=",">
+        (
+             #{item.id,jdbcType=CHAR},
+             #{item.taobaoCid,jdbcType=BIGINT},
+             #{item.taobaoPid,jdbcType=BIGINT},
+             #{item.taobaoVid,jdbcType=VARCHAR},
+             #{item.yougouCatNo,jdbcType=VARCHAR}, 
+             #{item.yougouPropItemNo,jdbcType=VARCHAR}, 
+             #{item.yougouPropValueNo,jdbcType=BIGINT},
+             #{item.nickId,jdbcType=BIGINT},
+             #{item.merchantCode,jdbcType=VARCHAR},
+             #{item.operater,jdbcType=VARCHAR},
+             #{item.operated,jdbcType=VARCHAR}
+        )
+        </foreach>
+    </insert>
+    
+    <!-- 更新分类绑定属性值 -->
+	<update id="updateTaobaoYougouItemPropValue" parameterType="com.yougou.kaidian.taobao.model.TaobaoYougouItemPropValue">
+    	update tbl_merchant_taobao_yougou_item_prop_value
+	    <set >
+	      <if test="taobaoCid != null" >
+	        taobao_cid = #{taobaoCid,jdbcType=VARCHAR},
+	      </if>
+	      <if test="taobaoPid != null" >
+	        taobao_pid = #{taobaoPid,jdbcType=VARCHAR},
+	      </if>
+	      <if test="taobaoVid != null" >
+	        taobao_vid = #{taobaoVid,jdbcType=VARCHAR},
+	      </if>
+		  <if test="yougouCatNo != null" >
+	        yougou_cat_no = #{yougouCatNo,jdbcType=VARCHAR},
+	      </if>
+	      <if test="yougouPropItemNo != null" >
+	        yougou_prop_item_no = #{yougouPropItemNo,jdbcType=VARCHAR},
+	      </if>
+	      <if test="taobaoPid != null" >
+	        yougou_prop_value_no = #{yougouPropValueNo,jdbcType=VARCHAR},
+	      </if>
+	    </set>
+	    where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<!-- 查询分类绑定id对应的所有属性 -->
+	
+	<select id="selectPropIdsByCatBindId" resultType="java.lang.String">
+		select p.id from tbl_merchant_taobao_yougou_item_prop p 
+		inner join  tbl_merchant_taobao_yougou_itemcat it 
+		on it.taobao_cid  = p.taobao_cid and it.yougou_cat_no = p.yougou_cat_no and it.nick_id = p.nick_id and it.merchant_code = p.merchant_code
+		where it.id = #{id,jdbcType=VARCHAR} and it.merchant_code = #{merchantCode,jdbcType=VARCHAR}
+	</select>
+		
+	<!-- 查询分类绑定id对应的所有属性 值-->
+	<select id="selectPropValueIdsByCatBindId"  resultType="java.lang.String">
+		select p.id from tbl_merchant_taobao_yougou_item_prop_value p 
+		inner join  tbl_merchant_taobao_yougou_itemcat it 
+		on it.taobao_cid  = p.taobao_cid and it.yougou_cat_no = p.yougou_cat_no and it.nick_id = p.nick_id and it.merchant_code = p.merchant_code
+		where it.id = #{id,jdbcType=VARCHAR} and it.merchant_code = #{merchantCode,jdbcType=VARCHAR}
+	</select>
+		
+	<!-- 批量删除所有属性 -->
+	<delete id="deletePropBatch" parameterType="java.util.List">
+		delete from tbl_merchant_taobao_yougou_item_prop where id in
+		(
+		<foreach collection="list" item="item" index="index" separator=",">
+           #{item,jdbcType=CHAR}
+        </foreach>
+         )
+       and merchant_code = #{merchantCode,jdbcType=VARCHAR}
+	</delete>
+	<!-- 批量删除属性值 -->
+	<delete id="deletePropValueBatch" parameterType="java.util.List">
+		delete from tbl_merchant_taobao_yougou_item_prop_value where id in
+		(
+		<foreach collection="list" item="item" index="index" separator=",">
+           #{item,jdbcType=CHAR}
+        </foreach>
+        )
+        and merchant_code = #{merchantCode,jdbcType=VARCHAR}
+	</delete>
+	
+	<!-- 根据CID删除商家属性对应关系 -->
+	<delete id="deletePropByCid">
+		delete from tbl_merchant_taobao_yougou_item_prop where taobao_cid= #{taobaoCid,jdbcType=BIGINT}
+		and merchant_code = #{merchantCode,jdbcType=VARCHAR}
+	</delete>
+	<delete id="deletePropValueByCid">
+		delete from tbl_merchant_taobao_yougou_item_prop_value where taobao_cid= #{taobaoCid,jdbcType=BIGINT}
+		and merchant_code = #{merchantCode,jdbcType=VARCHAR}
+	</delete>
+	
+	<!-- 分类属性绑定表 -->
+	<resultMap id="taobaoYougouItemPropValue" type="com.yougou.kaidian.taobao.model.TaobaoYougouItemPropValue">
+		<result column="id" property="id" jdbcType="CHAR" />
+		<result column="taobao_cid" property="taobaoCid" jdbcType="BIGINT" />
+		<result column="taobao_pid" property="taobaoPid" jdbcType="BIGINT" />
+		<result column="taobao_vid" property="taobaoVid" jdbcType="BIGINT" />
+		<result column="yougou_cat_no" property="yougouCatNo" jdbcType="VARCHAR" />
+		<result column="yougou_prop_item_no" property="yougouPropItemNo" jdbcType="VARCHAR" />
+		<result column="yougou_prop_value_no" property="yougouPropValueNo" jdbcType="VARCHAR" />
+		<result column="merchant_code" property="merchantCode" jdbcType="VARCHAR" />
+		<result column="operater" property="operater" jdbcType="VARCHAR" />
+		<result column="operated" property="operated" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<sql id="condition4taobaoYougouItemPropValue" >
+	    <if test="null!=params" >
+	      <if test="null!=params.id and ''!=params.id" >
+	       	 and p.id  =  #{params.id,jdbcType=VARCHAR}
+	      </if>
+	      <if test="null!=params.taobaoCid and ''!=params.taobaoCid" >
+	       	 and p.taobao_cid = #{params.taobaoCid,jdbcType=VARCHAR}
+	      </if>
+	      <if test="null!=params.taobaoPid and ''!=params.taobaoPid" >
+	       	 and p.taobao_pid = #{params.taobaoPid,jdbcType=VARCHAR}
+	      </if>
+	      <if test="null!=params.yougouCatNo and ''!=params.yougouCatNo" >
+	       	 and p.yougou_cat_no = #{params.yougouCatNo,jdbcType=VARCHAR}
+	      </if>
+	      <if test="null!=params.yougouPropItemNo and ''!=params.yougouPropItemNo" >
+	       	 and p.yougou_prop_item_no = #{params.yougouPropItemNo,jdbcType=VARCHAR}
+	      </if>
+	      <if test="null!=params.merchantCode and ''!=params.merchantCode" >
+	       	 and p.merchant_code = #{params.merchantCode,jdbcType=VARCHAR}
+	      </if>
+	      <if test="null!=params.nickId and ''!=params.nickId" >
+	       	 and p.nick_id = #{params.nickId,jdbcType=VARCHAR}
+	      </if>
+	      <if test="null!=params.isYougouMust and ''!=params.isYougouMust" >
+	       	 and p.is_yougou_must = #{params.isYougouMust,jdbcType=VARCHAR}
+	      </if>
+	    </if>
+	</sql>
+	
+	
+		<!-- 根据条件查询分类绑定属性 -->
+	<select id="selectTaobaoYougouItemPropValueList" parameterType="java.util.Map" resultMap="taobaoYougouItemPropValue">
+		select p.* from tbl_merchant_taobao_yougou_item_prop_value p where 1=1
+		<include refid="condition4taobaoYougouItemPropValue" />
+	</select>
+	
+	
+</mapper>

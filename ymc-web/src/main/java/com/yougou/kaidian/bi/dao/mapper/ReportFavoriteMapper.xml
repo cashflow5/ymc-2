@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yougou.kaidian.bi.dao.ReportFavoriteMapper">
+	
+	<!-- 新增收藏归类-->
+	<insert id="addFavoriteClassify" parameterType="java.util.HashMap">
+		INSERT INTO tbl_merchant_favorite_classify
+            (id,
+             classify_name,
+			 merchant_code,
+			 login_name,
+             create_time,
+             update_time,
+             order_by
+             )
+        values(#{id},
+             #{classify_name},
+             #{merchant_code},
+             #{login_name},
+             Now(),
+             Now(),
+             #{order_by}
+             )
+	</insert>
+	
+	<!-- 修改收藏归类 -->
+	<update id="updateFavoriteClassify" parameterType="java.util.HashMap" >
+		update tbl_merchant_favorite_classify set classify_name = #{classify_name}
+		where id = #{id}
+	</update>
+	
+	<!-- 查询新增收藏归类排序数值 -->
+	<select id="queryClassifyOrderBy" parameterType="java.util.HashMap" resultType="int">
+		select ifnull(max(order_by),0)+1 from tbl_merchant_favorite_classify
+		where merchant_code = #{merchant_code}
+		  and login_name = #{login_name}
+	</select>
+	
+	<!-- 删除收藏归类 -->
+	<delete id="deleteFavoriteClassify" parameterType="String">
+		delete from tbl_merchant_favorite_classify where id = #{value}
+	</delete>
+	
+	<!-- 查询用户收藏归类列表 -->
+	<select id="queryFavoriteClassify" parameterType="java.util.HashMap" resultType="java.util.HashMap">		
+		SELECT t.id,
+		       t.classify_name,
+		       (SELECT Count(1)
+		        FROM   tbl_merchant_favorite_commodity t1,
+		               tbl_merchant_favorite_commodity_classify t2
+		        WHERE  t1.classify_status = 'Y'
+		               AND t1.id = t2.fvr_commodity_id
+		               AND t2.classify_id = t.id
+		               AND t1.merchant_code = #{merchant_code}
+		               AND t1.login_name = #{login_name}) classify_count
+		FROM   tbl_merchant_favorite_classify t
+		WHERE  t.merchant_code = #{merchant_code}
+		       AND t.login_name = #{login_name}
+		       order by t.order_by asc;
+	</select>
+	
+	<!-- 新增收藏商品 -->
+	<insert id="addFavoriteCommodity" parameterType="java.util.HashMap" >
+		INSERT INTO tbl_merchant_favorite_commodity
+		            (id,
+		             commodity_no,
+		             merchant_code,
+		             login_name,
+		             create_time,
+		             update_time)
+		VALUES     (#{id},
+		            #{commodity_no},
+		            #{merchant_code},
+		            #{login_name},
+		            Now(),
+		            Now())
+	</insert>
+	
+	<!-- 取消商品收藏，收藏表内删除此条收藏记录 -->
+	<delete id="deleteFavoriteCommodity" parameterType="java.util.HashMap" >
+		delete from tbl_merchant_favorite_commodity 
+		where commodity_no = #{commodity_no}
+		  and merchant_code =  #{merchant_code}
+		  and login_name = #{login_name}
+	</delete>
+	
+	<!-- 取消收藏商品后，此商品归类关系删除（根据商品编码）  -->
+	<delete id="deleteFavoriteCommodityClassifyByNo" parameterType="java.util.HashMap" >
+		delete from tbl_merchant_favorite_commodity_classify 
+		where fvr_commodity_id = (select id from tbl_merchant_favorite_commodity 
+		where commodity_no = #{commodity_no}
+		  and merchant_code =  #{merchant_code}
+		  and login_name = #{login_name})	
+	</delete>
+	
+	<!-- 取消商品收藏，收藏表内删除此条收藏记录 -->
+	<delete id="deleteFavoriteCommodityById" parameterType="String" >
+		delete from tbl_merchant_favorite_commodity 
+		where id = #{value}
+	</delete>
+	
+	<!-- 查询已收藏商品，含已归类和未归类 -->
+	<select id="queryFavoriteCommodity" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		select t.id,t.commodity_no,t.create_time,
+		   (select t1.classify_name
+					 from tbl_merchant_favorite_classify t1,
+						  tbl_merchant_favorite_commodity_classify t2 
+					where t1.id = t2.classify_id 
+						and t2.fvr_commodity_id = t.id
+						order by t1.order_by asc limit 1 
+					 ) first_classify_name,
+			(select count(1) 
+					 from tbl_merchant_favorite_classify t1,
+						  tbl_merchant_favorite_commodity_classify t2 
+					where t1.id = t2.classify_id 
+						and t2.fvr_commodity_id = t.id
+					 ) classify_count
+		 from tbl_merchant_favorite_commodity t 
+		where t.merchant_code = #{merchant_code}  
+		   and t.login_name = #{login_name}
+		   <!-- 未归类 -->
+		   <if test="classify_status !=null and classify_status=='N'">
+		   		and t.classify_status = 'N'
+		   </if>
+		   <!-- 已归类，具体归类ID -->
+		   <if test="classify_id !=null and classify_id !='' ">
+		   		and t.classify_status = 'Y'
+				and exists(
+					select 'x'
+			   		from tbl_merchant_favorite_classify s,
+			   			 tbl_merchant_favorite_commodity_classify s2			   		
+			   		where t.id = s2.fvr_commodity_id
+			   		and s2.classify_id = s.id
+			   		and s.id = #{classify_id}
+		   		)
+		   </if>
+		   order by t.create_time desc
+	</select>
+	
+	<!-- 查询收藏商品数量，用于判断某商品是否被收藏 -->
+	<select id="queryFavoriteCommodityCount" parameterType="java.util.HashMap" resultType="int" >
+	    select count(1)
+		 from tbl_merchant_favorite_commodity t 
+		where t.merchant_code = #{merchant_code}  
+		   and t.login_name = #{login_name}
+		   and commodity_no = #{commodity_no}
+	
+	</select>
+
+	
+	<!-- 新增收藏商品所属归类(单个商品) -->
+	<insert id="addFavoriteCommodityClassify" parameterType="java.util.HashMap">
+		INSERT INTO tbl_merchant_favorite_commodity_classify
+            (id,
+             classify_id,
+             fvr_commodity_id,
+             create_time,
+             update_time)
+		VALUES
+		<foreach collection="classify_ids" item="item" index="index" separator="," >  
+	        (#{item.id},#{item.classify_id},#{fvr_commodity_id},now(),now())  
+	    </foreach>  
+	</insert> 
+	
+	<!-- 新增收藏商品所属归类(批量商品归类) -->
+	<insert id="batchAddFavoriteCommodityClassify" parameterType="java.util.HashMap">		 
+			INSERT INTO tbl_merchant_favorite_commodity_classify
+	            (id,
+	             classify_id,
+	             fvr_commodity_id,
+	             create_time,
+	             update_time)
+			VALUES		
+			<foreach collection="comClaList" item="item" index="index" separator="," >  
+		        (#{item.id},#{item.classify_id},#{item.fvr_commodity_id},now(),now())  
+		    </foreach>  
+	</insert>  
+	
+	<!--  删除收藏商品所属归类(单个商品) -->
+	<delete id="deleteFavoriteCommodityClassify" parameterType="String">
+		delete from tbl_merchant_favorite_commodity_classify 
+		where fvr_commodity_id = #{value}
+	</delete>
+	
+	<!--  删除收藏商品所属归类(批量商品) -->
+	<delete id="batchDeleteFavoriteCommodityClassify" parameterType="java.util.HashMap">
+		delete from tbl_merchant_favorite_commodity_classify 
+		where fvr_commodity_id in
+		<foreach collection="fvr_commodity_ids" open="(" close=")" separator="," item="fvr_commodity_id" index="index"  > 
+			#{fvr_commodity_id}
+		</foreach>
+	</delete>
+	
+	<!-- 删除指定归类下的收藏商品所属归类关系 -->
+	<delete id="deleteClassifyCommodity" parameterType="String">
+	    delete from tbl_merchant_favorite_commodity_classify 
+		where classify_id = #{value}
+	</delete>
+
+</mapper>

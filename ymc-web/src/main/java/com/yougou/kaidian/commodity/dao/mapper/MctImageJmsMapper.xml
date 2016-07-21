@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yougou.kaidian.commodity.dao.MctImageJmsMapper">
+
+	<resultMap id="imgJmsCountMap" type="com.yougou.kaidian.commodity.model.pojo.ImgJmsCountBean">
+		<result column="merchant_code" property="merchantCode" jdbcType="VARCHAR" />
+		<result column="supplier" property="merchantName" jdbcType="VARCHAR" />
+		<result column="pic_type" property="picType" jdbcType="VARCHAR" />
+		<result column="status1_count" property="status1Count" jdbcType="INTEGER" />
+		<result column="status0_count" property="status0Count" jdbcType="INTEGER" />
+		<result column="count" property="count" jdbcType="INTEGER" />
+	</resultMap>
+	
+	<select id="countImgJms" resultMap="imgJmsCountMap">
+		SELECT jms.*,s.supplier FROM (SELECT
+			j.merchant_code,
+			j.pic_type,
+			sum(
+				CASE
+				WHEN j.`status` = 1 THEN
+					1
+				ELSE
+					0
+				END
+			) AS status1_count,
+			sum(
+				CASE
+				WHEN j.`status` = 0 THEN
+					1
+				ELSE
+					0
+				END
+			) AS status0_count,
+			count(1) AS count
+		FROM
+			tbl_merchant_image_jms j
+		WHERE
+			<![CDATA[  j.create_time >= #{create_time_begin}   ]]>
+		AND <![CDATA[  j.create_time <= #{create_time_end}   ]]> 
+		GROUP BY
+			j.merchant_code,
+			j.pic_type) as jms LEFT JOIN tbl_sp_supplier s ON s.supplier_code=jms.merchant_code
+	</select>
+	
+</mapper>

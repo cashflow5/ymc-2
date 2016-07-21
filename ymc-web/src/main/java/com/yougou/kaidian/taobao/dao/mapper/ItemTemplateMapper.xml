@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yougou.kaidian.taobao.dao.ItemTemplateMapper" >
+  <resultMap id="itemTemplate" type="com.yougou.kaidian.taobao.model.pojo.ItemTemplate" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="cate_no" property="cateNo" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="merchant_code" property="merchantCode" jdbcType="VARCHAR" />
+    <result column="operated" property="operated" jdbcType="VARCHAR" />
+    <result column="prop_names" property="propNames" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <resultMap id="itemPropTemplate" type="com.yougou.kaidian.taobao.model.pojo.ItemPropTemplate" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="template_id" property="templateId" jdbcType="VARCHAR" />
+    <result column="prop_item_no" property="propItemNo" jdbcType="VARCHAR" />
+    <result column="prop_item_name" property="propItemName" jdbcType="VARCHAR" />
+    <result column="prop_value_no" property="propValueNo" jdbcType="VARCHAR" />
+    <result column="prop_value_name" property="propValueName" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <!-- 插入模板 -->
+  <insert id="insertItemTemplate" parameterType="com.yougou.kaidian.taobao.model.pojo.ItemTemplate">
+  	insert into tbl_merchant_item_template(id,cate_no,title,merchant_code,operated,prop_names)values
+  	(
+      #{id,jdbcType=VARCHAR},
+      #{cateNo,jdbcType=VARCHAR},
+      #{title,jdbcType=VARCHAR},
+      #{merchantCode,jdbcType=VARCHAR},
+      #{operated,jdbcType=VARCHAR},
+      #{propNames,jdbcType=VARCHAR}
+     )
+  </insert>
+  <!-- 批量插入模板属性值 -->
+  <insert id="insertItemPropTemplateBatch" parameterType="com.yougou.kaidian.taobao.model.pojo.ItemPropTemplate">
+  	insert into tbl_merchant_item_prop_template(id,template_id,prop_item_no,prop_item_name,prop_value_no,prop_value_name,merchant_code)
+  	values
+  	<foreach collection="list"  separator="," item="item">
+  	 	(
+  	 	#{item.id,jdbcType=VARCHAR},
+     	#{item.templateId,jdbcType=VARCHAR},
+      	#{item.propItemNo,jdbcType=VARCHAR},
+      	#{item.propItemName,jdbcType=VARCHAR},
+      	#{item.propValueNo,jdbcType=VARCHAR},
+      	#{item.propValueName,jdbcType=VARCHAR},
+      	#{item.merchantCode,jdbcType=VARCHAR}
+      	)
+  	</foreach>
+  </insert>
+  
+  <!-- 删除-->
+  <delete id="deleteItemTemplate" parameterType="java.lang.String">
+  	delete from tbl_merchant_item_template where id = #{id,jdbcType=VARCHAR} and merchant_code =  #{merchantCode,jdbcType=VARCHAR}
+  </delete>
+  
+  <delete id="deleteItemPropTemplate" parameterType="java.lang.String">
+  	delete from tbl_merchant_item_prop_template where template_id = #{templateId,jdbcType=VARCHAR} and merchant_code =  #{merchantCode,jdbcType=VARCHAR}
+  </delete>
+  
+  <sql id="selectCondition">
+	    <if test="null!=merchantCode and ''!=merchantCode" >
+	       	 and merchant_code = #{merchantCode, jdbcType=VARCHAR}
+	    </if>
+	    <if test="null!=cateNo and ''!=cateNo" >
+	       	 and cate_no = #{cateNo, jdbcType=VARCHAR}
+	    </if>
+	    <if test="null!=title and ''!=title" >
+	       	 and title = #{title, jdbcType=VARCHAR}
+	    </if>
+	    <if test="null!=key and ''!=key" >
+	       	 and (title like '%${key}%' or prop_names like '%${key}%')
+	    </if>
+  </sql>
+  
+  <!-- 查询模板 -->
+  <select id="selectTemplateCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+  	select count(1) from tbl_merchant_item_template where 1=1
+  	<include refid="selectCondition"/>
+  </select>
+  <select id="selectTemplate" parameterType="java.lang.String" resultMap="itemTemplate">
+  	select * from tbl_merchant_item_template where 1=1
+  	<include refid="selectCondition"/>
+  	order by operated desc
+  </select>
+  
+  <sql id="selectCondition4Prop">
+	    <if test="null!=merchantCode and ''!=merchantCode" >
+	       	 and merchant_code = #{merchantCode, jdbcType=VARCHAR}
+	    </if>
+	    <if test="null!=templateId and ''!=templateId" >
+	       	 and template_id = #{templateId, jdbcType=VARCHAR}
+	    </if>
+  </sql>
+  <select id="selectPropTemplate" parameterType="java.lang.String" resultMap="itemPropTemplate">
+  	select * from tbl_merchant_item_prop_template where 1=1
+  	<include refid="selectCondition4Prop"/>
+  </select>
+</mapper>

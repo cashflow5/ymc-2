@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.belle.yitiansystem.merchant.dao.mapper.PunishOrderMapper" >
+  
+  <!-- 查询超时违规订单列表 -->
+  <select id="queryPunishOrderList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+  	select t1.id,t1.punish_order_status,t1.order_no,t1.third_order_no,t1.order_time,t1.valid_time, 
+		sp.supplier,t1.merchant_code,t1.punish_type,t1.shipment_status,t1.shipment_time,
+		t1.order_price, t1.is_settle,t1.is_submit,t1.settle_order_no,t1.punish_price,
+		pu.shipment_hour,pu.timeout_punish_type,pu.timeout_punish_money,pu.timeout_punish_rate,
+		(select count(1) from tbl_merchant_shipment_day_setting sd  
+			where sd.is_shipment_day = 0 
+			 and sd.date between date(t1.order_time) and date(ifnull(t1.shipment_time,now())) ) noshipdays 
+	 from
+	 (select DISTINCT t.* from tbl_sp_supplier_punish_order t 
+	 			<if test="(punishOrderVo.brandNo !=null and punishOrderVo.brandNo !='') or (punishOrderVo.category !=null and punishOrderVo.category !='') ">
+				inner join tbl_order_sub os on t.order_no = os.order_sub_no
+				inner join tbl_order_detail4sub od on od.order_sub_id = os.id  
+				inner join tbl_commodity_style  cs on cs.no = od.commodity_no 
+				</if>
+		 where t.punish_order_status = #{punishOrderVo.punishOrderStatus}  
+				and t.punish_type = #{punishOrderVo.punishType}  	
+				<include refid="punishOrderWhere" />
+				<!-- 分页查询 -->
+				<if test="start != null and pageSize != null">
+				order by t.order_time desc limit #{start} ,#{pageSize} 
+				</if>
+				  )t1
+	 left  join tbl_sp_supplier sp on  t1.merchant_code =sp.supplier_code 
+	 left join tbl_sp_supplier_punish_rule pu on t1.merchant_code = pu.merchant_code  
+  </select>
+  
+  <!-- 查询超时违规订单列表总数 -->
+  <select id="queryPunishOrderCount" parameterType="java.util.HashMap" resultType="int">
+  	
+	 select count(DISTINCT t.id) punishOrderCount from tbl_sp_supplier_punish_order t 
+		<if test="(punishOrderVo.brandNo !=null and punishOrderVo.brandNo !='') or (punishOrderVo.category !=null and punishOrderVo.category !='') ">
+		inner join tbl_order_sub os on t.order_no = os.order_sub_no
+		inner join tbl_order_detail4sub od on od.order_sub_id = os.id  
+		inner join tbl_commodity_style  cs on cs.no = od.commodity_no 
+		</if>
+	 where t.punish_order_status = #{punishOrderVo.punishOrderStatus}  
+		and t.punish_type = #{punishOrderVo.punishType}  	
+		<include refid="punishOrderWhere" />
+				
+  </select>
+  
+  <sql id="punishOrderWhere" >
+  		<!-- 订单号 -->
+		<if test="punishOrderVo.orderNo !=null and punishOrderVo.orderNo !=''" >
+		and t.order_no = #{punishOrderVo.orderNo}
+		</if>
+		<!-- 商家编码 -->
+		<if test="punishOrderVo.merchantCode !=null and punishOrderVo.merchantCode !=''" >
+		and t.merchant_code = #{punishOrderVo.merchantCode}
+		</if>
+		<!-- 商家编码 -->
+		<if test="merchantCodes !=null and merchantCodes.length > 0" >
+			 and t.merchant_code in 
+			 <foreach collection="merchantCodes" item="merchantCode" open="(" separator="," close=")">
+					#{merchantCode} 
+			</foreach>	
+		</if>
+		<!-- 发货状态 -->
+		<if test="punishOrderVo.shipmentStatus !=null and punishOrderVo.shipmentStatus !=''" >
+		and t.shipment_status = #{punishOrderVo.shipmentStatus}
+		</if>
+		<!-- 下单时间Start -->
+		<if test="punishOrderVo.orderTimeStart !=null and punishOrderVo.orderTimeStart !=''" >
+		and t.order_time >= #{punishOrderVo.orderTimeStart,jdbcType=DATE}
+		</if>
+		<!-- 下单时间End-->
+		<if test="punishOrderVo.orderTimeEnd !=null and punishOrderVo.orderTimeEnd !=''" >
+		and t.order_time <![CDATA[ <= ]]> #{punishOrderVo.orderTimeEnd,jdbcType=DATE}
+		</if>
+		<!-- 货品负责人-->
+		<if test="punishOrderVo.supplierYgContacts!=null and punishOrderVo.supplierYgContacts !=''" >
+		and t.merchant_code in(select t.merchant_code 
+			from tbl_merchant_supplier_expand t inner join tbl_supplier_yg_contact s 
+			on t.yg_contact_user_id = s.user_id
+		   where s.user_name like concat('%',#{punishOrderVo.supplierYgContacts},'%') )
+		</if>
+		<!-- 品牌 -->
+		<if test="brandNos !=null and brandNos.length > 0">
+			and cs.brand_no in 
+			<foreach collection="brandNos" item="brandNo" open="(" separator="," close=")">
+				#{brandNo} 
+			</foreach>					
+		</if>
+		
+		<!-- 是否扣款-->
+		<if test="punishOrderVo.isSettle !=null and punishOrderVo.isSettle !=''" >
+		and t.is_settle <![CDATA[ <= ]]> #{punishOrderVo.isSettle}
+		</if>
+		<!-- 是否提交结算-->
+		<if test="punishOrderVo.isSubmit !=null and punishOrderVo.isSubmit !=''" >
+		and t.is_submit <![CDATA[ <= ]]> #{punishOrderVo.isSubmit}
+		</if>
+		
+		<!-- 一级分类 -->
+		<if test="(punishOrderVo.category !=null and punishOrderVo.category !='')">
+		and cs.cat_structname like concat(#{punishOrderVo.category},'%')
+		</if>
+  </sql>
+ 
+</mapper>

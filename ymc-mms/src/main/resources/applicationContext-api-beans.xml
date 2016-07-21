@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+	
+	<description>招商系统Bean配置</description>
+	
+	<bean id="ignoreClassNotFound" class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+		<property name="staticField">
+			<!-- 启用(适用开发环境) 
+			<value>java.lang.Boolean.TRUE</value>
+			-->
+			<!-- 禁用(适用生产环境) 
+			-->
+			<value>java.lang.Boolean.FALSE</value>
+		</property>
+	</bean>
+	
+	<bean id="ignoreNoSuchMethod" class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+		<property name="staticField">
+			<!-- 启用(适用开发环境) 
+			<value>java.lang.Boolean.TRUE</value>
+			-->
+			<!-- 禁用(适用生产环境) 
+			-->
+			<value>java.lang.Boolean.FALSE</value>
+		</property>
+	</bean>
+
+    <util:map id="XWSDefinitionMap" key-type="com.yougou.api.beans.XWSNaming" value-type="com.yougou.api.beans.XWSDefinition" map-class="java.util.HashMap">
+        <!-- 订单服务类 -->
+        <entry key="ORDER">
+			<bean class="com.yougou.api.beans.XWSDefinition">
+				<property name="serviceName" value="orderForMerchant"></property>
+				<property name="servicePort" value="orderForMerchantHttpPort"></property>
+				<property name="serviceTimeout" value="160000"></property>
+				<property name="serviceLocation" value="/orderForMerchant?wsdl"></property>
+				<property name="serviceMethod" value=""></property>
+				<property name="serviceNamespace" value="http://adapter.order.yougou.com"></property>
+				<property name="serviceIdentifier" value="asdfghjkkl12222jjdkfjkdjjj"></property>
+				<property name="serviceToken" value="cf5511ace587b7f9a56f227008dca53b3c7065fa4d886ea6a56f227008dca53b9ca792fb4d3c7971"></property>
+			</bean>
+        </entry>
+        <!-- 查询商品服务 -->
+        <entry key="COMMODITY_QUERY">
+			<bean class="com.yougou.api.beans.XWSDefinition">
+				<property name="serviceName" value="MerchantWebService"></property>
+				<property name="servicePort" value="MerchantWebServicePort"></property>
+				<property name="serviceTimeout" value="160000"></property>
+				<property name="serviceLocation" value="/MerchantWebService?wsdl"></property>
+				<property name="serviceMethod" value="getCommodityMsgByScope"></property>
+				<property name="serviceNamespace" value="http://api.yougou.com/ws"></property>
+				<property name="serviceIdentifier" value=""></property>
+				<property name="serviceToken" value=""></property>
+			</bean>
+        </entry>
+        <!-- 商品上架服务 -->
+        <entry key="COMMODITY_SHELVES">
+			<bean class="com.yougou.api.beans.XWSDefinition">
+				<property name="serviceName" value="CommodityStatusWebService"></property>
+				<property name="servicePort" value="CommodityStatusWebServicePort"></property>
+				<property name="serviceTimeout" value="160000"></property>
+				<property name="serviceLocation" value="/CommodityStatusWebService?wsdl"></property>
+				<property name="serviceMethod" value="commodityShelves"></property>
+				<property name="serviceNamespace" value="http://api.yougou.com/ws"></property>
+				<property name="serviceIdentifier" value=""></property>
+				<property name="serviceToken" value=""></property>
+			</bean>
+        </entry>
+        <!-- 商品调价服务 -->
+        <entry key="COMMODITY_UPDATE_PRICE">
+			<bean class="com.yougou.api.beans.XWSDefinition">
+				<property name="serviceName" value="CommodityPriceScopeService"></property>
+				<property name="servicePort" value="CommodityPriceScopeServicePort"></property>
+				<property name="serviceTimeout" value="160000"></property>
+				<property name="serviceLocation" value="/CommodityPriceScopeService?wsdl"></property>
+				<property name="serviceMethod" value="updateCommodityPrice"></property>
+				<property name="serviceNamespace" value="http://api.yougou.com/ws"></property>
+				<property name="serviceIdentifier" value=""></property>
+				<property name="serviceToken" value=""></property>
+			</bean>
+        </entry>
+        <!-- 商家品牌列表 -->
+        <entry key="BRAND_QUERY">
+			<bean class="com.yougou.api.beans.XWSDefinition">
+				<property name="serviceName" value="BasisWebService"></property>
+				<property name="servicePort" value="BasisWebServicePort"></property>
+				<property name="serviceTimeout" value="160000"></property>
+				<property name="serviceLocation" value="BasisWebService?wsdl"></property>
+				<property name="serviceMethod" value="getBrandByMerchantCode"></property>
+				<property name="serviceNamespace" value="http://api.yougou.com/ws"></property>
+				<property name="serviceIdentifier" value=""></property>
+				<property name="serviceToken" value=""></property>
+			</bean>
+        </entry>
+        <!-- 商家品牌列表 -->
+        <entry key="CAT_QUERY">
+			<bean class="com.yougou.api.beans.XWSDefinition">
+				<property name="serviceName" value="BasisWebService"></property>
+				<property name="servicePort" value="BasisWebServicePort"></property>
+				<property name="serviceTimeout" value="160000"></property>
+				<property name="serviceLocation" value="BasisWebService?wsdl"></property>
+				<property name="serviceMethod" value="getCatByMerchantCode"></property>
+				<property name="serviceNamespace" value="http://api.yougou.com/ws"></property>
+				<property name="serviceIdentifier" value=""></property>
+				<property name="serviceToken" value=""></property>
+			</bean>
+        </entry>
+    </util:map>
+
+</beans>

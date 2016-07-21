@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yougou.kaidian.commodity.dao.LayoutSettingMapper" >
+  <resultMap id="layoutTemplateResultMap" type="com.yougou.kaidian.commodity.model.vo.LayoutTemplate" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="layout_name" property="layoutName" jdbcType="VARCHAR" />
+    <result column="merchant_code" property="merchantCode" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    <result column="type" property="type" jdbcType="SMALLINT" />
+    <result column="isAll" property="isAll" jdbcType="VARCHAR" />
+    <result column="layout_html" property="layoutHtml" jdbcType="LONGVARCHAR" />
+    <result column="html_file_path" property="htmlFilePath" jdbcType="VARCHAR" />
+  </resultMap>
+ 
+
+	<!-- 新增版式模板 -->
+	<insert id="addLayoutTemplate" parameterType="com.yougou.kaidian.commodity.model.vo.LayoutTemplate">
+		insert into tbl_merchant_layout_template(id,layout_name,merchant_code,create_time,update_time,type,isAll,layout_html,html_file_path) 
+		values
+		(#{id},#{layoutName},#{merchantCode},now(),now(),#{type},#{isAll},#{layoutHtml},#{htmlFilePath}) 
+	</insert>
+	
+	<!-- 更新版式模板 -->
+	<update id="updateLayoutTemplate" parameterType="com.yougou.kaidian.commodity.model.vo.LayoutTemplate">
+		update tbl_merchant_layout_template t 
+		set t.update_time = now()
+		<if test="layoutName!=null and layoutName!=''">
+			,t.layout_name = #{layoutName}
+		</if>
+		<if test="layoutHtml!=null and layoutHtml!=''">
+			,t.layout_html = #{layoutHtml}
+		</if>
+		<if test="isAll!=null and isAll!=''">
+			,t.isAll = #{isAll}
+		</if>
+		<if test="htmlFilePath !=null and htmlFilePath !=''">
+			,t.html_file_path = #{htmlFilePath}
+		</if>
+		where t.id = #{id}
+	</update>
+	
+	<!-- 删除版式模板:由物理删除改为逻辑删除 -->
+	<delete id="deleteLayoutTemplate" parameterType="String">
+		<!-- delete from tbl_merchant_layout_template  where id = #{value} -->
+		update tbl_merchant_layout_template  set delete_flag = 'Y',isAll = 'N' ,update_time = now()  where id = #{value}
+	</delete>
+	
+	<!-- 删除版式下设置的商品关联关系 -->
+	<delete id="deleteLayoutSettingCommodity" parameterType="String" >
+		delete from tbl_merchant_layout_commodity  where layout_id = #{value}
+	</delete>
+	
+	<!-- 查询自定义版式模板 -->
+	<select id="queryLayoutTemplate" resultMap="layoutTemplateResultMap" parameterType="String">
+		select * from tbl_merchant_layout_template t where t.type = 1 and t.merchant_code = #{value} and t.delete_flag = 'N' order by t.create_time desc
+	</select>
+	
+	<!-- 查询自定义版式模板 -->
+	<select id="queryLayoutTemplateById" resultMap="layoutTemplateResultMap" parameterType="String">
+		select * from tbl_merchant_layout_template t where t.type = 1 and t.id = #{value} and t.delete_flag = 'N'
+	</select>
+	
+	<!-- 删除指定商家编码的所有版式设置 -->
+	<delete id="deleteLayoutSettingByMerchantCode" parameterType="String">
+		delete from tbl_merchant_layout_commodity  where exists (
+			select s.id from tbl_merchant_layout_template s 
+			where s.id = layout_id and s.merchant_code = #{value}
+		)
+	</delete>
+	
+	<!-- 删除指定商品编码的所有版式设置 -->
+	<delete id="deleteLayoutSettingByCommodityNo" parameterType="String">
+		delete from tbl_merchant_layout_commodity  where commodity_no = #{value}		
+	</delete>
+	
+	<!-- 批量删除指定商品编码的所有版式设置 -->
+	<delete id="batchDeleteLayoutSettingByCommodityNo" parameterType="java.util.List">
+		delete from tbl_merchant_layout_commodity  where commodity_no in (
+		<foreach collection="list" item="commodity" separator=",">
+			#{commodity}
+		</foreach>
+		)	
+	</delete>
+	
+	<!-- 保存版式设置 -->
+	<insert id="batchAddLayoutSetting" parameterType="java.util.List">
+		insert into tbl_merchant_layout_commodity values
+		<foreach collection="list" item="setting" separator="," >
+			(#{setting.id},#{setting.layoutId},#{setting.commodityNo},now(),now())
+		</foreach>
+	</insert>
+	
+	<!-- 除去指定模板 都改为 不是绑定所有商品  -->
+	<update id="updateLayoutTempalteIsAllNo" parameterType="com.yougou.kaidian.commodity.model.vo.LayoutTemplate">
+		update tbl_merchant_layout_template set isAll = 'N',update_time = now()
+			 where merchant_code = #{merchantCode} and id !=#{id}
+	</update>
+	
+	<!-- 将指定模板标记绑定所有商品  -->
+	<update id="updateLayoutTempalteIsAllYes" parameterType="com.yougou.kaidian.commodity.model.vo.LayoutTemplate">
+		update tbl_merchant_layout_template set isAll = 'Y',update_time = now()
+			 where  id !=#{id}
+	</update>
+	
+	<!-- 根据商品编码获取该商品版式设置html -->
+	<select id="querySettingHtmlByCommodityNo" resultMap="layoutTemplateResultMap" parameterType="String">
+		select t.layout_html from tbl_merchant_layout_commodity s,tbl_merchant_layout_template t 
+		where  s.layout_id = t.id and s.commodity_no = #{value} and t.delete_flag = 'N' limit 1
+	</select>
+	
+	<!-- 根据商品编码获取该商品版式设置html 静态文件地址 -->
+	<select id="querylayoutHtmlFileByCommodityNo" resultMap="layoutTemplateResultMap" parameterType="java.util.HashMap">
+		select t.html_file_path  from tbl_merchant_layout_commodity s,tbl_merchant_layout_template t 
+		where  s.layout_id = t.id and s.commodity_no = #{commodityNo} and t.delete_flag = 'N' limit 1
+	</select>
+	
+	<!-- 根据商家编码获取该商家指向所有商品的版式设置html -->
+	<select id="querySettingHtmlByMerchantCode" resultMap="layoutTemplateResultMap" parameterType="String">		
+		select t.layout_html from tbl_merchant_layout_template t 
+		where t.isAll = 'Y' and t.merchant_code = #{value} and t.delete_flag = 'N' limit 1
+	</select>
+	
+	<!-- 根据商家编码获取该商家指向所有商品的版式设置html -->
+	<select id="querylayoutHtmlFileByMerchantCode" resultMap="layoutTemplateResultMap" parameterType="java.util.HashMap">		
+		select t.html_file_path from tbl_merchant_layout_template t 
+		where t.isAll = 'Y' and t.merchant_code = #{merchantCode} and t.delete_flag = 'N' limit 1
+	</select>
+	
+	<!-- 根据商品编码获取商品所属商家编码 -->
+	<select id="queryMerchantCodeByCommodityNo" resultType="String" parameterType="String">		
+		select t.merchant_code merchantCode from tbl_commodity_style t 
+		where t.no = #{value} limit 1
+	</select>
+	
+	<!-- 根据模板ID 查询此模板下的商品编码 -->
+	<select id="queryCommodityNoByTemplateId" resultType="String" parameterType="String">
+		select commodity_no from tbl_merchant_layout_commodity where layout_id = #{value}
+	</select>
+	
+	<!-- 根据商家编码查询所有的绑定模板的商品编码 -->
+	<select id="queryLayoutSetCommodityNosByMerchantCode" resultType="String" parameterType="java.util.HashMap">
+		select c.commodity_no
+		 from tbl_merchant_layout_commodity c INNER JOIN tbl_merchant_layout_template t on c.layout_id = t.id
+		where t.merchant_code = #{merchantCode}
+		  and t.delete_flag = 'N'
+	</select>
+	
+	<!-- 查询所有绑定了商品或指向所有商品的固定模板和自定义模板   -->
+	<select id="queryAllUsingLayoutTemplate" resultMap="layoutTemplateResultMap">
+		select t.id ,t.isAll,t.layout_name,t.layout_html,t.merchant_code,t.create_time from tbl_merchant_layout_template t 
+		where ( t.type = 0 and (t.isAll = 'Y' or EXISTS (select 1 from tbl_merchant_layout_commodity c where t.id = c.layout_id) ) )
+ 		  or t.type = 1 
+ 		  and t.delete_flag = 'N'
+	</select>
+	
+	<!-- 更新静态页地址 -->
+	<update id="updateHtmlFilePath" parameterType="com.yougou.kaidian.commodity.model.vo.LayoutTemplate">
+		update tbl_merchant_layout_template t set t.html_file_path = #{htmlFilePath},t.update_time = now()
+		  where t.id = #{id}
+	</update>
+	
+	<!-- 根据商家编码查询绑定所有商品的模板 -->	
+	<select id="queryTemplateForAllByMerchantCode" parameterType="String"  resultMap="layoutTemplateResultMap" >
+		select * from tbl_merchant_layout_template t 
+		where  t.merchant_code = #{value} and t.isAll = 'Y' and t.delete_flag = 'N' limit 1
+	</select>	
+	
+</mapper>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yougou.kaidian.taobao.dao.TaobaoItemPropValueMapper">
+
+	<resultMap id="taobaoItemPropValue" type="com.yougou.kaidian.taobao.model.TaobaoItemPropValue">
+		<result column="vid" property="vid" jdbcType="BIGINT" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="is_parent" property="isParent" jdbcType="TINYINT" />
+		<result column="operater" property="operater" jdbcType="VARCHAR" />
+		<result column="operated" property="operated" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<!-- 批量插入淘宝类目属性值数据 -->
+    <insert id="insertTaobaoItemPropValueList" parameterType="java.util.List">
+        insert into tbl_merchant_taobao_item_prop_value ( vid, name, is_parent, operater, operated )
+        values 
+        <foreach collection="list" item="item" index="index" separator=","> 
+          (
+             #{item.vid,jdbcType=BIGINT},
+             #{item.name,jdbcType=VARCHAR},
+             #{item.isParent,jdbcType=TINYINT},
+             #{item.operater,jdbcType=VARCHAR},
+             #{item.operated,jdbcType=VARCHAR}
+          )
+        </foreach>
+    </insert>
+
+	<!-- 根据vid获取属性值对象 -->
+	<select id="getTaobaoItemPropValueByVid" resultMap="taobaoItemPropValue">
+		SELECT vid, name, is_parent, operater, operated
+		FROM tbl_merchant_taobao_item_prop_value
+		WHERE vid = #{vid,jdbcType=BIGINT}
+	</select>
+	
+	<resultMap id="taobaoItemCatPropValue" type="com.yougou.kaidian.taobao.model.TaobaoItemCatPropValue">
+		<result column="cid" property="cid" jdbcType="BIGINT" />
+		<result column="pid" property="pid" jdbcType="BIGINT" />
+		<result column="vid" property="vid" jdbcType="BIGINT" />
+	</resultMap>
+	
+	<!-- 批量插入淘宝类目属性值数据 -->
+    <insert id="insertTaobaoItemCatPropValueList" parameterType="java.util.List">
+        insert into tbl_merchant_taobao_item_cat_prop_value ( cid, pid, vid )
+        values 
+        <foreach collection="list" item="item" index="index" separator=","> 
+          (
+          	 #{item.cid,jdbcType=BIGINT},
+             #{item.pid,jdbcType=BIGINT},
+             #{item.vid,jdbcType=BIGINT}
+          )
+        </foreach>
+    </insert>
+    
+	<!-- 根据cid，pid，vid获取商品类目属性的属性值对象 -->
+	<select id="getTaobaoItemCatPropValueByVid" resultMap="taobaoItemCatPropValue">
+		SELECT cid, pid, vid
+		FROM tbl_merchant_taobao_item_cat_prop_value
+		WHERE cid = #{cid,jdbcType=BIGINT} AND pid = #{pid,jdbcType=BIGINT} AND vid = #{vid,jdbcType=BIGINT}
+	</select>
+	
+	
+	<!-- 淘宝属性值中间表 -->
+	<resultMap id="taobaoItemCatPropValueDto" type="com.yougou.kaidian.taobao.model.TaobaoItemCatPropValueDto">
+		<result column="cid" property="cid" jdbcType="BIGINT" />
+		<result column="pid" property="pid" jdbcType="BIGINT" />
+		<result column="vid" property="vid" jdbcType="BIGINT" />
+		<result column="name" property="vName" jdbcType="VARCHAR" />
+		<result column="bindId" property="propValBindId" jdbcType="VARCHAR" />
+		<result column="yougou_prop_value_no" property="yougouPropValueNo" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<!--根据淘宝属性查询属性值以及绑定的属性值-->
+	<select id="selectTaobaoItemProValWidthYouItemProVal" resultMap="taobaoItemCatPropValueDto">
+	select v.*,iv.name,pv.yougou_prop_value_no,pv.id bindId from tbl_merchant_taobao_item_cat_prop_value v 
+	inner join tbl_merchant_taobao_item_prop_value iv on iv.vid=v.vid
+	inner join tbl_merchant_taobao_yougou_itemcat i on i.taobao_cid = v.cid
+	left join tbl_merchant_taobao_yougou_item_prop_value pv on pv.taobao_cid = v.cid and pv.taobao_pid = v.pid and pv.taobao_vid = v.vid
+	where v.pid =  #{pid,jdbcType=VARCHAR} and v.cid= #{cid,jdbcType=VARCHAR}
+	and i.merchant_code = #{merchantCode,jdbcType=VARCHAR}
+	and i.id = #{catBindId,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 淘宝属性值中间表 -->
+	<resultMap id="taobaoItemPropValVO" type="com.yougou.kaidian.taobao.model.TaobaoItemPropValVO">
+		<result column="propval" property="propval" jdbcType="VARCHAR" />
+		<result column="pid" property="pid" jdbcType="BIGINT" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="yougou_cat_no" property="yougouCatNo" jdbcType="VARCHAR" />
+		<result column="yougou_prop_item_no" property="yougouPropItemNo" jdbcType="VARCHAR" />
+		<result column="yougou_prop_value_no" property="yougouPropValueNo" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="getTaobaoYougouItemPropValByCid" resultMap="taobaoItemPropValVO">
+		SELECT CONCAT(CONCAT(t2.pid,':'),t1.vid) AS propval,t2.pid,t1.name,t3.yougou_cat_no,t3.yougou_prop_item_no,t3.yougou_prop_value_no
+		FROM tbl_merchant_taobao_item_prop_value t1
+		INNER JOIN tbl_merchant_taobao_item_cat_prop_value t2 ON t2.vid = t1.vid
+		INNER JOIN tbl_merchant_taobao_yougou_item_prop_value t3 ON t3.taobao_cid = t2.cid AND t3.taobao_pid = t2.pid AND t3.taobao_vid = t2.vid
+		WHERE t3.merchant_code =  #{merchantCode, jdbcType=VARCHAR}
+			AND t3.nick_id = #{nickId, jdbcType=BIGINT}
+			AND t3.taobao_cid = #{cid, jdbcType=BIGINT}
+	</select>
+	
+	<select id="getTaobaoYougouItemPropValByCidPidVid" resultMap="taobaoItemPropValVO">
+		SELECT t1.yougou_prop_item_no, t1.yougou_prop_value_no
+		FROM tbl_merchant_taobao_yougou_item_prop_value t1
+		WHERE t1.merchant_code =  #{merchantCode, jdbcType=VARCHAR}
+			AND t1.nick_id = #{nickId, jdbcType=BIGINT}
+			AND t1.taobao_cid = #{cid, jdbcType=BIGINT}
+			AND t1.taobao_pid = #{pid, jdbcType=BIGINT}
+			AND t1.taobao_vid = #{vid, jdbcType=BIGINT}
+	</select>
+	<select id="getTaobaoYougouItemPropValByCidPid" resultMap="taobaoItemPropValVO">
+		SELECT t1.taobao_vid AS propval, t1.yougou_prop_item_no, t1.yougou_prop_value_no
+		FROM tbl_merchant_taobao_yougou_item_prop_value t1
+		WHERE t1.merchant_code =  #{merchantCode, jdbcType=VARCHAR}
+			AND t1.nick_id = #{nickId, jdbcType=BIGINT}
+			AND t1.taobao_cid = #{cid, jdbcType=BIGINT}
+			AND t1.taobao_pid = #{pid, jdbcType=BIGINT}
+	</select>
+	
+	<select id="getTaobaoYougouItemPropValByCidPidTemplet" resultMap="taobaoItemPropValVO">
+		SELECT t1.taobao_vid AS propval, t1.yougou_prop_item_no, t1.yougou_prop_value_no
+		FROM tbl_merchant_taobao_yougou_item_prop_value_templet t1
+		WHERE t1.taobao_cid = #{cid, jdbcType=BIGINT}
+		AND t1.taobao_pid = #{pid, jdbcType=BIGINT}
+	</select>
+	
+	<!-- 查询淘宝颜色分类属性值 -->
+	<select id="selectTaobaoItemProVal4Color" resultMap="taobaoItemCatPropValueDto">
+		select v.cid,v.pid,v.vid,pv.name,yv.id bindId from tbl_merchant_taobao_item_cat_prop_value v 
+		inner join tbl_merchant_taobao_item_prop p on v.pid = p.pid and p.is_color_prop = '1'
+		inner join tbl_merchant_taobao_item_prop_value pv on pv.vid = v.vid
+		left join tbl_merchant_taobao_yougou_item_prop_value yv on yv.taobao_cid = v.cid
+		and yv.taobao_pid = v.pid and yv.taobao_vid = v.vid
+		where v.cid = #{cid, jdbcType=BIGINT}
+	</select>
+</mapper>

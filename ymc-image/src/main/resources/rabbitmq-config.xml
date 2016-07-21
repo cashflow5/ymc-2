@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+	xmlns:task="http://www.springframework.org/schema/task" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit-1.1.xsd
+	http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- 用于消息发送 -->
+	<bean id="jsonMessageConverter"	class="org.springframework.amqp.support.converter.JsonMessageConverter">
+		<property name="classMapper">
+			<bean class="org.springframework.amqp.support.converter.DefaultClassMapper">
+			</bean>
+		</property>
+	</bean>	
+	
+	<rabbit:connection-factory id="connectionFactory" addresses="${rabbit.host}" />
+	<rabbit:admin connection-factory="connectionFactory" />
+	
+	<!-- 用于消息的监听的容器类SimpleMessageListenerContainer，对于queueName的值一定要与定义的Queue的值相同 -->
+	<rabbit:listener-container concurrency="2" connection-factory="connectionFactory" error-handler="jmsErrorHandler" 
+	message-converter="jsonMessageConverter">
+		<rabbit:listener ref="image4TaobaoReceive" method="handleMessage" queue-names="ymc.handleimage.taobao.queue"/>
+	</rabbit:listener-container>
+	
+	<!-- 新的queue 队列声明 -->
+	<rabbit:queue id="ymc.handleimage.queue" name="ymc.handleimage.queue">
+		<rabbit:queue-arguments>
+			<entry key="x-ha-policy" value="all" />
+		</rabbit:queue-arguments>
+	</rabbit:queue>
+	<rabbit:queue id="ymc.handleimage.batch.queue" name="ymc.handleimage.batch.queue">
+		<rabbit:queue-arguments>
+			<entry key="x-ha-policy" value="all" />
+		</rabbit:queue-arguments>
+	</rabbit:queue>
+	<rabbit:queue id="ymc.handleimage.taobao.queue" name="ymc.handleimage.taobao.queue">
+		<rabbit:queue-arguments>
+			<entry key="x-ha-policy" value="all" />
+		</rabbit:queue-arguments>
+	</rabbit:queue>
+	
+	<!-- 用于消息的监听的容器类SimpleMessageListenerContainer，对于queueName的值一定要与定义的Queue的值相同 -->
+	<rabbit:listener-container concurrency="10" connection-factory="connectionFactory" error-handler="jmsErrorHandler" 
+	message-converter="jsonMessageConverter">
+		<rabbit:listener ref="image4SingleCommodityReceive" method="handleMessage" queue-names="ymc.handleimage.queue"/>
+		<rabbit:listener ref="image4BatchUploadReceive" method="handleMessage" queue-names="ymc.handleimage.batch.queue"/>
+	</rabbit:listener-container>
+</beans>

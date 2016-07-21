@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>优购-商家中心修改账号</title>
+    <link rel="stylesheet" type="text/css" href="css/base.css" />
+    <link rel="stylesheet" type="text/css" href="css/mold.css" />
+</head>
+
+<body>
+    <div class="account_box">
+        <div class="form-box w400">
+            <dl class="form-warp small clearfix">
+                <dt class="form-title"><em class="cred">*</em>账号：</dt>
+                <dd class="form-text"><p class="prompt-tip">yongxu</p></dd>
+                <dd></dd>
+            </dl>
+            <dl class="form-warp small clearfix">
+                <dt class="form-title"><em class="cred">*</em>密码：</dt>
+                <dd class="form-text"><input type="password" class="password-text" value="gsg5e85"/></dd>
+                <dd>
+                    <ul class="safetyStrength">
+                        <li></li>
+                        <li class="pwdMid"></li>
+                        <li></li>
+                        <li class="text">中</li>
+                    </ul>
+                </dd>
+            </dl>
+            <dl class="form-warp small clearfix">
+                <dt class="form-title"><em class="cred">*</em>确认密码：</dt>
+                <dd class="form-text"><input type="password"/></dd>
+                <dd></dd>
+            </dl>
+            <dl class="form-warp small clearfix">
+                <dt class="form-title"><em class="cred">*</em>手机号码：</dt>
+                <dd class="form-text"><input type="text"/></dd>
+                <dd class="Gray"><p class="prompt-tip">不能与已绑定的号码重复</p></dd>
+            </dl>
+            <dl class="form-warp small clearfix">
+                <dt class="form-title">真实姓名：</dt>
+                <dd class="form-text"><input type="text"/></dd>
+                <dd></dd>
+            </dl>
+            <dl class="form-warp small clearfix">
+                <dt class="form-title">备注：</dt>
+                <dd class="form-text textarea"><textarea></textarea></dd>
+                <dd></dd>
+            </dl>
+        </div>
+    </div>
+    <script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="js/subaccount.js"></script>
+</body>
+</html>

@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.belle.yitiansystem.merchant.dao.mapper.TaobaoMapper" >
+	<resultMap id="TaobaoAuthorizeResultMap" type="com.belle.yitiansystem.merchant.model.vo.TaobaoAuthorizeVo">
+		<result column="id" property="id" jdbcType="VARCHAR" />
+		<result column="nid" property="nid" jdbcType="VARCHAR" />
+		<result column="nick_name" property="nickName" jdbcType="VARCHAR" />
+		<result column="top_appkey" property="topAppkey" jdbcType="VARCHAR" />
+		<result column="taobao_shop_name" property="taobaoShopName" jdbcType="VARCHAR" />
+		<result column="taobao_shop_url" property="taobaoShopUrl" jdbcType="VARCHAR" />
+		<result column="merchant_code" property="merchantCode" jdbcType="VARCHAR" />
+		<result column="supplier" property="merchantName" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="operater" property="operater" jdbcType="VARCHAR" />
+		<result column="operated" property="operated" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<select id="queryTaobaoAuthorizeList" resultMap="TaobaoAuthorizeResultMap" parameterType="com.belle.yitiansystem.merchant.model.vo.TaobaoAuthorizeVo">
+		SELECT t1.id,t1.nid,t1.nick_name,t1.top_appkey,t1.taobao_shop_name,t1.taobao_shop_url,t1.merchant_code,t2.supplier,t1.status,t1.operater,t1.operated,t1.create_time
+ 		FROM tbl_merchant_taobao_shopnick t1 left join tbl_sp_supplier t2 on (t1.merchant_code=t2.supplier_code)
+ 		WHERE 1=1
+			<include refid="queryTaobaoAuthorize_where" />
+		order by t1.operated desc
+	</select>
+	<select id="queryTaobaoAuthorizeListCount" resultType="int" parameterType="com.belle.yitiansystem.merchant.model.vo.TaobaoAuthorizeVo">
+		SELECT 
+			COUNT(1)
+		FROM tbl_merchant_taobao_shopnick t1 left join tbl_sp_supplier t2 on (t1.merchant_code=t2.supplier_code)
+		WHERE 1=1
+			<include refid="queryTaobaoAuthorize_where" />
+	</select>
+	
+	<!-- 查询条件 -->
+	<sql id="queryTaobaoAuthorize_where" >
+		<if test="merchantCode != null and merchantCode != ''">
+	 		AND t1.merchant_code = #{merchantCode,jdbcType=VARCHAR}
+		</if>
+		<if test="nickName != null and nickName != ''">
+		 	AND t1.nick_name LIKE CONCAT('%','${nickName}','%')
+		</if>
+		<if test="taobaoShopName != null and taobaoShopName != ''">
+		 	AND t1.taobao_shop_name LIKE CONCAT('%','${taobaoShopName}','%')
+		</if>
+		<if test="merchantName != null and merchantName != ''">
+		 	AND t2.supplier LIKE CONCAT('%','${merchantName}','%')
+		</if>
+		<if test="topAppkey != null and topAppkey != ''">
+		 	AND t1.top_appkey = #{topAppkey,jdbcType=VARCHAR}
+		</if>
+		<if test="status != null and status != ''">
+		 	AND t1.status != #{status,jdbcType=VARCHAR}
+		</if>
+		<!-- 创建时间 -->
+		<if test="startTime != null and startTime != ''">
+		    AND t1.create_time <![CDATA[>=]]> CONCAT('','${startTime}',' 00:00:00')
+		</if>
+		<if test="endTime != null and endTime != ''">
+		    AND t1.create_time <![CDATA[<=]]> CONCAT('','${endTime}',' 23:59:59')
+		</if>
+	</sql>
+	<select id="queryTaobaoAuthorizeById" resultMap="TaobaoAuthorizeResultMap" parameterType="com.belle.yitiansystem.merchant.model.vo.TaobaoAuthorizeVo">
+		SELECT t1.id,t1.nid,t1.nick_name,t1.top_appkey,t1.taobao_shop_name,t1.taobao_shop_url,t1.merchant_code,t1.status,t1.operater,t1.operated,t1.create_time
+ 		FROM tbl_merchant_taobao_shopnick t1
+ 		WHERE t1.id = #{id,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteTaobaoAuthorizeById" parameterType="com.belle.yitiansystem.merchant.model.vo.TaobaoAuthorizeVo">
+		DELETE FROM tbl_merchant_taobao_shopnick
+		WHERE id = #{id,jdbcType=VARCHAR}
+	</delete>
+	
+	<select id="queryTaobaoAuthorizedList" resultMap="TaobaoAuthorizeResultMap" parameterType="com.belle.yitiansystem.merchant.model.vo.TaobaoAuthorizeVo">
+		SELECT t1.id,t1.nid,t1.nick_name,t1.top_appkey,t1.taobao_shop_name,t1.taobao_shop_url,t1.merchant_code,t2.supplier,t1.status,t1.operater,t1.operated,t1.create_time
+ 		FROM tbl_merchant_taobao_shopnick t1 left join tbl_sp_supplier t2 on (t1.merchant_code=t2.supplier_code)
+ 		WHERE (t1.status =2 or t1.status =3)
+ 		<if test="topAppkey != null and topAppkey != ''">
+		 	AND t1.top_appkey = #{topAppkey,jdbcType=VARCHAR}
+		</if>
+		order by t1.operated desc
+	</select>
+	<update id="updateTaobaoAuthorize" parameterType="com.belle.yitiansystem.merchant.model.vo.TaobaoAuthorizeVo">
+		UPDATE
+		tbl_merchant_taobao_shopnick
+		SET
+		<if test="topAppkey != null and topAppkey != ''">
+			top_appkey = #{topAppkey,jdbcType=VARCHAR},
+		</if>
+		<if test="status != null and status != ''">
+			status = #{status,jdbcType=VARCHAR},
+		</if>
+		operater=#{operater,jdbcType=VARCHAR},
+		operated=#{operated,jdbcType=VARCHAR}
+		WHERE
+		id = #{id,jdbcType=VARCHAR}
+	</update>
+  		<!-- 淘宝api调用轨迹VO映射 -->
+	<resultMap id="TaobaoAccessTrackMap"
+		type="com.belle.yitiansystem.merchant.model.vo.TaobaoAccessTrackVo">
+		<result column="id" property="id" jdbcType="VARCHAR" />
+		<result column="nick_id" property="nickId" jdbcType="BIGINT" />
+		<result column="taobao_api" property="taobaoApi" jdbcType="VARCHAR" />
+		<result column="access_start" property="accessStart" jdbcType="BIGINT" />
+		<result column="access_end" property="accessEnd" jdbcType="BIGINT" />
+		<result column="access_result" property="accessResult" jdbcType="VARCHAR" />
+		<result column="operater" property="operater" jdbcType="VARCHAR" />
+		<result column="operated" property="operated" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="queryTaobaoAccessTrackList" resultMap="TaobaoAccessTrackMap"
+		parameterType="com.belle.yitiansystem.merchant.model.vo.TaobaoAccessTrackVo">
+		SELECT
+		t1.id,t1.nick_id,t1.taobao_api,t1.access_start,t1.access_end,t1.access_result,t1.operater,t1.operated
+		FROM tbl_merchant_taobao_access_track t1
+		WHERE 1=1
+		<include refid="queryTaobaoAccessTrack_where" />
+		order by t1.operated desc
+	</select>
+	<select id="queryTaobaoAccessTrackListCount" resultType="int"
+		parameterType="com.belle.yitiansystem.merchant.model.vo.TaobaoAuthorizeVo">
+		SELECT COUNT(1) FROM tbl_merchant_taobao_access_track t1 WHERE 1=1
+		<include refid="queryTaobaoAccessTrack_where" />
+	</select>
+	<!-- 查询条件 -->
+	<sql id="queryTaobaoAccessTrack_where">
+		<if test="nickId != null and nickId != ''">
+			AND t1.nick_id = #{nickId,jdbcType=VARCHAR}
+		</if>
+		<if test="nickId == null or nickId == ''">
+			AND 1=0
+		</if> 
+		<if test="taobaoApi != null and taobaoApi != ''">
+			AND t1.taobao_api = #{taobaoApi,jdbcType=VARCHAR}
+		</if>
+
+		<!-- 创建时间 -->
+		<if test="startTime != null and startTime != ''">
+		   AND t1.operated <![CDATA[>=]]> CONCAT('','${startTime}',' 00:00:00') 
+		</if>
+		<if test="endTime != null and endTime != ''">
+		   AND t1.operated <![CDATA[<=]]> CONCAT('','${endTime}',' 23:59:59') 
+		</if>
+	</sql>
+	
+	<!-- 淘宝appkey管理 -->
+	<resultMap id="TaobaoAppkeyResultMap" type="com.belle.yitiansystem.merchant.model.vo.TaobaoAppkeyVo">
+		<result column="id" property="id" jdbcType="VARCHAR" />
+		<result column="topapp_name" property="topAppName" jdbcType="VARCHAR" />
+		<result column="top_appkey" property="topAppkey" jdbcType="VARCHAR" />
+		<result column="top_secret" property="topSecret" jdbcType="VARCHAR" />
+		<result column="is_useble" property="isUseble" jdbcType="SMALLINT" />
+		<result column="operater" property="operater" jdbcType="VARCHAR" />
+		<result column="operated" property="operated" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="queryTaobaoAppkeyList" resultMap="TaobaoAppkeyResultMap" parameterType="com.belle.yitiansystem.merchant.model.vo.TaobaoAppkeyVo">
+		SELECT t1.id,t1.topapp_name,t1.top_appkey,t1.top_secret,t1.is_useble,t1.operater,t1.operated
+ 		FROM tbl_merchant_taobao_topapp t1
+ 		WHERE 1=1
+			<include refid="queryTaobaoAppkey_where" />
+	</select>
+	<select id="queryTaobaoAppkeyListCount" resultType="int" parameterType="com.belle.yitiansystem.merchant.model.vo.TaobaoAppkeyVo">
+		SELECT 
+			COUNT(1)
+ 		FROM tbl_merchant_taobao_topapp t1
+ 		WHERE 1=1
+			<include refid="queryTaobaoAppkey_where" />
+	</select>
+	
+	<!-- 查询条件 -->
+	<sql id="queryTaobaoAppkey_where" >
+		<if test="topAppkey != null and topAppkey != ''">
+	 		AND t1.top_appkey = #{topAppkey,jdbcType=VARCHAR}
+		</if>
+		<if test="topAppName != null and topAppName != ''">
+	 		AND t1.topapp_name LIKE CONCAT('%','${topAppName}','%')
+		</if>
+		<if test="isUseble != null and isUseble != ''">
+		 	AND t1.is_useble = #{isUseble,jdbcType=INTEGER} 
+		</if>
+		<if test="operater != null and operater != ''">
+		 	AND t1.operater = #{operater,jdbcType=VARCHAR} 
+		</if>
+	</sql>
+	<select id="queryTaobaoAppkeyByAppkey" resultMap="TaobaoAppkeyResultMap" parameterType="com.belle.yitiansystem.merchant.model.vo.TaobaoAppkeyVo">
+		SELECT t1.id,t1.topapp_name,t1.top_appkey,t1.top_secret,t1.is_useble,t1.operater,t1.operated
+ 		FROM tbl_merchant_taobao_topapp t1
+ 		WHERE t1.top_appkey = #{topAppkey,jdbcType=VARCHAR}
+	</select>
+	<update id="updateTaobaoAppkey" parameterType="com.belle.yitiansystem.merchant.model.vo.TaobaoAppkeyVo">
+     	UPDATE
+     		tbl_merchant_taobao_topapp
+     	SET
+     	    <if test="topAppName != null and topAppName != ''">
+		 	topapp_name = #{topAppName,jdbcType=VARCHAR},
+		    </if>
+     		top_secret = #{topSecret,jdbcType=VARCHAR},
+      		is_useble = #{isUseble,jdbcType=SMALLINT},
+      		operater=#{operater,jdbcType=VARCHAR},
+      		operated=#{operated,jdbcType=VARCHAR}
+      	WHERE
+      		id = #{id,jdbcType=VARCHAR}
+  	</update>
+  	
+  	<insert id="insertTaobaoAppkey" parameterType="com.belle.yitiansystem.merchant.model.vo.TaobaoAppkeyVo">
+      	INSERT INTO
+      		tbl_merchant_taobao_topapp (id, topapp_name, top_appkey, top_secret, is_useble, operater, operated)
+      	VALUES
+      		(#{id,jdbcType=VARCHAR},#{topAppName,jdbcType=VARCHAR},#{topAppkey,jdbcType=VARCHAR}, #{topSecret,jdbcType=VARCHAR},
+      		#{isUseble,jdbcType=SMALLINT},#{operater,jdbcType=INTEGER}, #{operated,jdbcType=VARCHAR})
+  	</insert>
+</mapper>

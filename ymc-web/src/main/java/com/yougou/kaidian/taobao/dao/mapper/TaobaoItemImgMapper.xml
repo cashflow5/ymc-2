@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yougou.kaidian.taobao.dao.TaobaoItemImgMapper">
+
+	<resultMap id="taobaoItemImg" type="com.yougou.kaidian.taobao.model.TaobaoItemImg">
+		<result column="img_id" property="imgId" jdbcType="VARCHAR" />
+		<result column="num_iid" property="numIid" jdbcType="BIGINT" />
+		<result column="id" property="id" jdbcType="BIGINT" />
+		<result column="url" property="url" jdbcType="VARCHAR" />
+		<result column="position" property="position" jdbcType="BIGINT" />
+		<result column="yougou_url" property="yougouUrl" jdbcType="VARCHAR" />
+		<result column="yougou_url_thumbnail" property="yougouUrlThumbnail" jdbcType="VARCHAR" />
+		<result column="extend_id" property="extendId" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<delete id="deleteTaobaoItemImgByNumIid">
+		DELETE FROM tbl_merchant_taobao_item_img
+		WHERE num_iid = #{numIid, jdbcType=BIGINT}
+	</delete>
+	
+	
+	<delete id="deleteTaobaoItemImgByExtendId">
+		DELETE FROM tbl_merchant_taobao_item_img
+		WHERE extend_id = #{extendId, jdbcType=VARCHAR}
+	</delete>
+	
+	<insert id="insertTaobaoItemImgList" parameterType="java.util.List">
+		INSERT INTO tbl_merchant_taobao_item_img (img_id, num_iid, id, url, position, yougou_url,yougou_url_thumbnail, extend_id)
+		VALUES 
+        <foreach collection="list" item="item" index="index" separator=","> 
+          (
+			#{item.imgId,jdbcType=CHAR},
+			#{item.numIid,jdbcType=BIGINT},
+			#{item.id,jdbcType=BIGINT},
+			#{item.url,jdbcType=VARCHAR},
+			#{item.position,jdbcType=SMALLINT},
+			#{item.yougouUrl,jdbcType=VARCHAR},
+			#{item.yougouUrlThumbnail,jdbcType=VARCHAR},
+			#{item.extendId,jdbcType=VARCHAR}
+          )
+        </foreach>
+	</insert>
+	
+	<select id="queryTaobaoItemImgByNumIid" resultMap="taobaoItemImg">
+		SELECT img_id, num_iid, id, url, position, yougou_url, extend_id,yougou_url_thumbnail FROM 
+			tbl_merchant_taobao_item_img 
+		WHERE num_iid = #{numIid, jdbcType=BIGINT}
+		ORDER BY position
+	</select>
+	
+	<select id="queryTaobaoItemImgByExtendId" resultMap="taobaoItemImg">
+		SELECT img_id, num_iid, id, url, position,yougou_url,yougou_url_thumbnail FROM 
+			tbl_merchant_taobao_item_img 
+		WHERE extend_id = #{extendId, jdbcType=VARCHAR}
+		ORDER BY position
+	</select>
+	
+</mapper>

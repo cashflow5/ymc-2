@@ -1,0 +1,775 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yougou.kaidian.commodity.dao.CommodityMapper" >
+  <resultMap id="CommodityResultMap" type="com.yougou.kaidian.common.commodity.pojo.Commodity" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="commodity_name" property="commodityName" jdbcType="VARCHAR" />
+    <result column="pic_small" property="picSmall" jdbcType="VARCHAR" />
+    <result column="commodity_no" property="commodityNo" jdbcType="VARCHAR" />
+    <result column="supplier_code" property="supplierCode" jdbcType="VARCHAR" />
+    <result column="sale_price" property="salePrice" jdbcType="VARCHAR" />
+    <result column="is_audit" property="isAudit" jdbcType="INTEGER" />
+    <result column="sale_quantity" property="saleQuantity" jdbcType="INTEGER" />
+    <result column="on_sale_quantity" property="onSaleQuantity" jdbcType="INTEGER" />
+    <result column="update_date" property="updateDate" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="VARCHAR" />
+    <result column="show_date" property="showDate" jdbcType="VARCHAR" />
+    <result column="down_date" property="downDate" jdbcType="VARCHAR" />
+    <result column="cat_no" property="catNo" jdbcType="VARCHAR" />
+    <result column="merchant_code" property="merchantCode" jdbcType="VARCHAR" />
+    <result column="order_distribution_side" property="orderDistributionSide" jdbcType="VARCHAR" />
+    <result column="cost_price" property="costPrice" jdbcType="VARCHAR" />
+    <result column="public_price" property="publicPrice" jdbcType="VARCHAR" />
+    <result column="style_no" property="styleNo" jdbcType="VARCHAR" />
+    <result column="spec_name" property="specName" jdbcType="VARCHAR" />
+    <result column="brand_name" property="brandName" jdbcType="VARCHAR" />
+    <result column="first_level_cat_name" property="firstLevelCatName" jdbcType="INTEGER" />
+    <result column="years" property="years" jdbcType="VARCHAR" />
+    <result column="cat_structname" property="catStructName" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap type="com.yougou.kaidian.commodity.model.vo.CommodityAndProductExportVo" id="CommodityAndpoductExportResultMap">
+    <result column="commodity_name" property="commodityName" jdbcType="VARCHAR" />
+    <result column="pic_small" property="picSmall" jdbcType="VARCHAR" />
+    <result column="commodity_no" property="commodityNo" jdbcType="VARCHAR" />
+    <result column="supplier_code" property="supplierCode" jdbcType="VARCHAR" />
+    <result column="sale_price" property="salePrice" jdbcType="VARCHAR" />
+    <result column="is_audit" property="isAudit" jdbcType="INTEGER" />
+    <result column="sale_quantity" property="saleQuantity" jdbcType="INTEGER" />
+    <result column="on_sale_quantity" property="onSaleQuantity" jdbcType="INTEGER" />
+    <result column="update_date" property="updateDate" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="VARCHAR" />
+    <result column="show_date" property="showDate" jdbcType="VARCHAR" />
+    <result column="down_date" property="downDate" jdbcType="VARCHAR" />
+    <result column="cat_no" property="catNo" jdbcType="VARCHAR" />
+    <result column="merchant_code" property="merchantCode" jdbcType="VARCHAR" />
+    <result column="order_distribution_side" property="orderDistributionSide" jdbcType="VARCHAR" />
+    <result column="cost_price" property="costPrice" jdbcType="VARCHAR" />
+    <result column="public_price" property="publicPrice" jdbcType="VARCHAR" />
+    <result column="style_no" property="styleNo" jdbcType="VARCHAR" />
+    <result column="spec_name" property="specName" jdbcType="VARCHAR" />
+    <result column="brand_name" property="brandName" jdbcType="VARCHAR" />
+    <result column="first_level_cat_name" property="firstLevelCatName" jdbcType="INTEGER" />
+    <result column="years" property="years" jdbcType="VARCHAR" />
+    <result column="cat_structname" property="catStructName" jdbcType="VARCHAR" />
+    <result column="third_party_code" property="thirdPartyCode" jdbcType="VARCHAR" />
+    <result column="size_name" property="sizeName" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap id="ProductResultMap" type="com.yougou.kaidian.common.commodity.pojo.Product" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="commodity_name" property="commodityName" jdbcType="VARCHAR" />
+    <result column="is_audit" property="isAudit" jdbcType="INTEGER" />
+    <result column="merchant_code" property="merchantCode" jdbcType="VARCHAR" />
+    <result column="product_no" property="productNo" jdbcType="VARCHAR" />
+    <result column="third_party_code" property="thirdPartyCode" jdbcType="VARCHAR" />
+    <result column="inside_code" property="insideCode" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ProductExportResultMap" type="com.yougou.kaidian.commodity.model.vo.ProductExportVo" >
+    <result column="supplier_code" property="supplierCode" jdbcType="VARCHAR" />
+    <result column="third_party_code" property="thirdPartyCode" jdbcType="VARCHAR" />
+    <result column="size_name" property="sizeName" jdbcType="VARCHAR" />
+  </resultMap>
+ 
+  <sql id="Commodity_Column_List" >
+    s.id as id,s.commodity_name AS commodity_name,s.pic_small AS pic_small,s.no AS commodity_no,
+    s.supplier_code AS supplier_code,s.sale_price AS sale_price,s.show_date AS show_date,
+	s.cost_price as cost_price, s.public_price as public_price, s.style_no as style_no, s.spec_name, s.years 
+  </sql>
+ 
+  <sql id="Commodity_where" >
+      <choose>
+         <when test="vo.recyclebinFlag != null and vo.recyclebinFlag != ''">
+            AND s.recyclebin_flag = #{vo.recyclebinFlag,jdbcType=VARCHAR}
+         </when>
+         <otherwise>
+            AND s.recyclebin_flag = 0 
+         </otherwise>
+     </choose> 
+     <choose>
+     	<when test="vo.merchantCode != null and vo.merchantCode!=''">
+     		AND s.merchant_code = #{vo.merchantCode,jdbcType=VARCHAR} 
+     	</when>
+     	<otherwise>
+     		AND 1=0  
+     	</otherwise>
+	</choose>
+	<if test="vo.commodityName != null and vo.commodityName != '' ">
+ 		AND s.commodity_name like CONCAT('%','${vo.commodityName}','%' )  
+	</if>
+	<if test="vo.commodityNoList != null">
+	 	AND s.no  in (
+	 		<foreach collection="vo.commodityNoList" item="no" separator=",">
+	 			#{no,jdbcType=VARCHAR}
+	 		</foreach>
+	 	)
+	</if> 
+		<if test="vo.supplierCodeList != null">
+	 		AND s.supplier_code  in (
+	 			<foreach collection="vo.supplierCodeList" item="no" separator=",">
+	 				#{no,jdbcType=VARCHAR}
+	 			</foreach>
+	 		)
+		</if> 
+		<if test="vo.styleNoList != null">
+	 		AND (
+	 			<foreach collection="vo.styleNoList" item="no" separator="or">
+	 				s.style_no LIKE CONCAT('${no}','%' ) 
+	 			</foreach>
+	 		)
+		</if> 
+		<!-- 货品条码 -->
+		<if test="vo.thirdPartyCodeList != null">
+			AND  cp.third_party_code  in (
+	 			<foreach collection="vo.thirdPartyCodeList" item="no" separator=",">
+	 				#{no,jdbcType=VARCHAR}
+	 			</foreach>
+	 		)
+		</if>
+	<if test="vo.minSalePrice != null and vo.minSalePrice !='' ">
+ 		<![CDATA[  AND s.sale_price >= #{vo.minSalePrice,jdbcType=INTEGER}   ]]>
+	</if>
+	<if test="vo.maxSalePrice != null and vo.maxSalePrice !=''">
+ 		<![CDATA[  AND s.sale_price <= #{vo.maxSalePrice,jdbcType=INTEGER}   ]]>
+	</if>
+	<!-- 创建时间 -->
+	<if test="vo.minCreateDate != null and vo.minCreateDate != ''">
+	<![CDATA[  and s.create_date >= CONCAT('${vo.minCreateDate}',' 00:00:00')   ]]>
+	</if>
+	<if test="vo.maxCreateDate != null and vo.maxCreateDate != ''">
+	<![CDATA[  and s.create_date <= CONCAT('${vo.maxCreateDate}',' 23:59:59')   ]]>
+	</if>
+	<!-- 上架时间 -->
+	<if test="vo.minShowDate != null and vo.minShowDate != ''">
+	<![CDATA[  and s.show_date >= CONCAT('${vo.minShowDate}',' 00:00:00')   ]]>
+	</if>
+	<if test="vo.maxShowDate != null and vo.maxShowDate != ''">
+	<![CDATA[  and s.show_date <= CONCAT('${vo.maxShowDate}',' 23:59:59')   ]]>
+	</if>
+	<!-- 下架时间 -->
+	<if test="vo.minDownDate != null and vo.minDownDate != ''">
+	<![CDATA[  and s.down_date >= CONCAT('${minDownDate}',' 00:00:00')   ]]>
+	</if>
+	<if test="vo.maxDownDate != null and vo.maxDownDate != ''">
+	<![CDATA[  and s.down_date <= CONCAT('${vo.maxDownDate}',' 23:59:59')   ]]>
+	</if>
+	<!-- 上下架状态 -->
+	<if test="vo.commodityStatus != null and vo.commodityStatus !=''">
+ 		AND s.commodity_status = #{vo.commodityStatus,jdbcType=INTEGER} 
+	</if>
+	<if test="vo.brandNo != null and vo.brandNo != ''">
+ 		AND s.brand_no = #{vo.brandNo,jdbcType=VARCHAR} 
+	</if>
+	<if test="vo.structName != null and vo.structName != ''">
+ 		AND s.cat_structname LIKE CONCAT('${vo.structName}','%' ) 
+	</if>
+	<!-- 审核状态 -->
+	<if test="vo.isAudit != null">
+ 		AND s.is_audit = #{vo.isAudit,jdbcType=INTEGER} 
+	</if>
+	<!-- 是否为审核通过 -->
+	<if test="vo.auditStatus != null and vo.auditStatus != '' and vo.isAuditPass != null and vo.isAuditPass != true" >
+		AND s.is_audit != #{commodityConstant.COMMODITY_IS_AUDIT_PASS}
+	</if>
+	
+	
+	
+	<if test="vo.isNotIn12 != null and vo.isNotIn12 == 'true' ">
+		AND s.commodity_status NOT IN (1,2)
+	</if>
+	<!-- 下架类型 -->
+	<if test="vo.status != null">
+		<!-- 从未上架 -->
+		<if test="vo.status==1">
+			AND s.first_sell_date IS NULL  
+		</if>
+ 		<!-- 人工下架 -->
+		<if test="vo.status==2">
+			AND s.first_sell_date IS NOT NULL AND s.commodity_status=3   
+		</if>
+		<!-- 销售完毕商品 -->
+		<if test="vo.status==3">
+			AND s.first_sell_date IS NOT NULL AND s.commodity_status=1   
+		</if>
+	</if>
+  </sql>
+ 
+
+<sql id="Commodity_where4CommodityList" >
+	<where>
+		<choose>
+			<when test="param.merchantCode != null and param.merchantCode!=''">
+				AND s.merchant_code = #{param.merchantCode,jdbcType=VARCHAR} 
+			</when>
+			<otherwise>
+				AND 1=0  
+			</otherwise>
+		</choose>
+		<if test="param.commodityName != null and param.commodityName != '' ">
+	 		AND s.commodity_name like CONCAT('%','${param.commodityName}','%' )  
+		</if>
+	    <choose>
+	         <when test="param.recyclebinFlag != null and param.recyclebinFlag != ''">
+	            AND s.recyclebin_flag = #{param.recyclebinFlag,jdbcType=VARCHAR}
+	         </when>
+	         <otherwise>
+	            AND s.recyclebin_flag = 0 
+	         </otherwise>
+	     </choose> 
+		<if test="param.commodityNoList != null">
+	 		AND s.no  in (
+	 			<foreach collection="param.commodityNoList" item="no" separator=",">
+	 				#{no,jdbcType=VARCHAR}
+	 			</foreach>
+	 		)
+		</if> 
+		<if test="param.supplierCodeList != null">
+	 		AND s.supplier_code  in (
+	 			<foreach collection="param.supplierCodeList" item="no" separator=",">
+	 				#{no,jdbcType=VARCHAR}
+	 			</foreach>
+	 		)
+		</if> 
+		<if test="param.styleNoList != null">
+	 		AND (
+	 			<foreach collection="param.styleNoList" item="no" separator="or">
+	 				s.style_no LIKE CONCAT('${no}','%' ) 
+	 			</foreach>
+	 		)
+		</if> 
+		<!-- 货品条码 -->
+		<if test="param.thirdPartyCodeList != null">
+			AND s.id IN (SELECT DISTINCT cp.commodity_id FROM tbl_commodity_product cp
+				WHERE cp.third_party_code in (
+					<foreach collection="param.thirdPartyCodeList" item="no" separator=",">
+						#{no,jdbcType=VARCHAR}
+					</foreach>
+											  )
+						)
+		</if>
+		<if test="param.minSalePrice != null and param.minSalePrice !='' ">
+	 		<![CDATA[  AND s.sale_price >= #{param.minSalePrice,jdbcType=INTEGER}   ]]>
+		</if>
+		<if test="param.maxSalePrice != null and param.maxSalePrice !=''">
+	 		<![CDATA[  AND s.sale_price <= #{param.maxSalePrice,jdbcType=INTEGER}   ]]>
+		</if>
+		<!-- 上架时间 -->
+		<if test="param.minShowDate != null and param.minShowDate != ''">
+		<![CDATA[  and s.show_date >= CONCAT('${param.minShowDate}',' 00:00:00')   ]]>
+		</if>
+		<if test="param.maxShowDate != null and param.maxShowDate != ''">
+		<![CDATA[  and s.show_date <= CONCAT('${param.maxShowDate}',' 23:59:59')   ]]>
+		</if>
+		<!-- 上下架状态 -->
+		<if test="param.commodityStatus != null and param.commodityStatus !=''">
+	 		AND s.commodity_status = #{param.commodityStatus,jdbcType=INTEGER} 
+		</if>
+		<if test="param.brandNo != null and param.brandNo != ''">
+	 		AND s.brand_no = #{param.brandNo,jdbcType=VARCHAR} 
+		</if>
+		<if test="param.structName != null and param.structName != ''">
+	 		AND s.cat_structname LIKE CONCAT('${param.structName}','%' ) 
+		</if>
+		
+		<choose>
+			<when test="param.deleteFlag != null and param.deleteFlag != ''">
+				and s.delete_flag = #{param.deleteFlag}
+			</when>
+			<otherwise>
+				and s.delete_flag = 1 
+			</otherwise>
+		</choose>
+	</where>
+  </sql>
+
+  <select id="queryCommodityList" resultMap="CommodityResultMap">
+    SELECT 
+    	<include refid="Commodity_Column_List" />
+    FROM tbl_commodity_style s 
+	<include refid="Commodity_where4CommodityList" />
+	<if test="query!=null">
+		limit #{query.offset},#{query.pageSize}
+	</if>	
+  </select>
+  <select id="queryCommodityCount" resultType="int">
+	SELECT 
+    	COUNT(1)
+    FROM tbl_commodity_style s
+	<include refid="Commodity_where4CommodityList" />
+  </select>
+  <select id="queryProductList" resultMap="ProductResultMap" parameterType="java.lang.String">
+    SELECT 
+    	p.id, s.commodity_name AS commodity_name, s.is_audit AS is_audit, s.merchant_code AS merchant_code,
+    	p.product_no AS product_no, p.third_party_code AS third_party_code, p.inside_code AS inside_code
+    FROM tbl_commodity_style s
+    	INNER JOIN tbl_commodity_product p ON s.id = p.commodity_id
+	WHERE s.delete_flag = 1 and p.delete_flag = 1
+		and s.merchant_code = #{merchantCode,jdbcType=VARCHAR}
+	<!-- AND s.is_audit = 2 -->
+  </select>
+  <select id="getProductByPartyCode" resultType="java.util.Map" parameterType="java.lang.String">
+  	SELECT
+		t1.product_no,t1.third_party_code,t2.supplier_code,t1.inside_code,
+		t2.commodity_name,t1.id,t2.unit_name,t1.size_name
+	FROM tbl_commodity_product t1
+		INNER JOIN tbl_commodity_style t2 ON(t1.commodity_id=t2.id)
+	WHERE
+		t1.third_party_code=#{value} AND t2.delete_flag = 1 AND t2.is_audit != 0 AND t1.delete_flag = 1
+  </select>
+  
+  <select id="getProductByprouductNo" resultType="java.util.Map" parameterType="java.lang.String">
+  	SELECT
+		t2.commodity_name,t2.supplier_code,t1.id,t1.product_no,t1.inside_code
+	FROM tbl_commodity_product t1
+		INNER JOIN tbl_commodity_style t2 ON t1.commodity_id=t2.id
+	WHERE
+		t1.product_no=#{value}
+  </select>
+  
+	<!-- 查询导出在销商品数据 -->
+	<select id="queryExportCommodityList" resultMap="CommodityResultMap">
+		SELECT 
+			s.id,s.cat_structname,s.commodity_name, s.no AS commodity_no, s.style_no, s.spec_name, s.supplier_code, 
+			s.brand_name, s.public_price,s.sale_price
+		FROM tbl_commodity_style s
+			INNER JOIN tbl_commodity_product cp on cp.commodity_id=s.id 
+		WHERE
+			s.delete_flag = 1 and cp.delete_flag = 1
+			<include refid="Commodity_where" />
+		GROUP BY s.no
+		<if test="query!=null">
+			limit #{query.offset},#{query.pageSize}
+		</if>
+	</select>
+	<!-- 00000 -->
+	<select id="exportWaitSaleCommodityAndProductList" resultMap="CommodityAndpoductExportResultMap" parameterType="com.yougou.kaidian.commodity.model.vo.CommodityQueryVo">
+		SELECT 
+			s.cat_structname,s.commodity_name, s.no AS commodity_no, s.style_no, s.spec_name, s.supplier_code,
+			s.brand_name, s.public_price,
+			s.sale_price, cp.size_name, cp.third_party_code
+		FROM tbl_commodity_style s
+			INNER JOIN tbl_commodity_product cp on cp.commodity_id=s.id
+		WHERE s.delete_flag = 1 and cp.delete_flag = 1 
+			<include refid="where_waitSaleCommodity_export" />
+		GROUP BY s.no,cp.size_name order by s.create_date DESC,s.no,cp.size_name
+		<if test="query!=null">
+			limit #{query.offset},#{query.pageSize}
+		</if>
+	</select>
+	<select id="queryWaitSaleCommodityAndProductCountByExport" resultType="int" parameterType="com.yougou.kaidian.commodity.model.vo.CommodityQueryVo">
+	    select count(1) from (
+		select count(1) 
+		FROM tbl_commodity_style s
+			INNER JOIN tbl_commodity_product cp on cp.commodity_id=s.id 
+		WHERE
+			s.delete_flag = 1 and cp.delete_flag = 1 
+			<include refid="where_waitSaleCommodity_export" />
+		GROUP BY s.no,cp.size_name) tmp
+	</select> 
+	
+	<!-- 查询导出在销商品数据 -->
+	<select id="queryCommodityCountByExport" resultType="int" >
+		select count(1) from (SELECT 
+			count(1)
+		FROM tbl_commodity_style s
+			INNER JOIN tbl_commodity_product cp on cp.commodity_id=s.id 
+		WHERE
+			s.delete_flag = 1 and cp.delete_flag = 1
+			<include refid="Commodity_where" />
+		GROUP BY s.no) tempA
+	</select>
+
+	<sql id="queryAllCommodity_out_where">
+		WHERE 1=1
+			<!-- 提交审批时间 min -->
+			<if test="minSubmitAuditDate != null and minSubmitAuditDate != ''">
+				AND <include refid="queryAllCommodity_handle_submit_audit_date"/> <![CDATA[>=]]> CONCAT(#{minSubmitAuditDate},' 00:00:00')
+			</if>
+			<if test="maxSubmitAuditDate != null and maxSubmitAuditDate != ''">
+				AND <include refid="queryAllCommodity_handle_submit_audit_date"/> <![CDATA[<=]]> CONCAT(#{maxSubmitAuditDate},' 23:59:59')
+			</if>
+	</sql>
+	<sql id="queryAllCommodity_handle_submit_audit_date">
+		IFNULL(t.submit_audit_date, #{commodityConstant.SUBMIT_AUDIT_DATE_NULL_DEFAULT_TIME})
+	</sql>
+	<!-- ########## 查询全部商品、待审核商品、审核通过商品、审核拒绝商品时用(End) ########### -->
+
+	<!-- ########## 查询全部商品、待审核商品、审核通过商品、审核拒绝商品时用 的 总记录数(End) ########### -->
+	
+	<select id="queryWaitSaleCommodity" parameterType="com.yougou.kaidian.commodity.model.vo.CommodityQueryVo" 
+			resultType="java.util.Map">
+		SELECT
+		  s.id,
+		  s.commodity_name,
+		  s.no AS commodity_no,
+		  s.supplier_code,
+		  s.pic_small,
+		  s.sale_price,
+		  s.is_audit,
+		  s.create_date,
+		  s.show_date,
+		  s.down_date,
+		  s.merchant_code,
+		  s.public_price,
+		  s.style_no,
+		  s.commodity_status,
+		  s.spec_name,
+		  s.first_sell_date,
+		  s.years,
+		  cse.sensitive_word 
+		FROM tbl_commodity_style s left join tbl_commodity_style_extend cse on s.no = cse.commodity_no 
+		WHERE s.delete_flag = 1
+		<include refid="where_waitSaleCommodity"/>
+		<if test="query!=null">
+			limit #{query.offset},#{query.pageSize}
+		</if>
+	</select>
+	
+	<select id="queryWaitSaleCommodityCount" parameterType="com.yougou.kaidian.commodity.model.vo.CommodityQueryVo" 
+			resultType="int">
+		SELECT COUNT(1) 
+		  FROM tbl_commodity_style s left join tbl_commodity_style_extend cse on s.no = cse.commodity_no 
+		 WHERE s.delete_flag = 1
+		<include refid="where_waitSaleCommodity"/>
+	</select>
+	
+	<sql id="where_waitSaleCommodity">
+		  <choose>
+	         <when test="param.recyclebinFlag != null and param.recyclebinFlag != ''">
+	            AND s.recyclebin_flag = #{param.recyclebinFlag,jdbcType=VARCHAR}
+	         </when>
+	         <otherwise>
+	            AND s.recyclebin_flag = 0 
+	         </otherwise>
+	     </choose> 
+		<if test="param.merchantCode != null and param.merchantCode != ''">
+ 			AND s.merchant_code = #{param.merchantCode,jdbcType=VARCHAR} 
+		</if>
+		<if test="param.merchantCode == null or param.merchantCode == ''">
+ 			AND 1=0  
+		</if>
+		<if test="param.commodityName != null and param.commodityName != ''">
+	 		AND s.commodity_name like CONCAT('%','${param.commodityName}','%' )  
+		</if>
+		<choose>
+			<when test="param.sensitive">
+				and cse.sensitive_word!=''
+			</when>
+			<otherwise>
+				and (cse.sensitive_word is null or cse.sensitive_word='')
+			</otherwise>
+		</choose>
+		<if test="param.commodityNoList != null">
+ 		AND s.no  in (
+ 			<foreach collection="param.commodityNoList" item="no" separator=",">
+ 				#{no,jdbcType=VARCHAR}
+ 			</foreach>
+ 		)
+		</if> 
+		<if test="param.supplierCodeList != null">
+	 		AND s.supplier_code  in (
+	 			<foreach collection="param.supplierCodeList" item="no" separator=",">
+	 				#{no,jdbcType=VARCHAR}
+	 			</foreach>
+	 		)
+		</if> 
+		<if test="param.styleNoList != null">
+	 		AND (
+	 			<foreach collection="param.styleNoList" item="no" separator="or">
+	 				s.style_no LIKE CONCAT('${no}','%' ) 
+	 			</foreach>
+	 		)
+		</if> 
+		<!-- 货品条码 -->
+		<if test="param.thirdPartyCodeList != null">
+			AND s.id IN (SELECT DISTINCT cp.commodity_id FROM tbl_commodity_product cp
+				WHERE cp.third_party_code in (
+					<foreach collection="param.thirdPartyCodeList" item="no" separator=",">
+						#{no,jdbcType=VARCHAR}
+					</foreach>
+											  )
+						)
+		</if>
+		<if test="param.minSalePrice != null and param.minSalePrice !=''">
+	 		<![CDATA[  AND s.sale_price >= #{param.minSalePrice,jdbcType=INTEGER}]]>
+		</if>
+		<if test="param.maxSalePrice != null and param.maxSalePrice !=''">
+	 		<![CDATA[  AND s.sale_price <= #{param.maxSalePrice,jdbcType=INTEGER}]]>
+		</if>
+		<if test="param.brandNo != null and param.brandNo != ''">
+	 		AND s.brand_no = #{param.brandNo,jdbcType=VARCHAR} 
+		</if>
+		<if test="param.structName != null and param.structName != ''">
+	 		AND s.cat_structname LIKE CONCAT('${param.structName}','%' ) 
+		</if>
+		
+		<!-- 状态 -->
+		<if test="param.auditStatus != null and param.auditStatus != ''">
+	 		AND s.commodity_status = #{param.auditStatus}
+		</if>
+		<if test="param.auditStatus == null or param.auditStatus == ''">
+			AND s.commodity_status != 2
+		</if>
+		
+		<!-- 下架类型 -->
+		<if test="param.status != null">
+			<!-- 从未上架 -->
+			<if test="param.status==1">
+				AND s.first_sell_date IS NULL AND s.commodity_status NOT IN (11, 12, 13, 2)
+			</if>
+	 		<!-- 人工下架  (包括停售) -->
+			<if test="param.status==2">
+				AND s.first_sell_date IS NOT NULL AND s.commodity_status IN (1, 3)    
+			</if>
+		</if>
+		<!-- 排序 -->
+		ORDER BY s.create_date DESC
+	</sql>
+	
+	<!-- 待售商品导出查询条件 -->
+	<sql id="where_waitSaleCommodity_export">
+		<if test="param.merchantCode != null and param.merchantCode != ''">
+ 			AND s.merchant_code = #{param.merchantCode,jdbcType=VARCHAR} 
+		</if>
+		<if test="param.merchantCode == null or param.merchantCode == ''">
+ 			AND 1=0  
+		</if>
+		<if test="param.commodityName != null and param.commodityName != ''">
+	 		AND s.commodity_name like CONCAT('%','${param.commodityName}','%' )  
+		</if>
+	    <choose>
+	         <when test="param.recyclebinFlag != null and param.recyclebinFlag != ''">
+	            AND s.recyclebin_flag = #{param.recyclebinFlag,jdbcType=VARCHAR}
+	         </when>
+	         <otherwise>
+	            AND s.recyclebin_flag = 0 
+	         </otherwise>
+	     </choose> 
+		 <if test="param.commodityNoList != null">
+ 		AND s.no  in (
+ 			<foreach collection="param.commodityNoList" item="no" separator=",">
+ 				#{no,jdbcType=VARCHAR}
+ 			</foreach>
+ 		)
+		</if> 
+		<if test="param.supplierCodeList != null">
+	 		AND s.supplier_code  in (
+	 			<foreach collection="param.supplierCodeList" item="no" separator=",">
+	 				#{no,jdbcType=VARCHAR}
+	 			</foreach>
+	 		)
+		</if> 
+		<if test="param.styleNoList != null">
+	 		AND (
+	 			<foreach collection="param.styleNoList" item="no" separator="or">
+	 				s.style_no LIKE CONCAT('${no}','%' ) 
+	 			</foreach>
+	 		)
+		</if> 
+		<if test="param.thirdPartyCodeList != null">
+	 		AND  cp.third_party_code  in (
+	 			<foreach collection="param.thirdPartyCodeList" item="no" separator=",">
+	 				#{no,jdbcType=VARCHAR}
+	 			</foreach>
+	 		)
+		</if> 
+		<if test="param.minSalePrice != null and param.minSalePrice !=''">
+	 		<![CDATA[  AND s.sale_price >= #{param.minSalePrice,jdbcType=INTEGER}]]>
+		</if>
+		<if test="param.maxSalePrice != null and param.maxSalePrice !=''">
+	 		<![CDATA[  AND s.sale_price <= #{param.maxSalePrice,jdbcType=INTEGER}]]>
+		</if>
+		<if test="param.brandNo != null and param.brandNo != ''">
+	 		AND s.brand_no = #{param.brandNo,jdbcType=VARCHAR} 
+		</if>
+		<if test="param.structName != null and param.structName != ''">
+	 		AND s.cat_structname LIKE CONCAT('${param.structName}','%' ) 
+		</if>
+		
+		<!-- 状态 -->
+		<if test="param.auditStatus != null and param.auditStatus != ''">
+	 		AND s.commodity_status = #{param.auditStatus}
+		</if>
+		<if test="param.auditStatus == null or param.auditStatus == ''">
+			AND s.commodity_status != 2
+		</if>
+		
+		<!-- 下架类型 -->
+		<if test="param.status != null">
+			<!-- 从未上架 -->
+			<if test="param.status==1">
+				AND s.first_sell_date IS NULL AND s.commodity_status NOT IN (11, 12, 13, 2)
+			</if>
+	 		<!-- 人工下架  (包括停售) -->
+			<if test="param.status==2">
+				AND s.first_sell_date IS NOT NULL AND s.commodity_status IN (1, 3)    
+			</if>
+		</if>
+	</sql>
+	
+	<!-- 查询导出待售商品数据 000-->
+	<select id="exportWaitSaleCommodityList" resultMap="CommodityResultMap" >
+		SELECT 
+			s.id,s.cat_structname,s.commodity_name, s.no AS commodity_no, s.style_no, s.spec_name, s.supplier_code,
+			s.brand_name, s.public_price,
+			s.sale_price
+		FROM tbl_commodity_style s
+			INNER JOIN tbl_commodity_product cp on cp.commodity_id=s.id
+		WHERE s.delete_flag = 1 and cp.delete_flag = 1 
+			<include refid="where_waitSaleCommodity_export" />
+		GROUP BY s.no order by s.create_date DESC,s.no
+		<if test="query!=null">
+			limit #{query.offset},#{query.pageSize}
+		</if>
+	</select>
+	
+	<!-- 查询导出待售商品数据 数量-->
+	<select id="queryWaitSaleCommodityCountByExport" resultType="int" parameterType="com.yougou.kaidian.commodity.model.vo.CommodityQueryVo">
+		select count(1) from(SELECT 
+			count(1)
+		FROM tbl_commodity_style s
+			INNER JOIN tbl_commodity_product cp on cp.commodity_id=s.id
+		WHERE s.delete_flag = 1 and cp.delete_flag = 1 
+			<include refid="where_waitSaleCommodity_export" />
+		GROUP BY s.no order by s.no) tempA
+	</select>
+	
+	<!-- 导出待售商品SKU0000 -->
+	<select id="exportWaitSaleProductList" resultMap="ProductExportResultMap" parameterType="com.yougou.kaidian.commodity.model.vo.CommodityQueryVo">
+		SELECT 
+			s.supplier_code, cp.size_name, cp.third_party_code
+		FROM tbl_commodity_style s
+			INNER JOIN tbl_commodity_product cp on cp.commodity_id=s.id
+		WHERE
+			s.delete_flag = 1 and cp.delete_flag = 1 
+			<include refid="where_waitSaleCommodity_export" />
+		order BY s.no, s.supplier_code 
+		<if test="query!=null">
+			limit #{query.offset},#{query.pageSize}
+		</if>
+	</select>
+	
+	<!-- 导出待售商品SKU -->
+	<select id="queryWaitSaleProductCountByExport" resultType="int" parameterType="com.yougou.kaidian.commodity.model.vo.CommodityQueryVo">
+		SELECT count(1)
+		FROM tbl_commodity_style s
+			INNER JOIN tbl_commodity_product cp on cp.commodity_id=s.id
+		WHERE
+			s.delete_flag = 1 and cp.delete_flag = 1 
+			<include refid="where_waitSaleCommodity_export" />
+		order BY s.no, s.supplier_code
+	</select>
+	
+	<!-- 查询导出在售商品SKU -->
+	<select id="queryExportProductList" resultMap="ProductExportResultMap" >
+		SELECT 
+			s.supplier_code, cp.size_name, cp.third_party_code
+		FROM tbl_commodity_style s
+			INNER JOIN tbl_commodity_product cp on cp.commodity_id=s.id
+		WHERE
+			s.delete_flag = 1 and cp.delete_flag = 1 
+			<include refid="Commodity_where" />
+		order BY s.supplier_code
+		<if test="query!=null">
+			limit #{query.offset},#{query.pageSize}
+		</if>
+	</select>
+	
+	<!-- 查询导出在售商品SKU -->
+	<select id="queryProductCountByExport" resultType="int" >
+		SELECT 
+			count(1)
+		FROM tbl_commodity_style s
+			INNER JOIN tbl_commodity_product cp on cp.commodity_id=s.id
+		WHERE
+			s.delete_flag = 1 and cp.delete_flag = 1 
+			<include refid="Commodity_where" />
+		order BY s.supplier_code
+	</select>
+	
+	
+	<!-- 查询货品的订单数据 -->
+	<select id="querySaleCountByroductNo" resultType="int" parameterType="string">
+		select count(1) as count from tbl_order_detail4sub p where p.prod_no=#{productNo,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 系统自动下架的商品 -->
+	<sql id="30DaysNoUpdateCommodityCondition">
+		AND update_date <![CDATA[<]]> subdate(now(), INTERVAL 30 DAY) AND delete_flag = 1
+		AND merchant_code IS NOT NULL
+		AND merchant_code != ''
+		AND commodity_status = '2'
+	</sql>
+	<select id="select30DaysNoUpdateCommodityCount" resultType="java.lang.Integer">
+		select count(1) from tbl_commodity_style where 1=1 <include refid="30DaysNoUpdateCommodityCondition"/>
+	</select>
+	
+	<select id="select30DaysNoUpdateCommodity" resultType="com.yougou.kaidian.common.commodity.pojo.Commodity">
+		select no commodityNo,merchant_code merchantCode from tbl_commodity_style where 1=1 <include refid="30DaysNoUpdateCommodityCondition"/>
+	</select>
+	
+	<!-- 系统自动移动商品到回收站 -->
+	<sql id="60DaysNoUpdateCommodityCondition4WaitSale">
+		AND update_date <![CDATA[<]]> subdate(now(), INTERVAL 60 DAY) AND delete_flag = 1
+		AND merchant_code IS NOT NULL
+		AND merchant_code != ''
+		AND (commodity_status ='11' or commodity_status = '13' or commodity_status = '1')
+	</sql>
+	<select id="select60DaysNoUpdateCommodityCount4WaitSale" resultType="java.lang.Integer">
+		select count(1) from tbl_commodity_style where 1=1 <include refid="60DaysNoUpdateCommodityCondition4WaitSale"/>
+	</select>
+	
+	<select id="select60DaysNoUpdateCommodity4WaitSale" resultType="com.yougou.kaidian.common.commodity.pojo.Commodity">
+		select no commodityNo,merchant_code merchantCode from tbl_commodity_style where 1=1 <include refid="60DaysNoUpdateCommodityCondition4WaitSale"/>
+	</select>
+	
+	<select id="getSupplierCodeByStyleNoAndMerchantCode" resultType="java.lang.String">
+		select max(supplier_code) maxcode from tbl_commodity_style 
+		where merchant_code = #{merchantCode} and style_no=#{styleNo} 
+		and supplier_code like CONCAT('${brandNo}','${styleNo}','%')
+	</select>
+	
+	<select id="getCountByStyleNoAndMerchantCodeAndColor" resultType="java.util.Map">
+		select max(supplier_code) maxcode,count(spec_name) colorcount 
+		from tbl_commodity_style where merchant_code = #{merchantCode} 
+		and style_no=#{styleNo} and spec_name like CONCAT('%','${color}') 
+		and supplier_code like CONCAT('${brandNo}','${styleNo}','%')
+	</select>
+	
+	<select id="getCommoditySize" resultType="java.lang.Integer">
+		select count(cs.id) from tbl_commodity_style cs 
+		<choose>
+			<when test="propList!=null and propList.size>0">
+				inner join tbl_commodity_product cp 
+					on cs.id = cp.commodity_id 
+					where style_no = #{styleNo} 
+				and spec_name = #{color} and years = #{years} and cp.size_no = #{sizeNo} and merchant_code = #{merchantCode}
+			</when>
+			<otherwise>
+				where style_no = #{styleNo} 
+				and spec_name = #{color} and years = #{years} and merchant_code = #{merchantCode}
+			</otherwise>
+		</choose>
+	</select>
+	<select id="queryCommodityByKeyword" resultType="java.util.Map" parameterType="java.lang.String">
+		select brand_no,cat_no,cat_structname from tbl_commodity_style 
+		where (style_no = #{keyword} or no=#{keyword} or commodity_name = #{keyword}) and merchant_code = #{merchantCode}
+	</select>
+	
+	<select id="getCommodityStatusInfoByMerchantCode" resultType="java.util.Map"  parameterType="String">
+		select case commodity_status 
+		when 2 then 'onSaleCount' 
+		when 11 then 'newCount'
+		when 12 then 'waitAuditCount' 
+		else 'refusedCount' end 
+		commodity_status ,count(1) cc from tbl_commodity_style s where 
+			s.delete_flag=1 and s.merchant_code = #{merchantCode} and s.recyclebin_flag=0 
+			and s.commodity_status in (2, 11, 12, 13)
+			group by commodity_status
+		union all
+		select "approveCount",count(1) cc from tbl_commodity_style s where 
+				s.delete_flag=1 and s.merchant_code = #{merchantCode} 
+			and s.recyclebin_flag=0 and s.is_audit=2 
+			AND s.first_sell_date IS NULL AND s.commodity_status NOT IN (11, 12, 13, 2)
+	</select>
+</mapper>

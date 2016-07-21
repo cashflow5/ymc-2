@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link type="text/css" rel="stylesheet" href="${BasePath}/css/ordermgmt/css/css.css" />
+  <link rel="stylesheet" type="text/css" href="${BasePath}/yougou/styles/sys-base.css"/>
+  <link rel="stylesheet" type="text/css" href="${BasePath}/yougou/styles/sys-global.css"/>
+  <link rel="stylesheet" type="text/css" href="${BasePath}/css/yitiansystem/merchants/supplier-contracts.css"/>
+  <link rel="stylesheet" type="text/css" href="${BasePath}/css/yitiansystem/merchants/supplier_manage.css"/>
+  
+  <script type="text/javascript" src="${BasePath}/js/jquery-1.8.3.min.js"></script>   
+  <script type="text/javascript" src="${BasePath}/js/yitiansystem/merchants/view_supplier.js"></script>
+  <script type="text/javascript" src="${BasePath}/yougou/js/ygdialog/lhgdialog.min.js?s=chrome"></script>   
+  <script src="${BasePath}/js/common/common_tools.js?version=20151210" type="text/javascript"></script>
+  <title>优购商城--商家后台</title>
+  </head>
+<style>
+.list_table th{text-align:center;}
+table.detail-table td{padding:0px 0px 15px 0px;}
+table.detail-table td.tit{text-align:right;vertical-align:top;}
+.attachment a{color:#487DC8;display:block;margin-bottom:10px;}
+table.trademark{border-collapse: collapse;}
+table.trademark td{border:1px solid #DDD;}
+table.trademark th{background:#CCCCCC;color:#000;padding:8px 0px;border:1px solid #DDD;}
+table.trademark td{text-align:center;padding:8px 0px;}
+</style>
+<script>
+var basePath = '${BasePath}';
+
+$(function(){
+	$(".download").live("click",function(){	 	
+		var fileName = $(this).attr("fileName");
+		var realName = $(this).attr("realName");
+		$("#fileName").val(fileName);
+		$("#realName").val(realName);
+		$("#downloadForm").submit();
+	});
+});
+</script>  
+<body>
+    <div class="container">
+        <!--工具栏start-->
+        <#import "view_title.ftl" as page>  
+			<@page.viewTitle pageName="contract"/>
+             
+            <div class="modify">  
+	 		<form id="downloadForm" action="${BasePath}/yitiansystem/merchants/businessorder/downLoadContractAttachment.sc" method="post"> 
+	 			<input type="hidden" name="fileName" id="fileName">
+	 			<input type="hidden" name="realName" id="realName">
+	 		</form>
+	 	
+	 		<div class="form-box">
+                <#import "part_contract_page_top.ftl" as page>
+                <@page.contractPageTop/>       
+                
+                <#import "part_detail_brand_trademark.ftl" as page>
+                <@page.trademarkView/>
+                
+			</div>
+	    </div>
+  	</div>
+</div>
+</body>
+</html>

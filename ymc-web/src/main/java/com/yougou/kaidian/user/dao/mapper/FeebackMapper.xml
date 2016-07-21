@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yougou.kaidian.user.dao.FeebackMapper" >
+
+  <resultMap id="BaseResultMap" type="com.yougou.kaidian.user.model.pojo.Feeback" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+  </resultMap>
+ 
+ 
+  <insert id="addFeeback" parameterType="com.yougou.kaidian.user.model.pojo.Feeback">
+     INSERT INTO tbl_merchant_feeback(id,merchant_code,merchant_name,first_cate,second_cate,
+		title,content,email,phone,is_reply,is_read,create_time,update_time)
+	 VALUES(#{id}, #{merchantCode}, #{merchantName}, #{firstCate}, #{secondCate},
+	 	 #{title}, #{content}, #{email}, #{phone}, #{isReply}, #{isRead}, #{createTime}, #{updateTime})
+  </insert>
+  
+   <select id="queryFeebackList" resultMap="BaseResultMap" parameterType="java.lang.String"  >
+		SELECT fb.id,fb.content from tbl_merchant_feeback fb
+	    WHERE fb.merchant_code = #{merchantCode}
+	    ORDER BY fb.create_time desc
+   </select>
+    
+   <select id="queryFeebackCount" resultType="int"  parameterType="java.lang.String" >
+		SELECT count(1) from tbl_merchant_feeback fb
+	    WHERE fb.merchant_code = #{merchantCode}
+	</select>
+	
+   <select id="queryFeebackReplyList" resultType="java.lang.String"  parameterType="java.lang.String" >
+		SELECT fr.reply_content FROM tbl_merchant_feeback_reply fr 
+		WHERE fr.feeback_id = #{feeback_id}
+		AND fr.is_deleted = '0'
+		ORDER BY fr.create_time DESC
+	</select>
+	
+	<!-- 帮助中心查询 -->
+	
+	<resultMap id="HelpMenuMap" type="com.yougou.kaidian.user.model.pojo.HelpMenu" >
+    	<id column="id" property="id" jdbcType="VARCHAR" />
+    	<result column="menu_name" property="menuName" jdbcType="VARCHAR" />
+    	<result column="parent_id" property="parentId" jdbcType="VARCHAR" />
+    	<result column="parent_name" property="parentName" jdbcType="VARCHAR" />
+    	<result column="sub_id" property="subId" jdbcType="VARCHAR" />
+    	<result column="level" property="level" jdbcType="INTEGER" />
+    	<result column="is_leaf" property="isLeaf" jdbcType="INTEGER" />
+    	<result column="order_no" property="orderNo" jdbcType="INTEGER" />
+  	</resultMap>
+  
+	<select id="queryHelpMenuListByObj" resultMap="HelpMenuMap" parameterType="com.yougou.kaidian.user.model.pojo.HelpMenu" >
+        SELECT
+			t.id,
+			t.menu_name,
+			t.parent_id,
+			m.menu_name as parent_name,
+			t.sub_id,
+			t.`level`,
+			t.is_leaf,
+			t.order_no
+		FROM
+			tbl_merchant_help_menu t,tbl_merchant_help_menu m
+		WHERE t.parent_id = m.sub_id and t.`level`=1 
+		<if test="id != null and id != ''">
+			AND	t.id = #{id}
+		</if>
+		<if test="menuName != null and menuName != ''">
+			AND t.menu_name = #{menuName}
+		</if>
+		<if test="parentId != null and parentId != ''">
+			AND t.parent_id = #{parentId}
+		</if>
+		<if test="subId != null and subId != ''">
+			AND t.sub_id = #{subId}
+		</if>
+		<if test="isLeaf != null">
+			AND t.is_leaf = #{isLeaf}	
+		</if>
+	</select>
+
+</mapper>

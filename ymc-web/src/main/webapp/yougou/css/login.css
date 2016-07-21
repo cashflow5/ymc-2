@@ -1,0 +1,31 @@
+/*login*/
+.login{background:#f7f7f7;border:1px solid #DFDFDF}
+.login_bd{background:url(../images/bnnr.jpg) no-repeat left center;padding:22px 0 25px;}
+.login_box{background:url(../images/loginbox-bg.png) no-repeat center top;width:389px;height:349px;}
+.login_form{width:343px;margin:0 auto;padding-top:30px;}
+.login_form .form_ipt,.login_form .smt_brwn,.rem_box .ico_chkbox{background:url(../images/loginform.png) no-repeat;overflow:hidden;}
+.login_form .form_ipt{width:308px;height:48px;padding-left:32px;position:relative;}
+.login_form .user_ipt{background-position:0 0;}
+.login_form .placeholder,.login_form .ipt_txt{position:absolute;font-size:15px;font-family:\5FAE\8F6F\96C5\9ED1,tahoma,arial;}
+.login_form .placeholder{top:13px;color:#aaa;}
+.login_form .ipt_txt{background:none;border:none;width:300px;height:20px;line-height:20px;padding:14px 0;color:#333;vertical-align:top;}
+.login_form .pwd_ipt{background-position:0 -49px;}
+.login_form .code_ipt{background-position:0 -98px;padding-left:0;width:150px;}
+.login_form .code_ipt .placeholder{left:12px;}
+.login_form .code_ipt .ipt_txt{width:130px;padding-left:12px;}
+.login_form .code_img{position:absolute;left:160px;top:0px;}
+.login_form .code_img span{display:inline-block;vertical-align:middle;}
+.login_form .validator_msg{height:25px;line-height:25px;overflow:hidden;}
+.validator_error{background:url(../images/ico-error.gif) no-repeat left center;color:#e60011;padding-left:21px;margin-left:10px;}
+.login_form .smt_brwn{border:none;background-position:0 -188px;width:340px;height:40px;cursor:pointer;}
+.login_form .smt_brwn_hover{background-position:0 -147px;}
+.rem_box{padding-left:20px;}
+.rem_box .ico_chkbox,.rem_box .ipt_chkbox{position:absolute;left:3px;top:2px;}
+.rem_box .ico_chkbox{display:block;background-position:-151px -98px;width:13px;height:13px;}
+.rem_box .ico_chkbox_on{background-position:-165px -98px;}
+.rem_box .ipt_chkbox{opacity:0;filter:alpha(opacity=0);left:-1px\9;top:-2px\9;}
+.clr_hstry a{text-decoration:underline;}
+.imgValidateCode{border:0px solid #aaaaaa;width:120px;height:45px;}
+.login_form .disabled{
+	background-position: 0 -229px;
+}

@@ -1,0 +1,163 @@
+/*start content */
+#content .cont_search{
+	padding:30px 0;
+	text-align: center;
+	background: #d5e4fa;
+	border:1px solid #c2d5ef;
+	position: relative;
+}
+.cont_search_text{
+	padding:0 4px;
+	height: 28px;
+	line-height: 28px;
+	width:578px;
+	color: #aaaaaa;
+}
+.search_list{
+	display: none;
+	margin-left:238px;
+	position: absolute;
+	top:60px;
+	left:0;
+	border: 1px solid #A7A6AA;;
+	border-top:none;
+	
+}
+.search_list.show{
+	display: block;
+}
+.search_list li{
+	padding:0 4px;
+	width:578px;
+	background:#fff;
+	height:25px;
+	line-height:25px;
+	cursor: pointer;
+}
+.search_list li:hover{
+	background:#dff1fb;
+}
+.search_classify{
+	padding:20px 0;
+	text-align: center;
+}
+.search_classify_select{
+	width: 578px;
+	padding:4px;
+	color:#aaaaaa; 
+}
+.search_classify_select option{
+	color: #000;
+}
+.cate-container{
+	background: #f5f9ff;
+	border:1px solid #c2d5ef;
+	padding:0 0 0 20px;
+}
+.cate-list{
+	margin: 0 auto;
+}
+.cate-list li.cate-list-item{
+	padding:3px 4px;
+	float: left;
+	width: 258px;
+	border-left:1px solid #c2d5ef;
+	background: #fff;
+}
+.two-level,.three-level,.four-level{
+	display: none;
+}
+.cate-list li.cate-list-item.last{
+	border-right: 1px solid #c2d5ef;
+}
+.cate-cbox-filter{
+	background:#fff;
+	min-height: 300px;
+}
+/* 四级分类控制高度，超出显示滚动条 */
+#brand_class,#item_class{
+	height:268px;
+	overflow-y:auto;
+	overflow-x:hidden;
+}
+.cate_ico_input{
+	position: absolute;
+	top:4px;
+	left: 10px;
+	width: auto;
+	padding:0 0 0 20px;
+	color: #aaaaaa;
+	height:16px;
+	background:url("/yougou/images/img-ico.png") no-repeat;
+	background-position: -90px 0;
+}
+.cate-text{
+	width: 229px;
+	padding:4px 0 4px 30px;
+	border:1px solid #c2d5ef;
+}
+.cate-listbox{
+	margin: 3px 0;
+}
+.cate-listbox li.cate-listbox-item{
+	padding:5px 10px;
+	width: 237px;
+	cursor: pointer;
+}
+.cate-listbox li.cate-listbox-item.cate-selected{
+	background: #dff1fb;
+	border:1px solid #9cd7fc;
+	padding:4px 9px;
+}
+.cate-listbox li.cate-listbox-item span{
+	display: inline-block;
+	*display:inline;
+	*zoom:1;
+	float: left;
+
+}
+.cate-listbox li.cate-listbox-item .cate_ico{
+	display: inline-block;
+	*display:inline;
+	*zoom:1;
+	float: right;
+}
+.tip{
+	position: relative;
+	padding:10px 20px;
+	height: 10px;
+	line-height:10px;
+	background: #fffaf2;
+	border:1px solid #fedbab;
+	margin: 10px 0 0 0;
+}
+.tip span.tip_title{
+	font-weight: bold;
+	letter-spacing: 1px;
+}
+.tip .tip_ico{
+	position: absolute;
+	top: -7px;
+	left:36px;
+	height: 7px;
+	width: 12px;
+	background: url(/yougou/images/img-ico.png) no-repeat;
+	background-position: -90px -20px;
+}
+
+.step_btn{
+	width:350px;
+	margin: 120px auto;
+}
+.next_btn,.help_information{
+	display: inline-block;
+	*display:inline;
+	*zoom:1;
+	margin-left: 20px;
+}
+.step_btn p{
+	margin: 20px 0;
+	padding-left:40px;
+}
+
+/*end content*/

@@ -1,0 +1,150 @@
+/*背景色btn颜色*/
+/*字体颜色登陆会员显示信息*/
+/*字体颜色 Blue*/
+/*detail颜色*/
+/*左侧菜单背景色*/
+/*导航条选中的颜色*/
+/*边框颜色*/
+/*灰色字体颜色*/
+/*字体颜色*/
+/*背景颜色*/
+/*淡灰色背景*/
+.realtime-indicators {
+  padding: 0 12px 18px 12px;
+  *zoom: 1;
+}
+.realtime-indicators:before,
+.realtime-indicators:after {
+  content: "\20";
+  display: table;
+  line-height: 0;
+}
+.realtime-indicators:after {
+  clear: both;
+}
+.realtime-indicators .tags li {
+  display: block;
+  float: left;
+  width: 380px;
+  height: 150px;
+  margin-right: 10px;
+}
+.realtime-indicators .tags li.last {
+  margin-right: 0;
+}
+.realtime-indicators .tags .hd {
+  height: 110px;
+  background: url("../images/tags-bg.png") 0 0 no-repeat;
+  text-align: center;
+  color: #ffffff;
+}
+.realtime-indicators .tags .hd.blue2 {
+  background-position: 0 -115px;
+}
+.realtime-indicators .tags .hd.blue3 {
+  background-position: 0 -230px;
+}
+.realtime-indicators .tags .hd h1,
+.realtime-indicators .tags .hd h3 {
+  font-family: "microsoft yahei";
+}
+.realtime-indicators .tags .hd h1 {
+  font-size: 28px;
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+.realtime-indicators .tags .hd h3 {
+  padding-top: 16px;
+  font-size: 16px;
+}
+.realtime-indicators .tags .hd h3 i.iconfont {
+  font-size: 14px;
+  margin-left: 10px;
+  cursor: pointer;
+  font-weight: normal;
+  color: #f0f0f0;
+}
+.realtime-indicators .tags .bd {
+  line-height: 12px;
+  padding: 14px 10px 13px 10px;
+  text-align: center;
+  border: 1px solid #f0f0f0;
+  border-top: 0;
+}
+.today-record {
+  *zoom: 1;
+}
+.today-record:before,
+.today-record:after {
+  content: "\20";
+  display: table;
+  line-height: 0;
+}
+.today-record:after {
+  clear: both;
+}
+.today-record .today-number {
+  float: left;
+  width: 530px;
+  margin: 27px 30px 5px 30px;
+  _display: inline;
+}
+.today-record .today-number .record-title {
+  background-color: #6bcbca;
+  color: #ffffff;
+  font-size: 14px;
+  letter-spacing: 1px;
+  text-align: center;
+  height: 30px;
+  line-height: 30px;
+  margin: 10px 0;
+}
+.today-record .today-number .record-scale {
+  *zoom: 1;
+  height: 20px;
+  line-height: 20px;
+  text-align: right;
+  padding-right: 30px;
+  font-weight: bold;
+  color: #ffffff;
+  background: #c4c4c4;
+}
+.today-record .today-number .record-scale:before,
+.today-record .today-number .record-scale:after {
+  content: "\20";
+  display: table;
+  line-height: 0;
+}
+.today-record .today-number .record-scale:after {
+  clear: both;
+}
+.today-record .today-number .record-scale .record-news {
+  width: 307px;
+  background-color: #91d5f8;
+  text-align: center;
+}
+.today-record table.sales-rank {
+  width: 100%;
+}
+.today-record table.sales-rank th {
+  padding: 5px 5px;
+  border-bottom: 1px solid #f0f0f0;
+  color: #666666;
+}
+.today-record table.sales-rank th.w80 {
+  width: 80px;
+}
+.today-record table.sales-rank th.w107 {
+  width: 107px;
+}
+.today-record table.sales-rank td {
+  padding: 5px 0px;
+  border-bottom: 1px dotted #f0f0f0;
+  text-align: center;
+  color: #808080;
+}
+.detail-select {
+  *float: none;
+  *margin-left: 347px;
+  line-height: 24px;
+}

@@ -1,0 +1,57 @@
+<graph bgColor="FFFFFF" subcaption="(从 2011-05-25 到 2011-05-31)" yaxisminvalue="0" yaxismaxvalue="10" baseFontColor="278296" baseFontSize="12" canvasBorderColor="278296" canvasBorderThickness="2" showAlternateHGridColor="1" AlternateHGridColor="BBCEE4" divLineColor="BBCEE4" hovercapbg="FFFDD7" hovercapborder="FFB400" formatNumberScale="0" decimalPrecision="0" showvalues="0" numdivlines="4" numVdivlines="4">
+<categories>
+
+	<category name="0525"/>
+
+	<category name="0526"/>
+
+	<category name="0527"/>
+
+	<category name="0528"/>
+
+	<category name="0529"/>
+
+	<category name="0530"/>
+
+	<category name="0531"/>
+
+</categories>
+
+<dataset seriesName="订单量" color="FC5841" anchorBorderColor="FC5841" anchorBgColor="FFFFFF" anchorRadius="3" anchorSides="20">
+	
+		<set value="10"/>
+	
+		<set value="20"/>
+	
+		<set value="30"/>
+	
+		<set value="40"/>
+	
+		<set value="50"/>
+	
+		<set value="50"/>
+	
+		<set value="90"/>
+	
+</dataset>
+
+
+<dataset seriesName="客户注册量" color="1DD145" anchorBorderColor="1DD145" anchorBgColor="FFFFFF" anchorRadius="3" anchorSides="20">
+	
+		<set value="100"/>
+	
+		<set value="200"/>
+	
+		<set value="300"/>
+	
+		<set value="401"/>
+	
+		<set value="500"/>
+	
+		<set value="600"/>
+	
+		<set value="700"/>
+	
+</dataset>
+
+</graph>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:int-ftp="http://www.springframework.org/schema/integration/ftp"
+	xsi:schemaLocation="http://www.springframework.org/schema/integration/ftp http://www.springframework.org/schema/integration/ftp/spring-integration-ftp-2.2.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration-2.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+		
+	<bean id="ftpTrainingClientFactory"
+		class="org.springframework.integration.ftp.session.DefaultFtpSessionFactory">
+		<property name="host" value="${training.ftp.server}" />
+		<property name="port" value="${training.ftp.port}" />
+		<property name="username" value="${training.ftp.username}" />
+		<property name="password" value="${training.ftp.password}" />
+	</bean>
+
+	<int:channel id="ftpChannelTraining" />
+
+	
+
+	<int-ftp:outbound-channel-adapter id="ftpOutboundTraining"
+		cache-sessions="true" channel="ftpChannelTraining" charset="UTF-8"
+		remote-file-separator="/" auto-create-directory="true"
+		remote-directory-expression="headers['remote_dir']"
+		remote-filename-generator-expression="headers['remote_filename']"
+		session-factory="cachingSessionTrainingFactory" />
+
+	<bean id="cachingSessionTrainingFactory"
+		class="org.springframework.integration.file.remote.session.CachingSessionFactory">
+		<constructor-arg ref="ftpTrainingClientFactory" />
+		<constructor-arg value="100" />
+		<property name="sessionWaitTimeout" value="60000" />
+	</bean>
+	
+	<!-- 删除ftp文件 -->
+    <int:channel id="toRemoveTrainingChannel">
+		<int:interceptors>
+			<int:wire-tap channel="loggerTraining"/>
+		</int:interceptors>
+	</int:channel>
+
+	<int:logging-channel-adapter id="loggerTraining" log-full-message="true"/>
+
+	<int-ftp:outbound-gateway id="gatewayRMTraining"
+		session-factory="cachingSessionTrainingFactory" cache-sessions="true"
+		expression="headers['file_remoteDirectory'] + '/' + headers['file_remoteFile']"
+		request-channel="toRemoveTrainingChannel"
+		command="rm"
+		reply-channel="nullChannel"/>
+</beans>

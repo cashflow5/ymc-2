@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yougou.kaidian.taobao.dao.TaobaoItemExtendMapper">
+	<resultMap id="taobaoItemExtend" type="com.yougou.kaidian.taobao.model.TaobaoItemExtend">
+		<id column="extend_id" property="extendId" jdbcType="VARCHAR" />
+		<result column="num_iid" property="numIid" jdbcType="BIGINT" />
+		<result column="merchant_code" property="merchantCode" jdbcType="VARCHAR" />
+		<result column="yougou_commodity_no" property="yougouCommodityNo" jdbcType="VARCHAR" />
+		<result column="yougou_description" property="yougouDescription" jdbcType="LONGVARCHAR" />
+		<result column="yougou_price" property="yougouPrice" jdbcType="DECIMAL" />
+		<result column="yougou_supplier_code" property="yougouSupplierCode" jdbcType="VARCHAR" />
+		<result column="yougou_spec_name" property="yougouSpecName" jdbcType="VARCHAR" />
+		<result column="yougou_style_no" property="yougouStyleNo" jdbcType="VARCHAR" />
+		<result column="check_status" property="checkStatus" jdbcType="VARCHAR" />
+		<result column="is_import_yougou" property="isImportYougou" jdbcType="VARCHAR" />
+		<result column="import_yougou_time" property="importYougouTime" jdbcType="VARCHAR" />
+		<result column="default_pic" property="defaultPic" jdbcType="VARCHAR" />
+		<!-- 淘宝属性 -->
+		<result column="price" property="price" jdbcType="DECIMAL" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="nick" property="nick" jdbcType="VARCHAR" />
+		<result column="nick_id" property="nickId" jdbcType="BIGINT" />
+		<result column="cid" property="cid" jdbcType="BIGINT" />
+		<result column="props" property="props" jdbcType="VARCHAR" />
+		<result column="input_pids" property="inputPids" jdbcType="VARCHAR" />
+		<result column="yougou_brand_no" property="yougouBrandNo" jdbcType="VARCHAR" />
+		<result column="yougou_brand_name" property="yougouBrandName" jdbcType="VARCHAR" />
+		<result column="yougou_cate_no" property="yougouCateNo" jdbcType="VARCHAR" />
+		<result column="yougou_years" property="yougouYears" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		extend_id,e.num_iid,e.merchant_code,yougou_commodity_no,yougou_description,yougou_price,yougou_supplier_code,default_pic,
+		yougou_spec_name,yougou_style_no,check_status,is_import_yougou,import_yougou_time,i.price,e.title,i.nick,i.nick_id,i.cid,i.props,
+		i.input_pids,i.yougou_brand_no,i.yougou_brand_name,i.yougou_cate_no,i.yougou_years
+	</sql>
+	
+	<select id="getTaobaoItemExtendByExtendId" resultMap="taobaoItemExtend">
+		select 
+		<include refid="Base_Column_List" />
+		From tbl_merchant_taobao_item_extend e inner join tbl_merchant_taobao_item i on i.num_iid = e.num_iid
+		WHERE extend_id = #{extendId, jdbcType=VARCHAR}
+	</select>
+	
+	<insert id="insertTaobaoItemExtend"
+		parameterType="com.yougou.kaidian.taobao.model.TaobaoItemExtend">
+		INSERT INTO tbl_merchant_taobao_item_extend
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="extendId != null">
+				extend_id,
+			</if>
+			<if test="numIid != null">
+				num_iid,
+			</if>
+			<if test="title != null">
+				title,
+			</if>
+			<if test="merchantCode != null">
+				merchant_code,
+			</if>
+			<if test="yougouCommodityNo != null">
+				yougou_commodity_no,
+			</if>
+			<if test="defaultPic != null">
+				default_pic,
+			</if>
+			<if test="yougouDescription != null">
+				yougou_description,
+			</if>
+			<if test="yougouPrice != null">
+				yougou_price,
+			</if>
+			<if test="yougouSupplierCode != null">
+				yougou_supplier_code,
+			</if>
+			<if test="yougouSpecName != null">
+				yougou_spec_name,
+			</if>
+			<if test="checkStatus != null">
+				check_status,
+			</if>
+			<if test="isImportYougou != null">
+				is_import_yougou,
+			</if>
+			<if test="importYougouTime != null">
+				import_yougou_time,
+			</if>
+			<if test="operater != null">
+				operater,
+			</if>
+			<if test="operated != null">
+				operated,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="extendId != null">
+				#{extendId,jdbcType=VARCHAR},
+			</if>
+			<if test="numIid != null">
+				#{numIid,jdbcType=BIGINT},
+			</if>
+			<if test="title != null">
+				#{title,jdbcType=VARCHAR},
+			</if>
+			<if test="merchantCode != null">
+				#{merchantCode,jdbcType=VARCHAR},
+			</if>
+			<if test="yougouCommodityNo != null">
+				#{yougouCommodityNo,jdbcType=VARCHAR},
+			</if>
+			<if test="defaultPic != null">
+				#{defaultPic,jdbcType=VARCHAR},
+			</if>
+			<if test="yougouDescription != null">
+				#{yougouDescription,jdbcType=VARCHAR},
+			</if>
+			<if test="yougouPrice != null">
+				#{yougouPrice,jdbcType=DECIMAL},
+			</if>
+			<if test="yougouSupplierCode != null">
+				#{yougouSupplierCode,jdbcType=VARCHAR},
+			</if>
+			<if test="yougouSpecName != null">
+				#{yougouSpecName,jdbcType=VARCHAR},
+			</if>
+			<if test="checkStatus != null">
+				#{checkStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="isImportYougou != null">
+				#{isImportYougou,jdbcType=BIT},
+			</if>
+			<if test="importYougouTime != null">
+				#{importYougouTime,jdbcType=VARCHAR},
+			</if>
+			<if test="operater != null">
+				#{operater,jdbcType=VARCHAR},
+			</if>
+			<if test="operated != null">
+				#{operated,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.yougou.kaidian.taobao.model.TaobaoItemExtend">
+		UPDATE tbl_merchant_taobao_item_extend
+		<set>
+			<if test="title != null">
+				title = #{title,jdbcType=VARCHAR},
+			</if>
+			<if test="yougouCommodityNo != null">
+				yougou_commodity_no = #{yougouCommodityNo,jdbcType=VARCHAR},
+			</if>
+			<if test="yougouDescription != null">
+				yougou_description = #{yougouDescription,jdbcType=VARCHAR},
+			</if>
+			<if test="yougouPrice != null">
+				yougou_price = #{yougouPrice,jdbcType=DECIMAL},
+			</if>
+			<if test="yougouSupplierCode != null">
+				yougou_supplier_code = #{yougouSupplierCode,jdbcType=VARCHAR},
+			</if>
+			<if test="yougouSpecName != null">
+				yougou_spec_name = #{yougouSpecName,jdbcType=VARCHAR},
+			</if>
+			<if test="checkStatus != null">
+				check_status = #{checkStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="isImportYougou != null">
+				is_import_yougou = #{isImportYougou,jdbcType=BIT},
+			</if>
+			<if test="importYougouTime != null">
+				import_yougou_time = #{importYougouTime,jdbcType=VARCHAR},
+			</if>
+			<if test="defaultPic != null">
+				default_pic = #{defaultPic,jdbcType=VARCHAR},
+			</if>
+		</set>
+		WHERE extend_id = #{extendId,jdbcType=VARCHAR} and  merchant_code = #{merchantCode,jdbcType=VARCHAR}
+	</update>
+	
+	<!--查询商品列表-->
+	<sql id="selectCondition">
+	  <if test="null!=params" >
+	    <if test="null!=params.title and ''!=params.title" >
+	       	 and title like '%${params.title}%'
+	    </if>
+	    <if test="null!=params.nickId and ''!=params.nickId" >
+	       	 and nick_id = #{params.nickId, jdbcType=VARCHAR}
+	    </if>
+	    <if test="null!=params.createdBegin and ''!=params.createdBegin" >
+	       	 and created <![CDATA[>=]]> CONCAT(#{params.createdBegin},' 00:00:00')
+	    </if>
+	    <if test="null!=params.createdEnd and ''!=params.createdEnd" >
+	       	 and created <![CDATA[<=]]> CONCAT(#{params.createdEnd},' 23:59:59')
+	    </if>
+	      <if test="null!=params.operatedBegin and ''!=params.operatedBegin" >
+	       	 and operated <![CDATA[>=]]> CONCAT(#{params.operatedBegin},' 00:00:00')
+	    </if>
+	    <if test="null!=params.operatedEnd and ''!=params.operatedEnd" >
+	       	 and operated <![CDATA[<=]]> CONCAT(#{params.operatedEnd},' 23:59:59')
+	    </if>
+	  </if>
+	</sql>
+	
+	<!-- 查询淘宝商品信息 -->
+	<resultMap id="taobaoItemExtendDto" type="com.yougou.kaidian.taobao.model.TaobaoItemExtendDto">
+		<id column="extend_id" property="extendId" jdbcType="VARCHAR" />
+		<result column="num_iid" property="numIid" jdbcType="BIGINT" />
+		<result column="merchant_code" property="merchantCode" jdbcType="VARCHAR" />
+		<result column="yougou_commodity_no" property="yougouCommodityNo" jdbcType="VARCHAR" />
+		<result column="yougou_description" property="yougouDescription" jdbcType="LONGVARCHAR" />
+		<result column="yougou_price" property="yougouPrice" jdbcType="DECIMAL" />
+		<result column="yougou_supplier_code" property="yougouSupplierCode" jdbcType="VARCHAR" />
+		<result column="yougou_spec_name" property="yougouSpecName" jdbcType="VARCHAR" />
+		<result column="yougou_style_no" property="yougouStyleNo" jdbcType="VARCHAR" />
+		<result column="check_status" property="checkStatus" jdbcType="VARCHAR" />
+		<result column="is_import_yougou" property="isImportYougou" jdbcType="VARCHAR" />
+		<result column="import_yougou_time" property="importYougouTime" jdbcType="VARCHAR" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="detail_url" property="detailUrl" jdbcType="VARCHAR" />
+		<result column="nick" property="nick" jdbcType="VARCHAR" />
+		<result column="price" property="price" jdbcType="DECIMAL" />
+		<result column="operater" property="operater" jdbcType="VARCHAR" />
+		<result column="operated" property="operated" jdbcType="VARCHAR" />
+		<result column="taobao_cat_full_name" property="taobaoCatFullName" jdbcType="VARCHAR" />
+		<result column="default_pic" property="defaultPic" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="extend_column_list">
+		extend_id,e.num_iid,e.merchant_code,yougou_commodity_no,yougou_description,yougou_price,yougou_supplier_code,default_pic,
+		yougou_spec_name,yougou_style_no,check_status,is_import_yougou,import_yougou_time,e.title,detail_url,
+		nick,price,e.operater,e.operated,c.taobao_cat_full_name
+	</sql>
+	
+	<sql id="selectExtendCondition">
+	  <if test="null!=params" >
+	    <if test="null!=params.title and ''!=params.title" >
+	       	 and e.title like '%${params.title}%'
+	    </if>
+	    <if test="null!=params.nickId and ''!=params.nickId" >
+	       	 and i.nick_id = #{params.nickId, jdbcType=VARCHAR}
+	    </if>
+	     <if test="null!=params.numIid and ''!=params.numIid" >
+	       	 and i.num_iid = #{params.numIid, jdbcType=VARCHAR}
+	    </if>
+	    <if test="null!=params.yougouSpecName and ''!=params.yougouSpecName" >
+	       	 and e.yougou_spec_name = #{params.yougouSpecName, jdbcType=VARCHAR}
+	    </if>
+	    <if test="null!=params.createdBegin and ''!=params.createdBegin" >
+	       	 and e.created <![CDATA[>=]]> CONCAT(#{params.createdBegin},' 00:00:00')
+	    </if>
+	    <if test="null!=params.createdEnd and ''!=params.createdEnd" >
+	       	 and e.created <![CDATA[<=]]> CONCAT(#{params.createdEnd},' 23:59:59')
+	    </if>
+	      <if test="null!=params.operatedBegin and ''!=params.operatedBegin" >
+	       	 and e.operated <![CDATA[>=]]> CONCAT(#{params.operatedBegin},' 00:00:00')
+	    </if>
+	    <if test="null!=params.operatedEnd and ''!=params.operatedEnd" >
+	       	 and e.operated <![CDATA[<=]]> CONCAT(#{params.operatedEnd},' 23:59:59')
+	    </if>
+	    <if test="null!=params.merchantCode and ''!=params.merchantCode" >
+	       	 and e.merchant_code = #{params.merchantCode, jdbcType=VARCHAR}
+	    </if>
+	    <if test="null!=params.importYougouTimeBegin and ''!=params.importYougouTimeBegin" >
+	       	 and import_yougou_time <![CDATA[<=]]> CONCAT(#{params.importYougouTimeBegin},' 23:59:59')
+	    </if>
+	    <if test="null!=params.importYougouTimeEnd and ''!=params.importYougouTimeEnd" >
+	       	 and import_yougou_time <![CDATA[<=]]> CONCAT(#{params.importYougouTimeEnd},' 23:59:59')
+	    </if>
+	    <if test="null!=params.status and ''!=params.status" >
+	       	 and is_import_yougou = #{params.status}
+	    </if>
+	    <if test="null!=params.yougouStyleNoList and ''!=params.yougouStyleNoList" >
+	    	 and yougou_style_no in 
+		    		<foreach collection="params.yougouStyleNoList"  item="no" open="(" close=")" separator=",">
+								'${no}'
+					</foreach>
+	    </if>
+	     <if test="null!=params.yougouSupplierCodeList and ''!=params.yougouSupplierCodeList" >
+	     	 and yougou_supplier_code in 
+	     			 <foreach collection="params.yougouSupplierCodeList"  item="no" open="(" close=")" separator=",">
+								'${no}'
+					</foreach>
+	    </if>
+	    <if test="null!=params.yougouCommodityNoList and ''!=params.yougouCommodityNoList" >
+	    	and yougou_commodity_no IN 
+				    <foreach collection="params.yougouCommodityNoList"  item="no" open="(" close=")" separator=",">
+								'${no}'
+					</foreach>	
+	    </if>
+	     <if test="null!=params.checkStatus and ''!=params.checkStatus" >
+	       	 and e.check_status = #{params.checkStatus}
+	    </if>
+	    <if test="null!=params.yougouCatNo and ''!=params.yougouCatNo">
+	    	and c.yougou_cat_no = #{params.yougouCatNo}
+	    </if>
+	     <if test="null!=params.yougouThirdPartyCodeList"  >
+	       	 and e.extend_id IN (SELECT DISTINCT vs.extend_id FROM tbl_merchant_taobao_item_extend_yougou_prop_value_size vs WHERE 
+	       	 
+	       	 vs.barcode IN	   
+	       	 			 <foreach collection="params.yougouThirdPartyCodeList"  item="no" open="(" close=")" separator=",">
+								'${no}'
+						 </foreach>				
+	       	 			 
+	       	
+	       	 <if test="null!=params.merchantCode and ''!=params.merchantCode" >
+	       	 and vs.merchant_code = #{params.merchantCode, jdbcType=VARCHAR}
+	   		 </if>
+	   		 )
+	    </if>
+	  </if>
+	</sql>
+	
+	<select id="selectTaobaoItemExtend" resultMap="taobaoItemExtendDto">
+		SELECT
+		<include refid="extend_column_list" />
+		FROM tbl_merchant_taobao_item_extend e inner join tbl_merchant_taobao_item i
+		on e.num_iid = i.num_iid left join tbl_merchant_taobao_yougou_itemcat c on c.taobao_cid = i.cid 
+		and c.nick_id = i.nick_id and c.merchant_code = i.merchant_code
+		WHERE 1=1
+	    <include refid="selectExtendCondition" />
+	    order by check_status,e.operated desc,import_yougou_time desc
+	</select>
+	<select id="selectTaobaoItemExtendCount" resultType="int">
+		SELECT count(1) 
+		FROM tbl_merchant_taobao_item_extend e inner join tbl_merchant_taobao_item i
+		on e.num_iid = i.num_iid left join tbl_merchant_taobao_yougou_itemcat c on c.taobao_cid = i.cid 
+		and c.nick_id = i.nick_id and c.merchant_code = i.merchant_code
+		WHERE 1=1
+	   <include refid="selectExtendCondition" />
+	</select>
+	
+	<select id="getTaobaoItemExtendByIds" resultMap="taobaoItemExtendDto">
+		SELECT
+		<include refid="extend_column_list" />
+		FROM tbl_merchant_taobao_item_extend e inner join tbl_merchant_taobao_item i
+		on e.num_iid = i.num_iid left join tbl_merchant_taobao_yougou_itemcat c on c.taobao_cid = i.cid 
+		and c.nick_id = i.nick_id and c.merchant_code = i.merchant_code
+		WHERE  e.merchant_code = #{merchantCode, jdbcType=VARCHAR} and e.extend_id in
+		<foreach collection="list" item="id" separator="," open="(" close=")">
+			#{id,jdbcType=VARCHAR}
+		</foreach>
+	    order by e.operated desc
+	</select>
+	
+	<delete id="deleteByExtendId">
+		delete from tbl_merchant_taobao_item_extend where extend_id = #{extendId} and 
+		merchant_code = #{merchantCode}
+	</delete>
+	
+	<select id="selectCountByNumIid" resultType="int">
+		select count(1) from tbl_merchant_taobao_item_extend where num_iid = #{numIid}
+	</select>
+	
+	<select id="selectByNumIid" resultMap="taobaoItemExtend">
+		select * from tbl_merchant_taobao_item_extend where num_iid = #{numIid}
+	</select>
+	
+	<select id="getTaobaoItemExtendIdByCommodtyNo" resultType="string">
+		SELECT e.extend_id  FROM tbl_merchant_taobao_item_extend e 
+		where e.yougou_commodity_no = #{commodityNo,jdbcType=VARCHAR}
+		 and e.merchant_code=#{merchantCode,jdbcType=VARCHAR}
+	</select>
+</mapper>

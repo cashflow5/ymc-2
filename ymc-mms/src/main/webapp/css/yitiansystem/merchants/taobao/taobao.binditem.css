@@ -1,0 +1,5 @@
+.form-table-tr{height: 40px;}
+.list-loading{text-align: center;padding-top: 10px;}
+tr td.selectAll{background: #E6EFF5}
+.qr-code{_position:absolute;top:150px;right:10px;height:auto;display:none;position:fixed;padding:0px;width:150px;border:1px solid #CBD8ED;background:#FFFFFF;}
+.msgdivtd{border-bottom: 1px solid #CBD8ED;background-color: #F1F8FF;height:24px;padding:1px;color:#ff0000;}

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yougou.kaidian.taobao.dao.TaobaoAccessTrackMapper">
+
+	<!-- 淘宝api调用轨迹VO映射 -->
+	<resultMap id="TaobaoAccessTrack" type="com.yougou.kaidian.taobao.model.TaobaoAccessTrackVo">
+		<result column="id" property="id" jdbcType="VARCHAR" />
+		<result column="nick_id" property="nickId" jdbcType="BIGINT" />
+		<result column="taobao_api" property="taobaoApi" jdbcType="VARCHAR" />
+		<result column="access_start" property="accessStart" jdbcType="BIGINT" />
+		<result column="access_end" property="accessEnd" jdbcType="BIGINT" />
+		<result column="access_result" property="accessResult" jdbcType="VARCHAR" />
+		<result column="operater" property="operater" jdbcType="VARCHAR" />
+		<result column="operated" property="operated" jdbcType="VARCHAR" />
+	</resultMap>
+
+    <!-- 插入淘宝api调用轨迹数据 -->
+    <insert id="insertTaobaoAccessTrack" parameterType="com.yougou.kaidian.taobao.model.TaobaoAccessTrackVo">
+        insert into tbl_merchant_taobao_access_track ( id, nick_id, taobao_api, access_start, access_end, access_result, operater, operated)
+        values 
+          (
+             #{id,jdbcType=VARCHAR},
+             #{nickId,jdbcType=BIGINT},
+             #{taobaoApi,jdbcType=VARCHAR},
+             #{accessStart,jdbcType=BIGINT},
+             #{accessEnd,jdbcType=BIGINT},
+             #{accessResult,jdbcType=VARCHAR},
+             #{operater,jdbcType=VARCHAR},
+             #{operated,jdbcType=VARCHAR}
+          )
+    </insert>
+</mapper>

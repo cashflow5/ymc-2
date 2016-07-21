@@ -1,0 +1,83 @@
+/*图片轮播样式重写开始*/
+body{
+	background-color: #fff;
+	font-size: 12px;
+}
+.slider{
+	width: 350px;
+	border-bottom:1px dashed #ccc;
+	color: #000;
+}
+.phoneslider{
+	border-bottom:1px dashed #ccc;
+	color: #000;
+}
+.slider-container{
+	width: 300px;
+	height: 130px;
+}
+.slider-container .slide{
+	width: 300px;
+	height:100px;
+	line-height: 20px;
+	padding:30px 20px 0 0;
+	text-indent:10px;
+}
+.slider-nav{
+	width: 350px;
+}
+.slider-nav .prev, .slider-nav .next{
+	background:none;
+}
+.slider-nav .bullet{
+	text-indent:0;
+	color: #000;
+	font-weight: bold;
+	border-radius:0;
+	background-color:transparent;
+}
+.slider-nav .active{
+	background-color: #ff8e00;
+	color: #fff;
+}
+
+.slider-nav{
+	margin-bottom: 20px;
+}
+
+.slider-icon{
+	width: 48px;
+	height: 48px;
+	line-height: 48px;
+	margin-top:30px;
+	background:url(../images/warning.png) no-repeat center center;
+}
+/*图片轮播样式重写结束*/
+
+/*按钮的样式开始*/
+.btn-box{
+	padding: 10px 0;
+	text-align: center;
+}
+
+.btn_yellow{
+	margin: 0 auto;
+}
+
+/*基本样式*/
+.hide{
+	display: none;
+}
+
+/*单条信息样式*/
+.single-message{
+	width: 280px;
+	line-height: 20px;
+	padding:15px 20px 15px 0;
+	text-indent:10px;
+
+}
+.phone-message{
+	line-height: 20px;
+	text-indent:23px;
+}

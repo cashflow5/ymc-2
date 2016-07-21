@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yougou.kaidian.taobao.dao.TaobaoShopNickMapper">
+
+	<!-- 淘宝店铺列表 -->
+	<resultMap id="taobaoShop" type="com.yougou.kaidian.taobao.model.TaobaoShop">
+		<result column="id" property="id" jdbcType="VARCHAR" />
+		<result column="nid" property="nid" jdbcType="BIGINT" />
+		<result column="nick_name" property="nickName" jdbcType="VARCHAR" />
+		<result column="top_appkey" property="topAppkey" jdbcType="VARCHAR" />
+		<result column="taobao_shop_name" property="taobaoShopName" jdbcType="VARCHAR" />
+		<result column="taobao_shop_url" property="taobaoShopUrl" jdbcType="VARCHAR" />
+		<result column="merchant_code" property="merchantCode" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="operater" property="operater" jdbcType="VARCHAR" />
+		<result column="operated" property="operated" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+    <!-- 插入淘宝店铺基本信息 -->
+    <insert id="insertTaobaoShop" parameterType="com.yougou.kaidian.taobao.model.TaobaoShop">
+        insert into tbl_merchant_taobao_shopnick ( id, nid, nick_name, top_appkey, taobao_shop_name, taobao_shop_url, merchant_code, status, operater, operated, create_time )
+        values 
+          (
+             #{id,jdbcType=VARCHAR},
+             #{nid,jdbcType=BIGINT},
+             #{nickName,jdbcType=VARCHAR},
+             #{topAppkey,jdbcType=VARCHAR},
+             #{taobaoShopName,jdbcType=VARCHAR},
+             #{taobaoShopUrl,jdbcType=VARCHAR},
+             #{merchantCode,jdbcType=VARCHAR},
+             #{status,jdbcType=INTEGER},
+             #{operater,jdbcType=VARCHAR},
+             #{operated,jdbcType=VARCHAR},
+             #{createTime}
+          )
+    </insert>
+    
+    <!-- 查询淘宝店铺列表 -->
+    <select id="getTaobaoShopList" resultMap="taobaoShop" parameterType="string">
+    	SELECT * FROM tbl_merchant_taobao_shopnick WHERE merchant_code =#{merchantCode} and status != -1 order by create_time desc
+    </select>
+    <select id="getTaobaoShopListCount" resultType="int" parameterType="string">
+    	SELECT count(1) FROM tbl_merchant_taobao_shopnick WHERE merchant_code =#{merchantCode} and status != -1;
+    </select>
+    <!-- 校验是否存在重复店铺名称 -->
+    <select id="getTaobaoShopByNameCount" resultType="int" parameterType="string">
+    	SELECT count(1) FROM tbl_merchant_taobao_shopnick WHERE taobao_shop_name =#{taobaoShopName} and status != -1;
+    </select>
+    <!-- 根据id获取淘宝店铺信息 -->
+    <select id="getTaobaoShopByID" resultMap="taobaoShop" parameterType="string">
+    	SELECT * FROM tbl_merchant_taobao_shopnick WHERE id =#{id};
+    </select>
+    <!-- 根据nickname获取淘宝店铺信息 -->
+    <select id="getTaobaoShopByNickName" resultMap="taobaoShop" parameterType="string">
+    	SELECT * FROM tbl_merchant_taobao_shopnick WHERE nick_name =#{nickName};
+    </select>
+    <!-- 更新淘宝店铺状态 -->
+    <update id="updateTaobaoShopStatus" parameterType="map">
+    	update tbl_merchant_taobao_shopnick set status=#{status} WHERE id =#{id};
+    </update>
+    <!-- 更新淘宝店铺 -->
+    <update id="updateTaobaoShop" parameterType="com.yougou.kaidian.taobao.model.TaobaoShop">
+    	update tbl_merchant_taobao_shopnick 
+    	set 
+    	<if test="nid != null">
+			nid = #{nid},
+		</if>
+		<if test="nickName != null and nickName != ''">
+			nick_name = #{nickName,jdbcType=VARCHAR},
+		</if>
+		<if test="topAppkey != null and topAppkey != ''">
+			top_appkey = #{topAppkey,jdbcType=VARCHAR},
+		</if>
+		<if test="taobaoShopName != null and taobaoShopName != ''">
+			taobao_shop_name = #{taobaoShopName,jdbcType=VARCHAR},
+		</if>
+		<if test="taobaoShopUrl != null and taobaoShopUrl != ''">
+			taobao_shop_url = #{taobaoShopUrl,jdbcType=VARCHAR},
+		</if>
+		<if test="status != null">
+			status = #{status},
+		</if>
+		<if test="operater != null and operater != ''">
+			operater = #{operater,jdbcType=VARCHAR},
+		</if>
+    	operated=#{operated,jdbcType=VARCHAR} 
+    	WHERE id =#{id};
+    </update>
+    <!-- 更新淘宝店铺根据nick_name -->
+    <update id="updateTaobaoShopByNickName" parameterType="com.yougou.kaidian.taobao.model.TaobaoShop">
+    	update tbl_merchant_taobao_shopnick 
+    	set 
+    	<if test="nid != null">
+			nid = #{nid},
+		</if>
+		<if test="nickName != null and nickName != ''">
+			nick_name = #{nickName,jdbcType=VARCHAR},
+		</if>
+		<if test="status != null">
+			status = #{status},
+		</if>
+		<if test="operater != null and operater != ''">
+			operater = #{operater,jdbcType=VARCHAR},
+		</if>
+    	operated=#{operated,jdbcType=VARCHAR} 
+    	WHERE nick_name =#{nickName};
+    </update>
+    
+    
+     <select id="getAllTaobaoShopListByStatus" resultMap="taobaoShop" parameterType="string">
+    	SELECT * FROM tbl_merchant_taobao_shopnick WHERE merchant_code =#{merchantCode} and status = #{status} order by create_time desc
+    </select>
+</mapper>

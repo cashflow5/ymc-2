@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yougou.kaidian.taobao.dao.TaobaoAuthinfoMapper" >
+
+  <resultMap id="BaseResultMap" type="com.yougou.kaidian.taobao.model.TaobaoAuthinfo" >
+    <id column="id" property="id" jdbcType="CHAR" />
+    <result column="top_appkey" property="topAppkey" jdbcType="VARCHAR" />
+    <result column="top_parameters" property="topParameters" jdbcType="VARCHAR" />
+    <result column="top_session" property="topSession" jdbcType="VARCHAR" />
+    <result column="top_timestamp" property="topTimestamp" jdbcType="VARCHAR" />
+    <result column="top_agreement" property="topAgreement" jdbcType="SMALLINT" />
+    <result column="top_agreementsign" property="topAgreementsign" jdbcType="VARCHAR" />
+    <result column="sign" property="sign" jdbcType="VARCHAR" />
+    <result column="top_sign" property="topSign" jdbcType="VARCHAR" />
+    <result column="top_visitor_id" property="topVisitorId" jdbcType="BIGINT" />
+    <result column="top_visitor_nick" property="topVisitorNick" jdbcType="VARCHAR" />
+    <result column="top_expires_in" property="topExpiresIn" jdbcType="INTEGER" />
+    <result column="top_expires_in_time" property="topExpiresInTime" jdbcType="TIMESTAMP" />
+    <result column="merchant_code" property="merchantCode" jdbcType="VARCHAR" />
+    <result column="is_useble" property="isUseble" jdbcType="SMALLINT" />
+    <result column="operater" property="operater" jdbcType="VARCHAR" />
+    <result column="operated" property="operated" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <select id="selectByTopVisitorID" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select * from tbl_merchant_taobao_authinfo where top_visitor_id = #{topVisitorId,jdbcType=CHAR}
+  </select>
+  
+  <select id="selectTopSecretByKey" resultType="java.lang.String" parameterType="java.lang.String" >
+    select top_secret from tbl_merchant_taobao_topapp where top_appkey = #{appkey,jdbcType=CHAR} and is_useble=1
+  </select>
+
+	<insert id="insertTaobaoAuthinfo" parameterType="com.yougou.kaidian.taobao.model.TaobaoAuthinfo">
+		insert into tbl_merchant_taobao_authinfo (id, top_appkey,
+		top_parameters,
+		top_session, top_timestamp, top_agreement,
+		top_agreementsign, sign,top_sign, top_visitor_id,
+		top_visitor_nick, top_expires_in, top_expires_in_time,
+		merchant_code, is_useble, operater,
+		operated)
+		values 
+		(
+			#{id,jdbcType=CHAR}, 
+			#{topAppkey,jdbcType=VARCHAR},
+			#{topParameters,jdbcType=VARCHAR},
+			#{topSession,jdbcType=VARCHAR}, 
+			#{topTimestamp,jdbcType=VARCHAR}, 
+			#{topAgreement,jdbcType=SMALLINT},
+			#{topAgreementsign,jdbcType=VARCHAR}, 
+			#{sign,jdbcType=VARCHAR},
+			#{topSign,jdbcType=VARCHAR},
+			#{topVisitorId,jdbcType=BIGINT},
+			#{topVisitorNick,jdbcType=VARCHAR}, 
+			#{topExpiresIn,jdbcType=INTEGER},
+			#{topExpiresInTime,jdbcType=TIMESTAMP},
+			#{merchantCode,jdbcType=VARCHAR}, 
+			#{isUseble,jdbcType=SMALLINT},
+			#{operater,jdbcType=VARCHAR},
+			#{operated,jdbcType=VARCHAR}
+		)
+	</insert>
+  
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.yougou.kaidian.taobao.model.TaobaoAuthinfo" >
+    update tbl_merchant_taobao_authinfo
+    <set >
+      <if test="topAppkey != null" >
+        top_appkey = #{topAppkey,jdbcType=VARCHAR},
+      </if>
+      <if test="topParameters != null" >
+        top_parameters = #{topParameters,jdbcType=VARCHAR},
+      </if>
+      <if test="topSession != null" >
+        top_session = #{topSession,jdbcType=VARCHAR},
+      </if>
+      <if test="topTimestamp != null" >
+        top_timestamp = #{topTimestamp,jdbcType=VARCHAR},
+      </if>
+      <if test="topAgreement != null" >
+        top_agreement = #{topAgreement,jdbcType=SMALLINT},
+      </if>
+      <if test="topAgreementsign != null" >
+        top_agreementsign = #{topAgreementsign,jdbcType=VARCHAR},
+      </if>
+      <if test="sign != null" >
+        sign = #{sign,jdbcType=VARCHAR},
+      </if>
+      <if test="topSign != null" >
+        top_sign = #{topSign,jdbcType=VARCHAR},
+      </if>
+      <if test="topVisitorId != null" >
+        top_visitor_id = #{topVisitorId,jdbcType=BIGINT},
+      </if>
+      <if test="topVisitorNick != null" >
+        top_visitor_nick = #{topVisitorNick,jdbcType=VARCHAR},
+      </if>
+      <if test="topExpiresIn != null" >
+        top_expires_in = #{topExpiresIn,jdbcType=INTEGER},
+      </if>
+      <if test="topExpiresInTime != null" >
+        top_expires_in_time = #{topExpiresInTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="merchantCode != null" >
+        merchant_code = #{merchantCode,jdbcType=VARCHAR},
+      </if>
+      <if test="isUseble != null" >
+        is_useble = #{isUseble,jdbcType=SMALLINT},
+      </if>
+      <if test="operater != null" >
+        operater = #{operater,jdbcType=VARCHAR},
+      </if>
+      <if test="operated != null" >
+        operated = #{operated,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=CHAR}
+  </update>
+  
+  <select id="selectAuthInfoByCatBandId" resultType="com.yougou.kaidian.taobao.model.TaobaoAuthinfoDto">
+  	select 
+  	a.top_appkey topAppkey,
+  	t.top_secret appSecret,
+  	a.top_session topSession,
+  	c.nick_id nickId,
+  	c.taobao_cid cid
+  	from tbl_merchant_taobao_authinfo a 
+  	inner join tbl_merchant_taobao_yougou_itemcat c on c.nick_id = a.top_visitor_id 
+  	inner join tbl_merchant_taobao_topapp t on t.top_appkey = a.top_appkey
+ where c.id = #{catBandId,jdbcType=CHAR}
+  </select>
+</mapper>

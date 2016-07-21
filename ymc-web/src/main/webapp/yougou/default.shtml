@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>优购-商家中心-基本信息</title>
+    <link rel="stylesheet" type="text/css" href="css/base.css" />
+    <link rel="stylesheet" type="text/css" href="css/mold.css" />
+</head>
+
+<body>
+    <script type="text/javascript" src="js/bootstrap.js"></script>
+    <!--#include file="layout/header.shtml" -->
+    <div id="newcontent" class="wrap clearfix mt10">
+        <!--#include file="layout/sidebar.shtml" -->
+        <div id="newmain" class="main_bd fr">
+            <div class="main_container">
+                <div class="normal_box">
+                    <p class="title site">当前位置：商家中心 &gt; 设置 &gt; 基本信息</p>
+                    <div class="tab_panel relative">
+                        <ul class="tab">
+                            <li onclick="location.href='/order/toDocumentPrintingNew.sc'" class="curr"><span>基本信息</span></li>
+                            <li onclick="location.href='/order/toPrintNewNotDelivery.sc'"><span>店铺信息</span></li>
+                            <li onclick="location.href='/order/toPrintNewDelivery.sc'"><span>合同信息</span></li>
+                        </ul>
+                        <div class="tab_content">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--#include file="layout/footer.shtml" -->
+    <script src="js/ygdialog/lhgdialog.js"></script>
+    <script>
+    // $.dialog.open('basic_info.shtml',{title:'提醒'});
+    $(function() {
+        // ygdg.dialog({
+        //     title: '提醒',
+        //     content: '<div style="width:310px;line-height:20px;">尊敬的商家：<br>&nbsp;&nbsp;&nbsp;&nbsp;您的<span class="cred">合同在2015年5月12日已到期</span>，请联系优购运营续签合同后再进行操作！</div>',
+        //     icon: 'warning',
+        //     ok: function() {
+        //         name:"dgdgdg"
+        //     }
+        // });
+
+        dialog_obj=$.dialog.open('carousel.shtml',{
+            title:"提醒",
+            max:false,
+            min:false,
+            width: '380px',
+            height: '245px',
+            lock:true
+        });
+    });
+    </script>
+</body>
+
+</html>

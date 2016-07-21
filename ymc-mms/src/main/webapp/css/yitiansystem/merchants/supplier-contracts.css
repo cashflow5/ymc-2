@@ -1,0 +1,484 @@
+/*基本信息*/
+
+.hide{
+	display:none;
+}
+
+/*查询，表单样式开始*/
+.form-box{
+	padding:10px 0;
+}
+.supplier-query-wrap{
+	margin-left: 40px;
+
+}
+.supplier-query-left{
+	float: left;
+	width: 500px;
+	padding:10px;
+}
+.supplier-query-right{
+	float: left;
+	width: 500;
+	padding:10px;
+	overflow: hidden;
+}
+.supplier-query-main{
+	float: left;
+	width: auto;
+	padding:10px;
+}
+/*流式布局查询条件开始*/
+.flow_layout .supplier-query-wrap{
+	width: 1180px;
+}
+.flow_layout .supplier-query-left{
+	width: 570px;
+}
+.flow_layout .supplier-query-right{
+	width: 570px;
+	margin-left: 0;
+}
+
+/*流式布局查询条件结束*/
+.inline-block{
+	display: inline-block;
+}
+.supplier-query-cont {
+  display: inline-block;
+  width: 340px;/*之前宽度是180px，但是发现有些不需要隐藏的内容给隐藏了，现在改成340，目前还不确定其他别的页面会受到什么影响20150915.lijunfang*/
+  vertical-align: middle;
+  line-height: 20px;
+}
+
+.attachment_item .supplier-query-cont{
+	width: 210px;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
+.update-natural-dialog .supplier-query-cont {
+	width: 210px;
+}
+
+.update-natural-dialog .attachment_item .supplier-query-cont {
+	width: 190px;
+}
+
+.Red{
+	color: #f00;
+}
+.Green{
+	color: #009944;
+}
+.Orange{
+	color: #f39700;
+}
+.Blue{
+	color: #206ebc;
+}
+a.Blue{
+	color: #206ebc;
+}
+a.Blue:hover{
+	color: #f00;
+}
+.supplier-query-title{
+	width:140px;
+	display: inline-block;
+	*display: inline;
+	*zoom:1;
+	text-align: right;
+	padding-right:5px;
+}
+.supplier-query-title.w25{
+	width:25px;
+	text-align: left;
+	padding-right:0;
+}
+.supplier-query-title.w80{
+	width: 80px;
+}
+.supplier-query-text{
+	width: 298px;
+	padding:5px 2px;
+	border:1px solid #ccc;
+}
+.supplier-query-text.default-val{
+	color: #ccc;
+}
+.supplier-query-text.w80{
+	width:80px;
+	color:#000;
+}
+.supplier-query-text.w136{
+	width:136px;
+}
+.supplier-query-text.w600{
+	width:858px;
+}
+.supplier-query-select{
+	width: 302px;
+	padding:5px 0;
+	border:1px solid #ccc;
+}
+.supplier-query-select.w250{
+	width: 250px;
+}
+textarea.supplier-query-textarea{
+	width: 292px;
+	height: 57px;
+	border:1px solid #ccc;
+	margin-top:0;
+}
+textarea.supplier-query-textarea.w550{
+	width: 550px;
+}
+textarea.supplier-query-textarea.default-val{
+	color: #ccc;
+}
+input[type="radio"].supplier-query-radio{
+	margin-top:-2px;
+}
+input[type="checkbox"].supplier-query-checkbox{
+	margin-top:1px;
+}
+.supplier-query-div{
+	padding-bottom:10px;
+}
+.calendar{
+	width:80px;
+	font-size: 12px;
+	line-height: 12px;
+	height: 12px;
+	padding: 4px 24px 4px 5px;
+	border:1px solid #ccc;
+	background: url(../../../images/calendar.png) 98% 4px no-repeat;
+}
+#createTimeStart{
+	margin-right: 10px;
+}
+#createTimeEnd{
+	margin-left: 10px;
+}
+.timeStart{
+	margin-right: 10px;
+}
+.timeEnd{
+	margin-left: 10px;
+}
+
+.up-btn-upload{
+	float: none;
+}
+
+/*查询，表单样式结束*/
+
+/*虚线样式开始*/
+
+.supplier-title{
+	height: 30px;
+	line-height: 30px;
+	padding:10px 5px;
+	margin:0 34px;
+	border-bottom: 1px dashed #ccc;
+}
+.Gray{
+	color: #ccc;
+	font-weight: normal;
+	padding-left: 25px;
+
+}
+/*虚线样式结束*/
+
+/*表格样式开始*/
+
+.box-blue{
+	height: 30px;
+	line-height: 30px;
+	padding-left: 15px;
+	font-size: 14px;
+	background: #ebf5fa;
+	border-bottom: 1px solid #c9dcea;
+}
+/*#content_list{
+	margin-top:15px;
+}*/
+.list_table th .Red{
+	color:#f00;
+}
+.list_table td{
+	border:1px solid #e8e8e8;
+}
+.list_table .table-text{
+	width: 70px;
+	padding:2px 4px;
+	border:1px solid #ccc;
+}
+.list_table .table-text.table-class-text{
+	width:40px;
+}
+/*表格样式结束*/
+.btn-bottom{
+	height:25px;
+	background-color: #e6eff5;
+	padding:5px 0;
+}
+/*保存按钮样式开始*/
+.btn-box{
+	padding:56px 0;
+	text-align: center;
+}
+.yg-btn-blue{
+	cursor: pointer;
+	color: #fff;
+	text-align: center;
+	background:url(../../../images/yg-blue-icon.png) repeat-x;
+	border-left: 1px solid #3299ff;
+	border-right: 1px solid #3299ff;
+	border-radius: 2px;
+	-moz-border-radius:2px;
+	-ms-border-radius:2px;
+	-webkit-border-radius:2px;
+	padding:0 30px;
+	height: 30px;
+	line-height: 30px;
+	border:0;
+	display: inline-block;
+	*display: inline;
+	*zoom:1;
+	font-size: 14px;
+	font-weight: bold;
+	letter-spacing: 2px;
+}
+a.yg-btn-blue:link{
+	color: #fff;
+}
+a.yg-btn-blue:visited{
+	color: #fff;
+}
+a.yg-btn-gray:hover{
+	color: #fff;
+}
+a.yg-btn-blue:active{
+	color: #fff;
+}
+
+.yg-btn-gray{
+	cursor: pointer;
+	color: #000;
+	text-align: center;
+	background:url(../../../images/icon.png) no-repeat;
+	background-position: -63px -32px;
+	width:97px;
+	height: 30px;
+	line-height: 30px;
+	border:0;
+	display: inline-block;
+	*display: inline;
+	*zoom:1;
+	font-size: 14px;
+	font-weight: bold;
+	letter-spacing: 2px;
+}
+.yg-btn-gray.c-normal{
+	font-weight: normal;
+}
+a.yg-btn-gray:link{
+	color: #000;
+}
+a.yg-btn-gray:visited{
+	color: #000;
+}
+a.yg-btn-gray:hover{
+	color: #000;
+}
+a.yg-btn-gray:active{
+	color: #000;
+}
+
+.yg-btn-gray.w60{
+	width: 60px;
+	border-right: 1px solid #ccc;
+	font-weight: normal;
+	border-radius: 0 2px 2px 0;
+	-webkit-border-radius:0 2px 2px 0;
+	-moz-border-radius:0 2px 2px 0;
+	-ms-border-radius:0 2px 2px 0;
+	-o-border-radius:0 2px 2px 0;
+}
+
+.yg-btn-gray.c-normal{
+	font-weight: normal;
+}
+
+.yg-btn-gray-2{
+	cursor: pointer;
+	color: #000;
+	text-align: center;
+	background:url(../../../images/yg-gray-icon.png) repeat-x;
+	height: 24px;
+	line-height: 24px;
+	border:1px solid #b5b5b5;
+	border-radius: 2px;
+	-webkit-border-radius:2px;
+	-moz-border-radius:2px;
+	-ms-border-radius:2px;
+	-o-border-radius:2px;
+	padding: 0 10px;
+	display: inline-block;
+	*display: inline;
+	*zoom:1;
+	font-size: 12px;
+}
+.yg-btn-gray-2.w56{
+	width: 56px;
+}
+.yg-btn-gray-2.w47{
+	width: 47px;
+}
+a.yg-btn-gray-2:link{
+	color: #000;
+}
+a.yg-btn-gray-2:visited{
+	color: #000;
+}
+a.yg-btn-gray-2:hover{
+	color: #000;
+}
+a.yg-btn-gray-2:active{
+	color: #000;
+}
+
+.yg-btn-gray-2.c-normal{
+	font-weight:normal;
+}
+
+.yg-btn-update{
+	padding: 0;
+	vertical-align: middle;
+}
+
+.yg-btn-update .webuploader-pick {
+  padding: 0 10px !important;
+  background: none;
+  color: #000;
+}
+
+/*填写店铺信息页面样式开始*/
+.step-list{
+	width: 1098px;
+	border:1px solid #ccc;
+	margin: 10px 0 10px 34px;
+	height: 38px;
+}
+.step-list li{
+	float: left;
+	width: 226px;
+	text-align: left;
+	padding-left:48px;
+	color: #d9d9d9;
+	font-size: 14px;
+	font-weight: bold;
+	height: 38px;
+	line-height: 38px;
+	background: url(../../../images/icon.png) no-repeat;
+	background-position: 0 -104px;
+}
+.step-list li.last{
+	background-position: 0 -235px;
+}
+.step-list li.current{
+	color: #fff;
+	background-position: 0 -148px;
+}
+
+.step-list li.walk{
+	color: #fff;
+	position: relative;
+	width: 240px;
+	z-index: 10;
+	background-position: 0 -192px;
+	margin-right: -14px;
+}
+.step-list li.current em,.step-list li.walk em{
+	visibility: hidden;
+}
+.step-list li em{
+	font-size:14px;
+	padding-right: 15px;
+	font-weight: bold;
+	font-style: normal;
+	font-family: "微软雅黑";
+	color: #fff;
+}
+select.address-select{
+	width: 97px;
+	border:1px solid #ccc;
+	height: 26px;
+	line-height: 26px;
+}
+/*填写店铺信息页面样式结束*/
+
+/*灰色表格样式开始*/
+.list_table.table_gray th{
+	background: #dcdcdc;
+	color: #000;
+	border:1px solid #e8e8e8;
+}
+
+.list_table.table_gray_0 th{
+	background: #f7f6f6;
+	color: #000;
+	border:1px solid #e8e8e8;
+	font-weight: normal;
+	text-align: left;
+	padding-left: 10px;
+}
+th.w100{
+	width: 100px;
+}
+th.w150{
+	width: 150px;
+}
+.list_table.table_gray_0 td{
+	text-align: left;
+	padding-left:5px;
+}
+/*灰色表格样式结束*/
+/*黑色字体表格样式开始*/
+.list_table.table_cblack th{
+	color: #000;
+	font-weight:normal;
+	font-size: 12px;
+}
+.list_table.table_cblack td{
+	border: none;
+	border-top: 1px solid #fff;
+}
+
+.g-layout-left {
+  width: 140px;
+  line-height: 30px;
+  float: left;
+  margin-right: -153px;
+}
+
+.g-layout-main {
+  float: left;
+  margin-left: 153px;
+}
+
+.yt-seach-btn {
+  width: 53px;
+  margin-left: 5px;
+  text-align: center;
+  background: url(../../../images/finance/adduser.gif) no-repeat;
+  height: 24px;
+  line-height: 24px;
+  border: 0;
+  cursor: pointer;
+  letter-spacing: 2px;
+}
+/*黑色字体表格样式结束*/

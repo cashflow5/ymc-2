@@ -1,0 +1,27 @@
+<graph caption="年客户注册量趋势" subcaption="(2011年)" xAxisName="日期" yAxisMinValue="0" yAxisMaxValue="10" rotateYAxisName="0" yAxisName="" decimalPrecision="0" formatNumberScale="0" numberSuffix="%C8%CB" showBorder="0" showNames="1" showValues="0" bgColor="FFFFFF" baseFontColor="278296" baseFontSize="12" canvasBorderColor="278296" canvasBorderThickness="2" showAlternateHGridColor="1" AlternateHGridColor="BBCEE4" alternateHGridAlpha="40" divLineColor="BBCEE4" hovercapbg="FFFDD7" hovercapborder="FFB400" hoverCapSepChar=", ">
+   
+   		<set name="1月" value="4" hoverText="1月"/>
+   
+   		<set name="2月" value="4" hoverText="2月"/>
+   
+   		<set name="3月" value="1" hoverText="3月"/>
+   
+   		<set name="4月" value="0" hoverText="4月"/>
+   
+   		<set name="5月" value="2" hoverText="5月"/>
+   
+   		<set name="6月" value="0" hoverText="6月"/>
+   
+   		<set name="7月" value="0" hoverText="7月"/>
+   
+   		<set name="8月" value="0" hoverText="8月"/>
+   
+   		<set name="9月" value="0" hoverText="9月"/>
+   
+   		<set name="10月" value="0" hoverText="10月"/>
+   
+   		<set name="11月" value="0" hoverText="11月"/>
+   
+   		<set name="12月" value="0" hoverText="12月"/>
+   
+</graph>

@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yougou.kaidian.bi.dao.MMSDBReportFavoriteMapper">
+	
+	<!-- 新增收藏归类-->
+	<insert id="addFavoriteClassify" parameterType="java.util.HashMap">
+		INSERT INTO tbl_merchant_favorite_classify
+            (id,
+             classify_name,
+			 merchant_code,
+			 login_name,
+             create_time,
+             update_time,
+             order_by
+             )
+        values(#{id},
+             #{classify_name},
+             #{merchant_code},
+             #{login_name},
+             Now(),
+             Now(),
+             #{order_by}
+             )
+	</insert>
+	
+	<!-- 修改收藏归类 -->
+	<update id="updateFavoriteClassify" parameterType="java.util.HashMap" >
+		update tbl_merchant_favorite_classify set classify_name = #{classify_name}
+		where id = #{id}
+	</update>
+	
+	<!-- 查询新增收藏归类排序数值 -->
+	<select id="queryClassifyOrderBy" parameterType="java.util.HashMap" resultType="int">
+		select ifnull(max(order_by),0)+1 from tbl_merchant_favorite_classify
+		where merchant_code = #{merchant_code}
+		  and login_name = #{login_name}
+	</select>
+	
+	<!-- 删除收藏归类 -->
+	<delete id="deleteFavoriteClassify" parameterType="String">
+		delete from tbl_merchant_favorite_classify where id = #{value}
+	</delete>
+	
+	<!-- 查询用户收藏归类列表 -->
+	<select id="queryFavoriteClassify" parameterType="java.util.HashMap" resultType="java.util.HashMap">		
+		SELECT t.id,
+		       t.classify_name
+		      
+		FROM   tbl_merchant_favorite_classify t
+		WHERE  t.merchant_code = #{merchant_code}
+		       AND t.login_name = #{login_name}
+		       order by t.order_by asc;
+	</select>
+	
+	<!-- 新增收藏商品 -->
+	<insert id="addFavoriteCommodity" parameterType="java.util.HashMap" >
+		INSERT INTO tbl_merchant_favorite_commodity
+		            (id,
+		             commodity_no,
+		             merchant_code,
+		             login_name,
+		             create_time,
+		             update_time)
+		VALUES     (#{id},
+		            #{commodity_no},
+		            #{merchant_code},
+		            #{login_name},
+		            Now(),
+		            Now())
+	</insert>
+	
+	<!-- 取消商品收藏，收藏表内删除此条收藏记录 -->
+	<delete id="deleteFavoriteCommodity" parameterType="java.util.HashMap" >
+		delete from tbl_merchant_favorite_commodity 
+		where commodity_no = #{commodity_no}
+		  and merchant_code =  #{merchant_code}
+		  and login_name = #{login_name}
+	</delete>
+	
+	<!-- 取消收藏商品后，此商品归类关系删除（根据商品编码）  -->
+	<delete id="deleteFavoriteCommodityClassifyByNo" parameterType="java.util.HashMap" >
+		delete from tbl_merchant_favorite_commodity_classify 
+		where fvr_commodity_id = (select id from tbl_merchant_favorite_commodity 
+		where commodity_no = #{commodity_no}
+		  and merchant_code =  #{merchant_code}
+		  and login_name = #{login_name})	
+	</delete>
+	
+	<!-- 取消商品收藏，收藏表内删除此条收藏记录 -->
+	<delete id="deleteFavoriteCommodityById" parameterType="String" >
+		delete from tbl_merchant_favorite_commodity 
+		where id = #{value}
+	</delete>
+	
+	<!-- 查询已收藏商品，含已归类和未归类 -->
+	<select id="queryFavoriteCommodity" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		select * from (select t.id,t.commodity_no,t.create_time, 
+			        s.commodity_name ,s.pic_small,s.sale_price ,s.commodity_status,
+					 s.no ,	s.supplier_code ,s.cat_structname,s.brand_no,
+					   (select GROUP_CONCAT(t1.classify_name) 
+								 from tbl_merchant_favorite_classify t1,
+									  tbl_merchant_favorite_commodity_classify t2 
+								where t1.id = t2.classify_id 
+									and t2.fvr_commodity_id = t.id
+								 ) first_classify_name,
+						 (select GROUP_CONCAT(t1.id) 
+								 from tbl_merchant_favorite_classify t1,
+									  tbl_merchant_favorite_commodity_classify t2 
+								where t1.id = t2.classify_id 
+									and t2.fvr_commodity_id = t.id
+								 ) first_classify_id,
+						(select count(1) 
+								 from tbl_merchant_favorite_classify t1,
+									  tbl_merchant_favorite_commodity_classify t2 
+								where t1.id = t2.classify_id 
+									and t2.fvr_commodity_id = t.id
+								 ) classify_count
+					 from tbl_merchant_favorite_commodity t ,
+								tbl_commodity_style  s 
+					where t.merchant_code = #{merchant_code} 
+					   and t.login_name = #{login_name}
+					  and s.no=t.commodity_no
+		   order by t.create_time desc)  as pp
+		   where 1=1 
+ 		  <if test="classifyName !=null and classifyName!=''">
+   				and	 find_in_set(#{classifyName},first_classify_name)
+   		  </if>
+   		   <if test="favorite_classify_id !=null and favorite_classify_id!=''">
+   				and	 find_in_set(#{favorite_classify_id},first_classify_id)
+   		  </if>
+		    <!-- 开始时间 下单时间 -->
+			<if test=" startTime != null and startTime != '' ">
+				<![CDATA[and create_time >=  CONCAT(#{startTime},' 00:00:00') ]]>
+			</if>
+		    <!-- 结束时间 下单时间 -->
+			<if test=" endTime != null and endTime != '' ">
+				<![CDATA[and create_time <=CONCAT(#{endTime},' 23:59:59')]]>
+			</if>
+			<if test="commodityCode !=null and commodityCode  !='' ">
+          		 and (commodity_name   like  CONCAT('%',#{commodityCode},'%' )  or   commodity_no =#{commodityCode} )
+	         </if>
+	         <if test="statusName !=null and statusName  !='' ">
+	          	and commodity_status=#{statusName}
+			</if>
+			
+			<if test="rootCattegory !=null and rootCattegory  !='' ">
+			
+	          	and cat_structname like  CONCAT(#{rootCattegory},'%' ) 
+			</if>
+			<if test="secondCategory !=null and secondCategory  !='' ">
+	          	and cat_structname  like  CONCAT(#{secondCategory},'%' ) 
+			</if>
+			<if test="threeCategory !=null and threeCategory  !='' ">
+	         	 and cat_structname=#{threeCategory}
+			</if>
+			<if test="brandNo !=null and brandNo  !='' ">
+	         	 and brand_no =#{brandNo}
+			</if>		
+			<if test=" start != null and pageSize != null">
+				
+			 limit #{start},#{pageSize}	
+			 
+			</if>
+		
+			
+			
+	</select>
+	
+	<!-- 查询收藏商品数量，用于判断某商品是否被收藏 -->
+	<select id="queryFavoriteCommodityCount" parameterType="java.util.HashMap" resultType="int" >
+	   select count(*) from (select t.id,t.commodity_no,t.create_time, 
+			s.commodity_name ,s.pic_small,s.sale_price ,s.commodity_status,s.cat_structname,s.brand_no,
+					   (select GROUP_CONCAT(t1.classify_name) 
+								 from tbl_merchant_favorite_classify t1,
+									  tbl_merchant_favorite_commodity_classify t2 
+								where t1.id = t2.classify_id 
+									and t2.fvr_commodity_id = t.id
+									
+								 ) first_classify_name,
+						 (select GROUP_CONCAT(t1.id) 
+								 from tbl_merchant_favorite_classify t1,
+									  tbl_merchant_favorite_commodity_classify t2 
+								where t1.id = t2.classify_id 
+									and t2.fvr_commodity_id = t.id
+								 ) first_classify_id,
+						(select count(1) 
+								 from tbl_merchant_favorite_classify t1,
+									  tbl_merchant_favorite_commodity_classify t2 
+								where t1.id = t2.classify_id 
+									and t2.fvr_commodity_id = t.id
+								 ) classify_count
+					 from tbl_merchant_favorite_commodity t ,
+								tbl_commodity_style  s 
+					where t.merchant_code = #{merchant_code} 
+					   and t.login_name = #{login_name}
+					  and s.no=t.commodity_no
+		   order by t.create_time desc)  as pp
+		   where 1=1
+ 		  <if test="classifyName !=null and classifyName!=''">
+   				and	 find_in_set(#{classifyName},first_classify_name)
+   		  </if>
+   		    <if test="favorite_classify_id !=null and favorite_classify_id !=''">
+   				and	 find_in_set(#{favorite_classify_id},first_classify_id)
+   		  </if>
+           <!-- 开始时间 下单时间 -->
+			<if test=" startTime != null and startTime != '' ">
+				<![CDATA[and create_time >=  CONCAT(#{startTime},' 00:00:00') ]]>
+			</if>
+		    <!-- 结束时间 下单时间 -->
+			<if test=" endTime != null and endTime != '' ">
+				<![CDATA[and create_time <=CONCAT(#{endTime},'23:59:59')]]>
+			</if>
+			<if test="commodityCode !=null and commodityCode  !='' ">
+			 	 and (commodity_name   like  CONCAT('%',#{commodityCode},'%' )  or   commodity_no =#{commodityCode} )
+	         </if>
+	         <if test="statusName !=null and statusName  !='' ">
+	          and commodity_status=#{statusName}
+			</if>
+			<if test="rootCattegory !=null and rootCattegory  !='' ">
+			
+	          	and cat_structname like  CONCAT(#{rootCattegory},'%' ) 
+	          	
+			</if>
+			<if test="secondCategory !=null and secondCategory  !='' ">
+	          	and cat_structname  like  CONCAT(#{secondCategory},'%' ) 
+			</if>
+			<if test="threeCategory !=null and threeCategory  !='' ">
+	         	 and cat_structname=#{threeCategory}
+			</if>
+			<if test="brandNo !=null and brandNo  !='' ">
+	         	 and brand_no =#{brandNo}
+			</if>
+			 
+	</select>
+
+	
+	<!-- 新增收藏商品所属归类(单个商品) -->
+	<insert id="addFavoriteCommodityClassify" parameterType="java.util.HashMap">
+		INSERT INTO tbl_merchant_favorite_commodity_classify
+            (id,
+             classify_id,
+             fvr_commodity_id,
+             create_time,
+             update_time)
+		VALUES
+		<foreach collection="classify_ids" item="item" index="index" separator="," >  
+	        (#{item.id},#{item.classify_id},#{fvr_commodity_id},now(),now())  
+	    </foreach>  
+	</insert> 
+	
+	<!-- 新增收藏商品所属归类(批量商品归类) -->
+	<insert id="batchAddFavoriteCommodityClassify" parameterType="java.util.HashMap">		 
+			INSERT INTO tbl_merchant_favorite_commodity_classify
+	            (id,
+	             classify_id,
+	             fvr_commodity_id,
+	             create_time,
+	             update_time)
+			VALUES		
+			<foreach collection="comClaList" item="item" index="index" separator="," >  
+		        (#{item.id},#{item.classify_id},#{item.fvr_commodity_id},now(),now())  
+		    </foreach>  
+	</insert>  
+	
+	<!--  删除收藏商品所属归类(单个商品) -->
+	<delete id="deleteFavoriteCommodityClassify" parameterType="String">
+		delete from tbl_merchant_favorite_commodity_classify 
+		where fvr_commodity_id = #{value}
+	</delete>
+	
+	<!--  删除收藏商品所属归类(批量商品) -->
+	<delete id="batchDeleteFavoriteCommodityClassify" parameterType="java.util.HashMap">
+		delete from tbl_merchant_favorite_commodity_classify 
+		where fvr_commodity_id in
+		<foreach collection="fvr_commodity_ids" open="(" close=")" separator="," item="fvr_commodity_id" index="index"  > 
+			#{fvr_commodity_id}
+		</foreach>
+		and  classify_id = #{classify_id}
+	</delete>
+	
+	<!-- 删除指定归类下的收藏商品所属归类关系 -->
+	<delete id="deleteClassifyCommodity" parameterType="String">
+	    delete from tbl_merchant_favorite_commodity_classify 
+		where classify_id = #{value}
+		
+	</delete>
+	<select id="queryFavoriteInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		       SELECT classify.id,
+		       classify.classify_name,
+		       ifnull((
+						select 'y'   from tbl_merchant_favorite_commodity_classify  t
+						 ,tbl_merchant_favorite_commodity  b 
+						where t.fvr_commodity_id=b.id
+	             and t.classify_id= classify.id
+	             and  b.commodity_no=#{commodity_no}
+	          ),'n') as  favoriteInfo 
+			FROM   tbl_merchant_favorite_classify classify   
+			WHERE  classify.merchant_code = #{merchant_code}
+			       AND classify.login_name =  #{login_name}
+			       order by classify.order_by asc
+		       
+	</select>
+	<select id="queryFavoriteCommodityInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		    select * from tbl_merchant_favorite_commodity t  where  
+			t.merchant_code= #{merchant_code} and t.login_name= #{login_name}
+			and commodity_no= #{commodity_id}
+	</select>
+
+	<!--删除收藏夹商品信息 -->	
+	<delete id="batchDeleteFavoriteCommodityInfo" parameterType="java.util.HashMap">
+	
+		    delete  from tbl_merchant_favorite_commodity  WHERE  1=2 
+		<foreach collection="fvr_commodity_ids" open="" close="" separator="" item="fvr_commodity_id" index="index"  > 
+		     or (( 1=(select count(*) from tbl_merchant_favorite_commodity_classify 
+				where  fvr_commodity_id=#{fvr_commodity_id} ))
+				and id=#{fvr_commodity_id})
+		</foreach>
+	</delete>
+	<select id="queryfavoriteCommodityId" parameterType="String" resultType="java.util.HashMap">
+		select b.id as fvr_commodity_id   from tbl_merchant_favorite_commodity_classify  t
+				,tbl_merchant_favorite_commodity  b
+				 where t.fvr_commodity_id=b.id
+				  and   t.classify_id=#{value}
+	</select>
+
+</mapper>

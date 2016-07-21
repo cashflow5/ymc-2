@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.yougou.kaidian.user.dao.ApiKeyMapper" >
+	<insert id="saveApiKey" parameterType="com.yougou.kaidian.user.model.pojo.ApiKey">
+		insert into tbl_merchant_api_key(id,app_key,app_secret,status,update_user,update_time) 
+		values(#{id},#{appKey},#{appSecret},#{status},#{updateUser},#{updateTime})
+	</insert>
+	
+	<insert id="bindingApiKeyToMerchant" parameterType="com.yougou.kaidian.user.model.pojo.ApiKeyMetadata">
+		insert into tbl_merchant_api_key_metadata(id, key_id, metadata_key, metadata_val) 
+		values(#{id}, #{keyId}, #{metadataKey}, #{metadataVal})
+	</insert>
+	
+	<insert id="authorizeApiKeyToMerchant" parameterType="com.yougou.kaidian.user.model.pojo.ApiLicense">
+		insert into tbl_merchant_api_license(id, api_id, key_id, licensor, licensed) values
+		<foreach collection="list" item="item" index="index" separator=","> 
+          (
+             #{item.id,jdbcType=VARCHAR},
+             #{item.apiId,jdbcType=VARCHAR},
+             #{item.keyId,jdbcType=VARCHAR},
+             #{item.licensor,jdbcType=VARCHAR},
+             #{item.licensed,jdbcType=TIMESTAMP}
+          )
+        </foreach>
+	</insert>
+	
+	<update id="changeApiStatus">
+		update tbl_merchant_api_key set status = #{status,jdbcType=INTEGER} where id = #{apiId,jdbcType=VARCHAR}
+	</update>
+	
+	<select id="findAppKeyIsExist" resultType="java.util.Map" parameterType="String">
+  		select count(akm.id) app_count,app_key,app_secret,ak.status app_status,ak.id api_id  
+  		from tbl_merchant_api_key_metadata akm inner join tbl_merchant_api_key ak on ak.id = akm.key_id 
+		where metadata_val = #{merchantCode}
+  	</select>
+  	
+  	<select id="findAppKeyByApiId" parameterType="String" resultType="String">
+  		select t.api_id from tbl_merchant_api_license t  INNER JOIN tbl_merchant_api_key k 
+		ON t.key_id = k.id  WHERE t.key_id = #{apiId} AND k.status = 1
+  	</select>
+  	
+  	<select id="findAppKeySecret" resultType="com.yougou.kaidian.user.model.vo.AppKeySecretVo">
+  		SELECT t1.app_key as appKey, t1.app_secret as secret, t2.metadata_val as metadataVal FROM tbl_merchant_api_key t1  
+		INNER JOIN tbl_merchant_api_key_metadata t2 ON (t1.id = t2.key_id) 
+		WHERE t1.status = '1'
+  	</select>
+  	
+  	<select id="findApiByApiId" resultType="com.yougou.kaidian.user.model.pojo.Api" parameterType="String">
+  		SELECT t.id, t.api_name apiName, t.api_method apiMethod, t.is_enable isEnable, 
+  		t.is_save_result isSaveResult FROM tbl_merchant_api t where t.id = #{apiId}
+  	</select>
+</mapper>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	 http://code.alibabatech.com/schema/dubbo	http://code.alibabatech.com/schema/dubbo/dubbo.xsd"
+	default-lazy-init="true">
+
+	<description>Dubbo provider配置</description>
+	
+    <!-- 消费方应用名，用于计算依赖关系，不是匹配条件，不要与提供方一样 -->
+    <dubbo:application name="merchant-center"  />
+    
+    <!-- 使用zookeeper暴露服务地址 -->
+    <dubbo:registry protocol="zookeeper" address="${dubbo.registry.address}" file="${dubbo.registry.file}"/>
+    
+    <!-- 商品系统API -->
+    <dubbo:reference id="commodityBaseApiService" interface="com.yougou.pc.api.ICommodityBaseApiService" timeout="60000" protocol="dubbo" check="false" version="1.2"/>
+    <dubbo:reference id="commodityMerchantApiService" interface="com.yougou.pc.api.ICommodityMerchantApiService" timeout="60000" protocol="dubbo" check="false" version="1.1"/> 
+    <dubbo:reference id="commodityClientApi" interface="com.yougou.pc.api.ICommodityClientApiService" timeout="60000" protocol="dubbo" check="false" version="1.1"/>
+    <dubbo:reference id="commodityOrderApiService" interface="com.yougou.pc.api.ICommodityOrderApiService" timeout="60000" protocol="dubbo" check="false" version="1.1"/>
+    
+    <!-- 仓库接口 -->
+    <dubbo:reference id="warehouseCacheService" interface="com.yougou.wms.wpi.warehouse.service.IWarehouseCacheService" timeout="60000" protocol="dubbo" check="false"  version="1.4"/> 
+    
+    <!-- 预占及库存接口 -->
+    <dubbo:reference id="inventoryDomainService" interface="com.yougou.wms.wpi.inventory.service.IInventoryDomainService" timeout="60000" protocol="dubbo" check="false"  version="1.4"/>
+    <dubbo:reference id="inventoryForMerchantService" interface="com.yougou.wms.wpi.inventory.service.IInventoryForMerchantService" timeout="60000" protocol="dubbo" check="false"  version="1.4"/>
+    
+    <!-- 拒收质检接口类 -->
+    <dubbo:reference id="rejectionInspectionDomainService" interface="com.yougou.wms.wpi.rejectioninspection.service.IRejectionInspectionDomainService" timeout="60000" protocol="dubbo" check="false"  version="1.4"/>
+    
+    <!-- 退换货质检接口类 -->
+    <dubbo:reference id="returnQaProductDomainService" interface="com.yougou.wms.wpi.returnqaproduct.service.IReturnQaProductDomainService" timeout="60000" protocol="dubbo" check="false"  version="1.4"/>
+    
+    <!-- 退换货明细质检接口类 -->
+    <dubbo:reference id="returnQaProductDetailDomainService" interface="com.yougou.wms.wpi.returnqaproduct.service.IReturnQaProductDetailDomainService" timeout="60000" protocol="dubbo" check="false"  version="1.4"/>
+    
+    <!-- 发货快递公司相关接口 -->
+    <dubbo:reference id="expressSocDomainService" interface="com.yougou.wms.wpi.expresssoc.service.IExpressSocDomainService" timeout="60000" protocol="dubbo" check="false"  version="1.4"/>
+    <dubbo:reference id="logisticsCompanyDomainService" interface="com.yougou.wms.wpi.logisticscompany.service.ILogisticsCompanyDomainService" timeout="60000" check="false" protocol="dubbo" version="1.4"/>
+     
+    <!-- wms关于订单的 -->
+    <dubbo:reference id="orderOutStoreDomainService" interface="com.yougou.wms.wpi.orderoutstore.service.IOrderOutStoreDomainService" timeout="60000" protocol="dubbo" check="false"  version="1.4"/>
+    
+    <!-- 订单接口(订单)  url="dubbo://10.0.20.117:20884"-->
+    <dubbo:reference id="orderApiService" interface="com.yougou.ordercenter.api.order.IOrderApi" timeout="120000" protocol="dubbo" check="false" version="1.4"/>
+    
+    <!-- 订单接口（招商)-->
+	<dubbo:reference id="orderForMerchantApi" interface="com.yougou.ordercenter.api.order.IOrderForMerchantApi" protocol="dubbo" check="false" version="1.4"/>
+	
+  	<!--订单售后接口-->
+    <dubbo:reference id="asmApiImpl" interface="com.yougou.ordercenter.api.asm.IAsmApi" timeout="120000" protocol="dubbo" check="false"/>
+    
+    <!--订单发票接口-->
+    <dubbo:reference id="invoiceNewApi " interface="com.yougou.ordercenter.api.invoice.IInvoiceNewApi" timeout="120000" protocol="dubbo" check="false" version="1.4"/>
+  	
+  	<!-- 物流跟踪 -->
+  	<dubbo:reference id="logisticApi" interface="com.yougou.component.logistics.api.IMemberLogisticsApi" timeout="60000" protocol="dubbo" check="false" version="1.1"/>
+  	
+  	<!-- BI统计商品销售数量 -->
+    <dubbo:reference id="biApi" interface="com.yougou.bi.api.IBIApi" timeout="30000" protocol="dubbo" check="false"/>
+    
+    <!-- 招商相关接口 -->
+    <dubbo:reference id="merchantApi" interface="com.yougou.merchant.api.supplier.service.ISupplierService" timeout="60000" protocol="dubbo" check="false" version="1.1"/>
+    <dubbo:reference id="merchantImageApi" interface="com.yougou.merchant.api.supplier.service.IMerchantImageService" timeout="60000" protocol="dubbo" check="false" version="1.1"/>
+    <dubbo:reference id="imerchantsApi" interface="com.yougou.merchant.api.supplier.service.IMerchantsApi" timeout="60000" protocol="dubbo" check="false" version="1.1"/>
+    <!-- 招商订单API接口 --> 
+    <dubbo:reference id="merchantOrderApi" interface="com.yougou.yop.api.IMerchantApiOrderService" timeout="300000" protocol="dubbo" retries="0" check="false" version="1.1"/>
+    
+    <!-- 关于财务接口 -->
+    <dubbo:reference id="merchantsRedeployPriceBillDubboService" interface="com.belle.finance.biz.dubbo.IMerchantsRedeployPriceBillDubboService" timeout="60000" check="false"  version="1.1"/>
+     <dubbo:reference id="costSetOfBooksDubboService" interface="com.belle.finance.biz.dubbo.ICostSetOfBooksDubboService" timeout="60000" check="false"  version="1.1"/>
+    
+    <!-- 关于邮件接口 -->
+    <dubbo:reference id="emailApi" interface="com.yougou.component.email.api.IEmailApi" async="true" check="false" protocol="dubbo" version="1.1"/>
+    <!-- 关于邮件接口 -->
+    <dubbo:reference id="smsApi" interface="com.yougou.component.sms.api.ISmsApi" async="true" check="false" protocol="dubbo" version="1.1"/>
+    <!-- 会员接口 -->
+    <dubbo:reference id="areaApi" interface="com.yougou.component.area.api.IAreaApi" timeout="60000" check="false" protocol="dubbo" version="1.1"/>
+    <!-- 图片接口 -->
+    <dubbo:reference id="pictureService" interface="com.yougou.merchant.api.pic.service.IPictureService" timeout="60000" check="false" protocol="dubbo" version="1.1"/>
+    <!-- 旗舰店接口 -->
+    <dubbo:reference id="fssYmcApiService" interface="com.yougou.fss.api.IFSSYmcApiService" timeout="60000" check="false" protocol="dubbo"/>
+    <dubbo:reference id="fssWebApiService" interface="com.yougou.fss.api.IFSSWebApiService" timeout="60000" check="false" protocol="dubbo"/>
+    
+    <dubbo:reference id="officialActiveApiService" interface="com.yougou.active.api.IOfficialActiveApiService" timeout="60000" check="false" protocol="dubbo" version="2.0"/>
+    <dubbo:reference id="workOrderApi" interface="com.yougou.api.IWorkOrderApi" timeout="60000" check="false" protocol="dubbo" version="1.0.1"/>
+	<!-- 通过订单号包裹总量 -->
+	<dubbo:reference id="orderDeliveryStatusDomainService" interface="com.yougou.wms.wpi.orderdeliverystatus.service.IOrderDeliveryStatusDomainService" timeout="60000" check="false" protocol="dubbo" version="1.4"/>
+
+</beans>

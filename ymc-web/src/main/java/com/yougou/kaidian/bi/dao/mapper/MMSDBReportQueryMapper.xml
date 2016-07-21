@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yougou.kaidian.bi.dao.MMSDBReportQueryMapper">
+
+	<!-- 收订订单统计：订单数，订单金额 -->
+	<resultMap type="java.util.HashMap" id="orderedInfoMap">
+		<result column="totalAmt" property="totalAmt" javaType="double"/>
+		<result column="orderNum" property="orderNum" javaType="int"/>		
+		<result column="orderDate" property="orderDate" javaType="String"/>
+	</resultMap>	
+	
+	<!-- 发货订单统计：发货订单数，发货时间，发货金额 -->
+	<resultMap type="java.util.HashMap" id="deliveryOrderInfoMap">
+		<result column="deliveryOrderNum" property="deliveryOrderNum" javaType="int"/>		
+		<result column="orderDate" property="orderDate" javaType="String"/>
+		<result column="deliveryOrderAmt" property="deliveryOrderAmt" javaType="double"/>
+		
+	</resultMap>	
+
+
+	<!-- 统计商家收订订单数据 -->
+	<select id="queryOrderByParams" parameterType="java.util.HashMap" resultMap="orderedInfoMap">
+		select round(sum(order_pay_total_amont ),2) totalAmt,
+			   count(*) orderNum 
+	    from tbl_order_sub t1,tbl_order_sub_expand t2  
+		where 
+		  t1.id = t2.order_sub_id
+		  and t1.create_time <![CDATA[ >=  ]]> #{startDate}
+		  AND t1.create_time <![CDATA[ < ]]> addDate(#{endDate},1)
+		  AND t1.original_order_no IS NULL 
+		  and UPPER(t1.order_source_no) LIKE 'YG%'
+		  and t2.merchant_code = #{merchantCode}
+	</select>
+	
+	<!-- 查询商家指定时间范围内每天收订的订单数据 -->
+	<select id="queryEveryDayOrderByParams" parameterType="java.util.HashMap" resultMap="orderedInfoMap">
+		select count(*) orderNum,
+			   round(sum(order_pay_total_amont ),2) totalAmt ,
+			  date_format(t1.create_time,'%Y-%m-%d') orderDate
+ 		from tbl_order_sub t1,tbl_order_sub_expand t2  
+		where t1.id = t2.order_sub_id
+		  and t1.create_time <![CDATA[ >= ]]>  #{startDate}
+		  AND t1.create_time <![CDATA[ < ]]> addDate(#{endDate},1)
+		  AND t1.original_order_no IS NULL 
+		  and UPPER(t1.order_source_no) LIKE 'YG%'
+		  and t2.merchant_code =  #{merchantCode}
+			group by date_format(t1.create_time,'%Y-%m-%d')
+	</select>
+	
+	<!-- 查询指定时间范围内下单并发货的订单数量 ,发货金额-->
+	<select id="queryDeleveryOrderByParams" parameterType="java.util.HashMap" resultMap="deliveryOrderInfoMap" >
+		select count(1) deliveryOrderNum,round(sum(order_pay_total_amont ),2) deliveryOrderAmt 
+		 from tbl_order_sub t,tbl_order_sub_expand t2  
+		 where   t.id = t2.order_sub_id
+		 and t.create_time <![CDATA[ >= ]]>  #{startDate} 
+		 and  t.create_time <![CDATA[ < ]]> addDate(#{endDate},1) 
+		 and t.ship_time <![CDATA[ >= ]]>  #{startDate} 
+		 and  t.ship_time <![CDATA[ < ]]> addDate(#{endDate},1)  
+		 AND t.original_order_no IS NULL 
+		 and UPPER(t.order_source_no) LIKE 'YG%'
+		 and t.is_paid = 2 
+		 and t2.merchant_code =  #{merchantCode}
+	</select>
+	
+	<!-- 查询指定时间范围内下单,并且发货时间和下单时间是同一天的，即：每天的发货订单数 -->
+	<select id="queryEveryDayDeleveryOrderByParams" parameterType="java.util.HashMap" resultMap="deliveryOrderInfoMap" >
+		select count(1) deliveryOrderNum,
+			  date_format(t.create_time,'%Y-%m-%d')  orderDate,
+			  round(sum(order_pay_total_amont),2) deliveryOrderAmt
+		 from tbl_order_sub t,tbl_order_sub_expand t2  
+		 where   t.id = t2.order_sub_id
+		 and date_format(t.ship_time,'%Y-%m-%d') = date_format(t.create_time,'%Y-%m-%d') 
+		 and t.create_time <![CDATA[ >= ]]>  #{startDate} 
+		 and  t.create_time <![CDATA[ < ]]> addDate(#{endDate},1) 
+		 AND t.original_order_no IS NULL 
+		 and  UPPER(t.order_source_no) LIKE 'YG%'
+		 and t.is_paid = 2 
+		 and t2.merchant_code =  #{merchantCode}
+		 group by date_format(t.create_time,'%Y-%m-%d') 
+	</select>
+	
+	<!-- 查询经营概况指标 -->
+	<select id="queryManageSurveyIndex" resultType="java.util.HashMap">		
+		select label,en_name,create_time,order_by,type,is_default,valueSuffix,descText
+		 from tbl_merchant_report_index where type = 0 order by order_by 
+	</select>
+	
+	<!-- 查询单品分析下拉指标 -->
+	<select id="querySingleAnalysisIndex" resultType="java.util.HashMap">		
+		select t.en_name,t.label,valueSuffix from tbl_merchant_report_index t where t.type = 2 order by t.order_by asc
+	</select>
+	
+	<!-- 根据商品编码查询出收藏人数 -->
+	<select id="queryFavoriteCountByCommodityNo" parameterType="java.lang.String" resultType="int">
+		select count(*) ftCount 
+		from tbl_merchant_favorite_commodity t 
+		where t.commodity_no = #{commodityNo}
+	</select>
+	
+	<!-- 根据商品编码查询所属归类数量 -->
+	<resultMap type="java.util.HashMap" id="favoriteClassfyCountMap">
+		<result column="fcount" property="fcount" javaType="int"/>		
+		<result column="commodity_no" property="commodity_no" javaType="String"/>
+		
+	</resultMap>	
+	
+	<!-- 根据商品编码查询所属归类数量 -->
+	<select id="queryFavoriteClassifyByCommodityNos" parameterType="java.util.HashMap" resultMap="favoriteClassfyCountMap">
+		select count(*) fcount,commodity_no from tbl_merchant_favorite_commodity t1 
+		INNER JOIN tbl_merchant_favorite_commodity_classify t2 on t1.id = t2.fvr_commodity_id
+		where 
+		t1.merchant_code = #{merchantCode}
+		and t1.login_name = #{loginName}
+		<if test="commodityNos != null">
+			and t1.commodity_no in 
+			<foreach collection="commodityNos" item="commodityNo" open="(" separator="," close=")">
+				#{commodityNo}
+			</foreach>
+		</if>		
+		group by t1.commodity_no;
+	</select>
+	
+	<resultMap type="java.util.HashMap" id="supplierOrderIndexMap">
+		<result column="orderNum" property="orderNum" javaType="int"/>
+		<result column="totalAmt" property="totalAmt" javaType="double"/>
+		<result column="merchantCode" property="merchantCode" javaType="string"/>
+	</resultMap>
+	
+	<!-- 商家昨日收订订单数，收订金额  -->
+	<select id="querySupplierOrderIndex" resultMap="supplierOrderIndexMap">
+		select count(*) orderNum,
+			   round(sum(order_pay_total_amont ),2) totalAmt ,
+			   t2.merchant_code merchantCode
+ 		from tbl_order_sub t1,tbl_order_sub_expand t2  
+		where t1.id = t2.order_sub_id		 
+		   <choose>
+				<when test="queryDate != null and queryDate != ''">
+					and t1.create_time <![CDATA[ >= ]]> date(#{queryDate}) 
+		  			AND t1.create_time <![CDATA[ < ]]> date(addDate(#{queryDate},1))
+				</when>
+				<otherwise>
+					and t1.create_time <![CDATA[ >= ]]> date(addDate(now(),-1))
+		  			AND t1.create_time <![CDATA[ < ]]> date(now())
+				</otherwise>
+			</choose>
+		  AND t1.original_order_no IS NULL 
+		  and UPPER(t1.order_source_no) LIKE 'YG%'
+		  and (t2.merchant_code is not null and length(trim(t2.merchant_code)) >0 )
+		  and  ( t2.merchant_code != 'KOREA' AND t2.merchant_code != 'SPYG' )
+	    group by t2.merchant_code 
+	</select>
+	
+	<resultMap type="java.util.HashMap" id="supplierDeliveryOrderIndexMap">
+		<result column="deliveryOrderNum" property="deliveryOrderNum" javaType="int"/>
+		<result column="deliveryOrderAmt" property="deliveryOrderAmt" javaType="double"/>
+		<result column="merchantCode" property="merchantCode" javaType="string"/>
+	</resultMap>
+	
+	<!-- 商家昨日发货订单数，发货金额  -->
+	<select id="querySupplierDeliveryOrderIndex" resultMap="supplierDeliveryOrderIndexMap">
+		select count(1) deliveryOrderNum,
+			  round(sum(order_pay_total_amont),2) deliveryOrderAmt,
+			  t2.merchant_code merchantCode			  
+		 from tbl_order_sub t,tbl_order_sub_expand t2  
+		 where   t.id = t2.order_sub_id
+		 and date_format(t.ship_time,'%Y-%m-%d') = date_format(t.create_time,'%Y-%m-%d') 		
+		 <choose>
+			<when test="queryDate != null and queryDate != ''">
+	  			and t.create_time <![CDATA[ >= ]]> date(#{queryDate}) 
+				and  t.create_time <![CDATA[ < ]]> date(addDate(#{queryDate},1))
+			</when>
+			<otherwise>
+				and t.create_time <![CDATA[ >= ]]> date(addDate(now(),-1))
+		 		and  t.create_time <![CDATA[ < ]]> date(now())
+			</otherwise>
+		</choose>
+		 AND t.original_order_no IS NULL 
+		 and  UPPER(t.order_source_no) LIKE 'YG%'
+		 and t.is_paid = 2 
+		 and  ( t2.merchant_code != 'KOREA' AND t2.merchant_code != 'SPYG' )
+		 and (t2.merchant_code is not null and length(trim(t2.merchant_code)) >0 )
+		 group by t2.merchant_code 
+	</select>
+	
+<!-- 	<insert id="insertSupplierSurveyIndex" parameterType="java.util.HashMap">
+		insert into tbl_merchant_report_suppler_survey_index(
+		   id,
+		  create_time,
+		  update_time,
+		  report_date,
+		  merchant_code,
+		  visitCount,
+		  pageView,
+		  orderNum,
+		  payedOrderNum,
+		  payedOrderAmt,
+		  changePercent,
+		  deliveryPercent,
+		  payedOrderAvgAmt,
+		  totalAmt,
+		  deliveryOrderNum,
+		  deliveryOrderAmt,
+		  sendCommodityNum,
+		  rejectedCommodityNum,
+		  rejectedCommodityAmt,
+		  rejectedCommodityPercent,
+		  newSaleCommodityNum
+		) values
+		<foreach collection="listParams" item="item" separator="," >  
+	        (replace(uuid(),'-',''),now(),now(),#{item.reportDate},#{item.merchantCode},#{item.visitCount},#{item.pageView},#{item.orderNum},#{item.payedOrderNum},
+	        #{item.payedOrderAmt},#{item.changePercent},#{item.deliveryPercent},#{item.payedOrderAvgAmt},#{item.totalAmt},#{item.deliveryOrderNum},
+	        #{item.deliveryOrderAmt},#{item.sendCommodityNum},#{item.rejectedCommodityNum},#{item.rejectedCommodityAmt},#{item.rejectedCommodityPercent},
+	        #{item.newSaleCommodityNum})  
+	    </foreach>  
+	</insert> -->
+	
+	<!-- 商家经营分析指标  -->
+<!-- 	<resultMap type="java.util.HashMap" id="supplierSurveyIndex">
+		<result column="visitCount" property="visitCount" javaType="int"/>
+		<result column="pageView" property="pageView" javaType="int"/>
+		<result column="orderNum" property="orderNum" javaType="int"/>
+		<result column="payedOrderNum" property="payedOrderNum" javaType="int"/>
+		<result column="payedOrderAmt" property="payedOrderAmt" javaType="double"/>
+		<result column="changePercent" property="changePercent" javaType="double"/>
+		<result column="totalAmt" property="totalAmt" javaType="double"/>
+		<result column="payedOrderAvgAmt" property="payedOrderAvgAmt" javaType="double"/>
+		<result column="rejectedCommodityNum" property="rejectedCommodityNum" javaType="int"/>
+		<result column="rejectedCommodityAmt" property="rejectedCommodityAmt" javaType="double"/>
+		<result column="rejectedCommodityPercent" property="rejectedCommodityPercent" javaType="double"/>
+		<result column="newSaleCommodityNum" property="newSaleCommodityNum" javaType="int"/>
+		<result column="deliveryOrderNum" property="deliveryOrderNum" javaType="int"/>
+		<result column="deliveryOrderAmt" property="deliveryOrderAmt" javaType="double"/>
+		<result column="deliveryPercent" property="deliveryPercent" javaType="double"/>
+		<result column="report_date" property="reportDate" javaType="String"/>
+	</resultMap> -->
+	
+	<!-- 从提前计算好的经营分析指标表中查询商家经营分析指标（发货相关除外） -->
+<!-- 	<select id="selectSupplierSurveyIndex" parameterType="java.util.HashMap" resultMap="supplierSurveyIndex">
+		select sum(s.visitCount) visitCount,
+			 sum(s.pageView) pageView,
+			 SUM(s.orderNum) orderNum,
+			 SUM(s.payedOrderNum) payedOrderNum,
+			 SUM(s.payedOrderAmt) payedOrderAmt,
+			 round(SUM(s.orderNum) / sum(s.visitCount) *100,2) changePercent,
+			 round(SUM(s.payedOrderAmt) /  SUM(s.payedOrderNum),2) payedOrderAvgAmt,
+			 SUM(s.totalAmt) totalAmt,
+			 SUM(s.rejectedCommodityNum) rejectedCommodityNum,
+			 SUM(s.rejectedCommodityAmt) rejectedCommodityAmt,
+			 ROUND(SUM(s.rejectedCommodityNum) / SUM(s.sendCommodityNum) * 100,2) rejectedCommodityPercent,
+			 SUM(s.newSaleCommodityNum) newSaleCommodityNum
+		 from tbl_merchant_report_suppler_survey_index s 
+		 where s.merchant_code = #{merchantCode}
+		   and s.report_date <![CDATA[  >= ]]> #{startDate}
+		   and s.report_date <![CDATA[ < ]]>  addDate(#{endDate},1)  
+	</select>
+	
+	<select id="selectSupplierEveryDaySurveyIndex" parameterType="java.util.HashMap" resultMap="supplierSurveyIndex">
+		select s.visitCount ,
+			 s.pageView ,
+			 s.orderNum ,
+			 s.payedOrderNum ,
+			 s.payedOrderAmt ,
+			 s.changePercent ,
+			 s.payedOrderAvgAmt,
+			 s.totalAmt,
+			 date_format(report_date,'%Y-%m-%d') report_date,
+			 s.rejectedCommodityNum,
+			 s.rejectedCommodityAmt,
+			 s.rejectedCommodityPercent,
+			 s.newSaleCommodityNum,
+			 s.deliveryOrderAmt,
+			 s.deliveryOrderNum,
+			 s.deliveryPercent
+		 from tbl_merchant_report_suppler_survey_index s 
+		 where s.merchant_code = #{merchantCode}
+			and  s.report_date <![CDATA[  >= ]]> #{startDate}
+		  and s.report_date <![CDATA[ < ]]> addDate(#{endDate},1)
+	</select> -->
+	
+</mapper>

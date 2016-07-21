@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+	xmlns:task="http://www.springframework.org/schema/task" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit.xsd
+	http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+    <!--
+	<rabbit:connection-factory id="rmq-api-connectionFactory" virtual-host="${rabbitmq.api.virtual.host}"
+		addresses="${rabbitmq.api.host}" username="${rabbitmq.api.user}"  password ="${rabbitmq.api.password}" />
+	-->
+	<!-- 定义rabbitmq连接工厂，生产环境使用集群配置，支持failover -->
+	<rabbit:connection-factory id="rmq-api-connectionFactory" addresses="${rabbitmq.host}" />
+		
+	<bean id="jsonMessageConverter"	class="org.springframework.amqp.support.converter.JsonMessageConverter">
+		<property name="classMapper">
+			<bean class="org.springframework.amqp.support.converter.DefaultClassMapper">
+				 <property name="defaultHashtableClass" value="java.util.HashMap"/>
+			</bean>
+		</property>
+	</bean>	
+	
+	<rabbit:admin id="api-admin" connection-factory="rmq-api-connectionFactory" />
+	
+	<!-- api 日志MQ error-handler="apiErrorHandler" -->
+	<rabbit:queue name="${rabbitmq.api.log.queue}"  declared-by="api-admin" />
+	<rabbit:listener-container concurrency="3" connection-factory="rmq-api-connectionFactory" message-converter="jsonMessageConverter" >
+		<rabbit:listener queues="${rabbitmq.api.log.queue}" ref="apiLogReceive" method="handleMessage"/>
+	</rabbit:listener-container>
+
+</beans>

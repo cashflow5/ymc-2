@@ -1,0 +1,19 @@
+
+.natural .supplier-query-wrap{
+	margin-left: 0;
+}
+.natural .supplier-query-left{
+	width: 440px;
+}
+.natural .supplier-query-right{
+	margin-left:30px;
+}
+.natural .supplier-query-title{
+	width: 110px;
+}
+/* .natural .supplier-query-cont{
+	width: 210px;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+} */

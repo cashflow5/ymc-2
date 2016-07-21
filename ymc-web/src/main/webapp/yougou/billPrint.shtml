@@ -1,0 +1,224 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>优购-商家中心-基本信息</title>
+    <link rel="stylesheet" type="text/css" href="css/base.css" />
+    <link rel="stylesheet" type="text/css" href="css/mold.css" />
+</head>
+
+<body>
+    <script type="text/javascript" src="js/bootstrap.js"></script>
+    <!--#include file="layout/header.shtml" -->
+    <div id="newcontent" class="wrap clearfix mt10">
+        <!--#include file="layout/sidebar.shtml" -->
+        <div id="newmain" class="main_bd fr">
+            <div class="main_container">
+                <div class="normal_box">
+                    <p class="title site">当前位置：商家中心 &gt; 订单 &gt; 单据打印(新)</p>
+                    <div class="tab_panel  relative">
+                    <p style="position:absolute;top:0;right:0;"><span class="fl icon_info"></span><span class="fl ml5" style="color:#999;">默认显示30天的订单，可设置条件查询更多订单，缺货订单请不要发货</span></p>
+                        <!-- 单据打印导航tab模版引入 -->
+                         <ul class="tab">
+                            <li onclick="location.href='/order/toDocumentPrintingNew.sc'"  ><span>未打印</span></li>
+                            <li onclick="location.href='/order/toPrintNewNotDelivery.sc'" ><span>已打印未发货</span></li>
+                            <li onclick="location.href='/order/toPrintNewDelivery.sc'" class="curr"  ><span>已发货</span></li>
+                            <li onclick="location.href='/order/toPrintNewOutstock.sc'" ><span>缺货订单</span></li>
+                            <li onclick="location.href='/order/toPrintNewAll.sc'" > <span>全部</span></li>
+                        </ul>
+                        <div class="tab_content"> 
+                            <!--搜索start-->
+                            <div class="search_box">
+                                <form action="toPrintNewDelivery.sc" id="queryVoform" name="queryVoform" method="post">
+                                    <!--是否一单一货-->
+                                    <input type="hidden" id="singleCargo" name="singleCargo" value="" />
+                                    <!--标识页面是否第一次进入-->
+                                    <input type="hidden" id="tabNum" name="tabNum" value="1" />
+                                    <!--选项卡页面标识-->
+                                    <input type="hidden" id="flag" name="flag" value="" />
+                                    
+                                    <p>
+                                        <span>
+                                            <label style="width:110px;">订单号：</label>
+                                            <input type="text" name="orderSubNo" id="orderSubNo" class="inputtxt" value="" />
+                                        </span>
+                                        <span>
+                                            <label style="width:110px;">原始订单号：</label>
+                                            <input type="text" name="originalOrderNo" id="originalOrderNo" class="inputtxt" value="" />
+                                        </span>
+                                        <span>
+                                            <label style="width:110px;">下单时间：</label>
+                                            <input type="text" name="timeStart" id="startTime" value="" class="inputtxt" style="width:80px;" /> 至
+                                        <input type="text" name="timeEnd" id="endTime" value="" class="inputtxt" style="width:80px;" />
+                                        </span>
+                                    </p>
+                                    <p>
+                                        <span>
+                                            <label style="width:110px;">物流公司：</label>
+                                            <input type="text" name="logisticsName" id="logisticsName" class="inputtxt" value="" />
+                                        </span>
+                                        <span>
+                                            <label style="width:110px;">商家款色编码：</label>
+                                            <input type="text" name="suppliersColorModelsCode" id="suppliersColorModelsCode"  value="" class="inputtxt" />
+                                        </span>
+                                        <span>
+                                            <label style="width:110px;">商家货品条码：</label>
+                                            <input type="text" name="thirdPartyCode" id="thirdPartyCode"  value="" class="inputtxt" />
+                                        </span>
+                                    </p>
+                                    <p>
+                                        <span>
+                                            <label style="width:110px;">快递单号：</label>
+                                            <input type="text" name="expressOrderId" id="expressOrderId"  value="" class="inputtxt" />
+                                        </span>
+                                        <span>
+                                            <label style="width:110px;">发货时间：</label>
+                                            <input type="text" name="timeStartShipTime" id="timeStartShipTime"  value="" class="inputtxt" style="width:80px;" /> 
+                                            至 <input type="text" name="timeEndShipTime" id="timeEndShipTime"  value="" class="inputtxt" style="width:80px;" />
+                                        </span>
+                                        <span style="padding-left:50px;">
+                                            <a class="button" id="mySubmit" onclick="mysubmit()"><span>搜索</span></a>
+                                        </span>
+                                    </p>
+                                </form>
+                            </div>
+                            <!--搜索end-->
+                            <!--列表start-->
+                            <table class="list_table">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th class="w70">下单时间</th>
+                                        <th>订单号</th>
+                                        <!--th>原始订单号</th-->
+                                        <th>订单来源</th>
+                                        <th>商品数量</th>
+                                        <th>订单金额</th>
+                                        <th>优惠金额</th>
+                                        <th>礼品卡冲抵金额</th>
+                                        <th>运费金额</th>
+                                        <th>收货人姓名</th>
+                                        <th>收货人电话</th>
+                                        <th>物流公司</th>
+                                        <th>快递单号</th>
+                                        <th>打印次数</th>
+                                        <th class="w70">发货时间</th>
+                                        <th>订单备注</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="gray_bg">  <!--do_tr 这行客户端会自动显示隐藏-->
+                                        <td colspan=""><input type="checkbox" id="all_checkbox"/></td>
+                                        <td class="tleft"><label for="all_checkbox">全选</label></td>
+                                        <td class="tleft"><a href="#" class="">补打购物清单</a></td>
+                                        <td colspan="2"><a href="#" class="">补打快递单</a></td>
+                                        <td colspan="13"></td>
+                                    </tr>
+                                </tbody>
+                                <tbody>
+                                    <tr>  <!--do_tr 这行客户端会自动显示隐藏-->
+                                        <td><input type="checkbox" /></td>
+                                        <td>2015-12-02 15:20:00</td>
+                                        <td><a href="#" class="">G550624150008_1</a></td>
+                                        <td>优购</td>
+                                        <td>1</td>
+                                        <td>20</td>
+                                        <td>1</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>汤小春</td>
+                                        <td>18770070103</td>
+                                        <td>圆通</td>
+                                        <td>23232324232</td>
+                                        <td>购物清单0次 快递单0次</td> 
+                                        <td>2015-06-24 17:23:14</td>
+                                        <td class="rel">
+                                            <div class="flag flag_red"></div>
+                                            <div class="flag_tip hide">
+                                                <div class="flag_triangle"></div>
+                                                该订单商品缺货
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <a href="">补打购物清单</a> <br />
+                                            <a href="">补打快递单</a>
+                                        </td>
+                                    </tr>
+                                    <tr>  <!--do_tr 这行客户端会自动显示隐藏-->
+                                        <td><input type="checkbox" /></td>
+                                        <td>2015-12-02 15:20:00</td>
+                                        <td><a href="#" class="">G550624150008_1</a></td>
+                                        <td>优购</td>
+                                        <td>1</td>
+                                        <td>20</td>
+                                        <td>1</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>汤小春</td>
+                                        <td>18770070103</td>
+                                        <td>圆通</td>
+                                        <td>23232324232</td>
+                                        <td>购物清单0次 快递单0次</td> 
+                                        <td>2015-06-24 17:23:14</td>
+                                        <td class="rel">
+                                            <div class="flag"></div>
+                                            <div class="flag_tip hide">
+                                                <div class="flag_triangle"></div>
+                                                该订单商品缺货
+                                            </div></td>
+                                        <td>
+                                            <a href="">补打购物清单</a> <br />
+                                            <a href="">补打快递单</a>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                            <!--列表end--> 
+                        </div>
+                    </div>
+                </div>            
+            </div>
+        </div>
+    </div>
+    <!--#include file="layout/footer.shtml" -->
+    <script>
+    // $.dialog.open('basic_info.shtml',{title:'提醒'});
+    $(function() {
+        $('.flag').click(function(){
+            var $this=$(this);
+           ygdg.dialog({
+                title:"添加备注信息",
+                content: '<dl class="flagForm_dl clearfix"><dt class="label">标记：</dt><dd class="pt3"><input type="radio" id="mark1" class="flagradio" name="mark" value="flag_red" /><label class="flaglabel flag flag_red" for="mark1"></label><input type="radio" id="mark2" class="flagradio" name="mark" value="flag_yellow" /><label class="flaglabel flag flag_yellow" for="mark2"></label><input type="radio" id="mark3" class="flagradio" name="mark" value="flag_green" /><label class="flaglabel flag flag_green" for="mark3"></label><input type="radio" id="mark4" class="flagradio" name="mark" value="flag_blue"/><label class="flaglabel flag flag_blue" for="mark4"></label><input type="radio" id="mark5" class="flagradio" name="mark" value="flag_purple"/><label class="flaglabel flag flag_purple" for="mark5"></label></dd></dl><dl class="flagForm_dl clearfix"><dt class="label">内容：</dt><dd><textarea class="flag_textarea"></textarea></dd></dl>',
+                max:false,
+                min:false,
+                width: '420px',
+                height: '205px',
+                lock:true,
+                ok: function() {
+                    var radio_val=$('input[name="mark"]:checked').val();
+                    if(radio_val){
+                        $this.attr('class',"flag "+radio_val);
+                        if(!$('.flag_textarea').val()){
+                            return false;
+                        }
+                    }else{
+                        return false;
+                    }
+                }
+            });
+        }).hover(function(){
+            var flag_class=$(this).attr('class');
+            if(flag_class.length!=4){
+                $(this).siblings('.flag_tip').removeClass('hide');
+            }
+        },function(){
+            $(this).siblings('.flag_tip').addClass('hide');
+        })
+    });
+    </script>
+</body>
+
+</html>

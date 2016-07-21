@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yougou.kaidian.taobao.dao.TaobaoItemMapper">
+	<resultMap id="taobaoItem" type="com.yougou.kaidian.taobao.model.TaobaoItem">
+		<id column="num_iid" property="numIid" jdbcType="BIGINT" />
+		<result column="cid" property="cid" jdbcType="BIGINT" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="nick" property="nick" jdbcType="VARCHAR" />
+		<result column="props" property="props" jdbcType="VARCHAR" />
+		<result column="input_pids" property="inputPids" jdbcType="VARCHAR" />
+		<result column="created" property="created" jdbcType="TIMESTAMP" />
+		<result column="pic_url" property="picUrl" jdbcType="VARCHAR" />
+		<result column="list_time" property="listTime" jdbcType="TIMESTAMP" />
+		<result column="delist_time" property="delistTime" jdbcType="TIMESTAMP" />
+		<result column="price" property="price" jdbcType="DECIMAL" />
+		<result column="modified" property="modified" jdbcType="TIMESTAMP" />
+		<result column="violation" property="violation" jdbcType="BIT" />
+		<result column="detail_url" property="detailUrl" jdbcType="VARCHAR" />
+		<result column="sell_point" property="sellPoint" jdbcType="VARCHAR" />
+		<result column="outer_id" property="outerId" jdbcType="VARCHAR" />
+		<result column="barcode" property="barcode" jdbcType="VARCHAR" />
+		<result column="item_weight" property="itemWeight" jdbcType="VARCHAR" />
+		<result column="item_size" property="itemSize" jdbcType="VARCHAR" />
+		<result column="is_xinpin" property="isXinpin" jdbcType="BIT" />
+		<result column="is_fenxiao" property="isFenxiao" jdbcType="SMALLINT" />
+		<result column="is_timing" property="isTiming" jdbcType="BIT" />
+		<result column="is_taobao" property="isTaobao" jdbcType="BIT" />
+		<result column="approve_status" property="approveStatus" jdbcType="VARCHAR" />
+		<result column="nick_id" property="nickId" jdbcType="BIGINT" />
+		<result column="merchant_code" property="merchantCode" jdbcType="VARCHAR" />
+		<result column="operater" property="operater" jdbcType="VARCHAR" />
+		<result column="operated" property="operated" jdbcType="VARCHAR" />
+		<result column="angle_pic" property="anglePic" jdbcType="LONGVARCHAR" />
+		<result column="description" property="description" jdbcType="LONGVARCHAR" />
+		<result column="props_name" property="propsName" jdbcType="LONGVARCHAR" />
+		<result column="input_str" property="inputStr" jdbcType="LONGVARCHAR" />
+		<result column="wireless_desc" property="wirelessDesc" jdbcType="LONGVARCHAR" />
+		<result column="yougou_brand_no" property="yougouBrandNo" jdbcType="VARCHAR" />
+		<result column="yougou_brand_name" property="yougouBrandName" jdbcType="VARCHAR" />
+		<result column="yougou_cate_no" property="yougouCateNo" jdbcType="VARCHAR" />
+		<result column="yougou_years" property="yougouYears" jdbcType="VARCHAR" />
+		<result column="yougou_style_no" property="yougouStyleNo" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		num_iid, cid, title, nick, props, input_pids, created, pic_url, list_time, delist_time,
+		price, modified, violation, detail_url, sell_point, outer_id, barcode, item_weight,
+		item_size, is_xinpin, is_fenxiao, is_timing, is_taobao, approve_status, nick_id,
+		merchant_code,operater, operated,angle_pic,
+ 		description, props_name, input_str, wireless_desc,yougou_brand_no,yougou_brand_name,
+ 		yougou_cate_no,yougou_years,yougou_style_no
+	</sql>
+	<select id="getTaobaoItemByNumIid" resultMap="taobaoItem">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM tbl_merchant_taobao_item
+		WHERE num_iid = #{numIid, jdbcType=BIGINT}
+	</select>
+	
+	<select id="getTaobaoItemByExtendId" resultMap="taobaoItem">
+		select DISTINCT i.* from tbl_merchant_taobao_item i LEFT JOIN tbl_merchant_taobao_item_extend e on i.num_iid=e.num_iid 
+		WHERE e.extend_id = #{extendId, jdbcType=VARCHAR}
+	</select>
+	
+	<sql id="selectCondition">
+	  <if test="null!=params" >
+	    <if test="null!=params.title and ''!=params.title" >
+	       	 and title like '%${params.title}%'
+	    </if>
+	    <if test="null!=params.nickId and ''!=params.nickId" >
+	       	 and nick_id = #{params.nickId, jdbcType=VARCHAR}
+	    </if>
+	    <if test="null!=params.createdBegin and ''!=params.createdBegin" >
+	       	 and created <![CDATA[>=]]> CONCAT(#{params.createdBegin},' 00:00:00')
+	    </if>
+	    <if test="null!=params.createdEnd and ''!=params.createdEnd" >
+	       	 and created <![CDATA[<=]]> CONCAT(#{params.createdEnd},' 23:59:59')
+	    </if>
+	      <if test="null!=params.operatedBegin and ''!=params.operatedBegin" >
+	       	 and operated <![CDATA[>=]]> CONCAT(#{params.operatedBegin},' 00:00:00')
+	    </if>
+	    <if test="null!=params.operatedEnd and ''!=params.operatedEnd" >
+	       	 and operated <![CDATA[<=]]> CONCAT(#{params.operatedEnd},' 23:59:59')
+	    </if>
+	  </if>
+	</sql>
+	<!-- 查询淘宝商品信息 -->
+	<select id="getTaobaoItem" resultMap="taobaoItem">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM tbl_merchant_taobao_item
+		WHERE merchant_code = #{params.merchantCode, jdbcType=VARCHAR}
+	    <include refid="selectCondition" />
+	    order by created desc
+	</select>
+	
+	<select id="getTaobaoItemCount" resultType="int">
+		SELECT count(1) 
+		FROM tbl_merchant_taobao_item
+		WHERE merchant_code = #{params.merchantCode, jdbcType=VARCHAR}
+	   <include refid="selectCondition" />
+	</select>
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		DELETE FROM tbl_merchant_taobao_item
+		WHERE num_iid = #{numIid, jdbcType=BIGINT} and  merchant_code = #{merchantCode, jdbcType=VARCHAR}
+	</delete>
+	<insert id="insertTaobaoItem"
+		parameterType="com.yougou.kaidian.taobao.model.TaobaoItem">
+		INSERT INTO tbl_merchant_taobao_item
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="numIid != null">
+				num_iid,
+			</if>
+			<if test="cid != null">
+				cid,
+			</if>
+			<if test="title != null">
+				title,
+			</if>
+			<if test="nick != null">
+				nick,
+			</if>
+			<if test="props != null">
+				props,
+			</if>
+			<if test="inputPids != null">
+				input_pids,
+			</if>
+			<if test="created != null">
+				created,
+			</if>
+			<if test="picUrl != null">
+				pic_url,
+			</if>
+			<if test="listTime != null">
+				list_time,
+			</if>
+			<if test="delistTime != null">
+				delist_time,
+			</if>
+			<if test="price != null">
+				price,
+			</if>
+			<if test="modified != null">
+				modified,
+			</if>
+			<if test="violation != null">
+				violation,
+			</if>
+			<if test="detailUrl != null">
+				detail_url,
+			</if>
+			<if test="sellPoint != null">
+				sell_point,
+			</if>
+			<if test="outerId != null">
+				outer_id,
+			</if>
+			<if test="barcode != null">
+				barcode,
+			</if>
+			<if test="itemWeight != null">
+				item_weight,
+			</if>
+			<if test="itemSize != null">
+				item_size,
+			</if>
+			<if test="isXinpin != null">
+				is_xinpin,
+			</if>
+			<if test="isFenxiao != null">
+				is_fenxiao,
+			</if>
+			<if test="isTiming != null">
+				is_timing,
+			</if>
+			<if test="isTaobao != null">
+				is_taobao,
+			</if>
+			<if test="approveStatus != null">
+				approve_status,
+			</if>
+			<if test="nickId != null">
+				nick_id,
+			</if>
+			<if test="merchantCode != null">
+				merchant_code,
+			</if>
+			<if test="operater != null">
+				operater,
+			</if>
+			<if test="operated != null">
+				operated,
+			</if>
+			<if test="description != null">
+				description,
+			</if>
+			<if test="propsName != null">
+				props_name,
+			</if>
+			<if test="inputStr != null">
+				input_str,
+			</if>
+			<if test="wirelessDesc != null">
+				wireless_desc,
+			</if>
+			<if test="yougouStyleNo != null">
+				yougou_style_no,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="numIid != null">
+				#{numIid,jdbcType=BIGINT},
+			</if>
+			<if test="cid != null">
+				#{cid,jdbcType=BIGINT},
+			</if>
+			<if test="title != null">
+				#{title,jdbcType=VARCHAR},
+			</if>
+			<if test="nick != null">
+				#{nick,jdbcType=VARCHAR},
+			</if>
+			<if test="props != null">
+				#{props,jdbcType=VARCHAR},
+			</if>
+			<if test="inputPids != null">
+				#{inputPids,jdbcType=VARCHAR},
+			</if>
+			<if test="created != null">
+				#{created,jdbcType=TIMESTAMP},
+			</if>
+			<if test="picUrl != null">
+				#{picUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="listTime != null">
+				#{listTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="delistTime != null">
+				#{delistTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="price != null">
+				#{price,jdbcType=DECIMAL},
+			</if>
+			<if test="modified != null">
+				#{modified,jdbcType=TIMESTAMP},
+			</if>
+			<if test="violation != null">
+				#{violation,jdbcType=BIT},
+			</if>
+			<if test="detailUrl != null">
+				#{detailUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="sellPoint != null">
+				#{sellPoint,jdbcType=VARCHAR},
+			</if>
+			<if test="outerId != null">
+				#{outerId,jdbcType=VARCHAR},
+			</if>
+			<if test="barcode != null">
+				#{barcode,jdbcType=VARCHAR},
+			</if>
+			<if test="itemWeight != null">
+				#{itemWeight,jdbcType=VARCHAR},
+			</if>
+			<if test="itemSize != null">
+				#{itemSize,jdbcType=VARCHAR},
+			</if>
+			<if test="isXinpin != null">
+				#{isXinpin,jdbcType=BIT},
+			</if>
+			<if test="isFenxiao != null">
+				#{isFenxiao,jdbcType=SMALLINT},
+			</if>
+			<if test="isTiming != null">
+				#{isTiming,jdbcType=BIT},
+			</if>
+			<if test="isTaobao != null">
+				#{isTaobao,jdbcType=BIT},
+			</if>
+			<if test="approveStatus != null">
+				#{approveStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="nickId != null">
+				#{nickId,jdbcType=BIGINT},
+			</if>
+			<if test="merchantCode != null">
+				#{merchantCode,jdbcType=VARCHAR},
+			</if>
+			<if test="operater != null">
+				#{operater,jdbcType=VARCHAR},
+			</if>
+			<if test="operated != null">
+				#{operated,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				#{description,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="propsName != null">
+				#{propsName,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="inputStr != null">
+				#{inputStr,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="wirelessDesc != null">
+				#{wirelessDesc,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="yougouStyleNo != null">
+				#{yougouStyleNo,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.yougou.kaidian.taobao.model.TaobaoItem">
+		UPDATE tbl_merchant_taobao_item
+		<set>
+			<if test="cid != null">
+				cid = #{cid,jdbcType=BIGINT},
+			</if>
+			<if test="nick != null">
+				nick = #{nick,jdbcType=VARCHAR},
+			</if>
+			<if test="props != null">
+				props = #{props,jdbcType=VARCHAR},
+			</if>
+			<if test="inputPids != null">
+				input_pids = #{inputPids,jdbcType=VARCHAR},
+			</if>
+			<if test="created != null">
+				created = #{created,jdbcType=TIMESTAMP},
+			</if>
+			<if test="picUrl != null">
+				pic_url = #{picUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="listTime != null">
+				list_time = #{listTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="delistTime != null">
+				delist_time = #{delistTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="price != null">
+				price = #{price,jdbcType=DECIMAL},
+			</if>
+			<if test="modified != null">
+				modified = #{modified,jdbcType=TIMESTAMP},
+			</if>
+			<if test="violation != null">
+				violation = #{violation,jdbcType=BIT},
+			</if>
+			<if test="detailUrl != null">
+				detail_url = #{detailUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="sellPoint != null">
+				sell_point = #{sellPoint,jdbcType=VARCHAR},
+			</if>
+			<if test="outerId != null">
+				outer_id = #{outerId,jdbcType=VARCHAR},
+			</if>
+			<if test="barcode != null">
+				barcode = #{barcode,jdbcType=VARCHAR},
+			</if>
+			<if test="itemWeight != null">
+				item_weight = #{itemWeight,jdbcType=VARCHAR},
+			</if>
+			<if test="itemSize != null">
+				item_size = #{itemSize,jdbcType=VARCHAR},
+			</if>
+			<if test="isXinpin != null">
+				is_xinpin = #{isXinpin,jdbcType=BIT},
+			</if>
+			<if test="isFenxiao != null">
+				is_fenxiao = #{isFenxiao,jdbcType=SMALLINT},
+			</if>
+			<if test="isTiming != null">
+				is_timing = #{isTiming,jdbcType=BIT},
+			</if>
+			<if test="isTaobao != null">
+				is_taobao = #{isTaobao,jdbcType=BIT},
+			</if>
+			<if test="approveStatus != null">
+				approve_status = #{approveStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="nickId != null">
+				nick_id = #{nickId,jdbcType=BIGINT},
+			</if>
+			<if test="merchantCode != null">
+				merchant_code = #{merchantCode,jdbcType=VARCHAR},
+			</if>
+			<if test="operater != null">
+				operater = #{operater,jdbcType=VARCHAR},
+			</if>
+			<if test="operated != null">
+				operated = #{operated,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				description = #{description,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="propsName != null">
+				props_name = #{propsName,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="inputStr != null">
+				input_str = #{inputStr,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="wirelessDesc != null">
+				wireless_desc = #{wirelessDesc,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="yougouCateNo != null">
+				yougou_cate_No = #{yougouCateNo,jdbcType=INTEGER},
+			</if>
+			<if test="yougouBrandNo != null">
+				yougou_brand_no = #{yougouBrandNo,jdbcType=INTEGER},
+			</if>
+			<if test="yougouBrandName != null">
+				yougou_brand_name = #{yougouBrandName,jdbcType=INTEGER},
+			</if>
+			<if test="yougouYears != null">
+				yougou_years = #{yougouYears,jdbcType=INTEGER},
+			</if>
+			<if test="yougouStyleNo != null">
+				yougou_style_no = #{yougouStyleNo,jdbcType=INTEGER},
+			</if>
+		</set>
+		WHERE num_iid = #{numIid,jdbcType=BIGINT} and merchant_code =  #{merchantCode,jdbcType=VARCHAR}
+	</update>
+	
+	<select id="selectByIds" parameterType="java.util.List" resultMap="taobaoItem">
+		select * from tbl_merchant_taobao_item where num_iid in(
+			<foreach collection="list" item="id"  separator=",">
+				#{id,jdbcType=VARCHAR}
+			</foreach>
+		) and merchant_code =  #{merchantCode,jdbcType=VARCHAR}
+	</select>
+</mapper>

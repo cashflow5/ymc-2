@@ -1,0 +1,50 @@
+.yg-sort {
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+.yg-sort .yg-sort-s {
+  position: absolute;
+  z-index: 99;
+  -webkit-opacity: 0;
+  -moz-opacity: 0;
+  -ms-opacity: 0;
+  -o-opacity: 0;
+  opacity: 0;
+  filter: alpha(opacity=0);
+}
+.yg-sort .yg-sort-s input {
+  cursor: pointer;
+}
+.yg-sort .icon {
+  position: relative;
+  display: inline-block;
+}
+.yg-sort .icon i {
+  font-style: normal;
+  position: absolute;
+  left: 0;
+}
+.yg-sort .icon i.sort-up {
+  bottom:0px;
+  color: #adadad;
+}
+.yg-sort .icon i.sort-down {
+  top: -9px;
+  color: #4786d9;
+}
+.yg-sort .icon.checked .sort-up {
+  color: #4786d9;
+}
+.yg-sort .icon.checked .sort-down {
+  color: #adadad;
+}
+.yg-sort .icon.disabled .sort-up {
+  color: #adadad;
+}
+.yg-sort .icon.disabled .sort-down {
+  color: #adadad;
+}

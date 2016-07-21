@@ -1,0 +1,41 @@
+.box-detail {
+    height: 590px;
+    overflow: hidden;
+    background-color: #373434;
+}
+
+.box-detail .hd,
+.box-detail .bd {
+    float: left;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 740px;
+    height: 100%;
+}
+
+.box-detail .bd {
+    width: 250px;
+    *width: 210px;
+    height: auto;
+    padding: 25px 20px;
+    color: #c1c1c1;
+}
+
+.box-detail .flash,
+.box-detail .video {
+    height: 100%;
+}
+
+.box-detail .video {
+    display: none;
+}
+
+.box-detail .bd h1 {
+    display: block;
+    font-size: 16px;
+    line-height: 38px;
+    font-family: "microsoft yahei";
+    color: #fff;
+    border-bottom: 1px solid #696969;
+}

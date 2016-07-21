@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>优购-商家中心-APPKEY管理</title>
+    <link rel="stylesheet" type="text/css" href="css/base.css" />
+    <link rel="stylesheet" type="text/css" href="css/mold.css" />
+</head>
+
+<body>
+    <script type="text/javascript" src="js/bootstrap.js"></script>
+    <!--#include file="layout/header.shtml" -->
+    <div id="newcontent" class="wrap clearfix mt10">
+        <!--#include file="layout/sidebar.shtml" -->
+        <div id="newmain" class="main_bd fr">
+            <div class="main_container">
+                <div class="normal_box">
+                    <p class="title site">当前位置：商家中心 &gt; 设置模块 &gt; APPKEY管理</p>
+                    <div class="box-contain">
+                        <div class="c-h-2column-right">
+                            <div class="c-h-right">
+                                <input class="mt20" type="checkbox" data-ui-type="toggle" />
+                            </div>
+                            <div class="c-h-contain">
+                                <p class="h3">优购开放API</p>
+                                <p>优购API提供优购商城工具、订单、类目、库存、物流等数据接口，可对接商家ERP系统。</p>
+                                <p>如贵公司使用的ERP尚未根据优购ERP文档完成开发对接，建议您联系优购运营负责人。</p>
+                            </div>
+                        </div>
+                        <div class="appkey">
+                            <div class="c-h-2column-left">
+                                <div class="label">Appkey：</div>
+                                <div class="c-h-contain pr">
+                                    <input id="appkey" class="input-default" type="text" disabled /><a href="javascript:;" class="btn-blue mlf1 copy">复制</a><span class="copymsg"></span></div>
+                            </div>
+                            <div class="c-h-2column-left">
+                                <div class="label">Appkey secret：</div>
+                                <div class="c-h-contain pr">
+                                    <input id="appkeysecret" class="input-default" type="text" disabled /><a href="javascript:;" class="btn-blue mlf1 copy">复制</a><span class="copymsg"></span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--#include file="layout/footer.shtml" -->
+    <script type="text/javascript" src="js/zclip/jquery.zclip.min.js"></script>
+    <script type="text/javascript" src="js/yguib.js"></script>
+    <script>
+    $(function() {
+        $('.copy').zclip({
+            path: 'js/ZeroClipboard.swf',
+            copy: function() { //复制内容 
+                return $(this).siblings('input').val();
+            },
+            afterCopy: function() { //复制成功 
+                $(this).siblings('.copymsg').text('复制成功').show().delay(1000).fadeOut();
+            }
+        });
+    })
+    </script>
+</body>
+
+</html>

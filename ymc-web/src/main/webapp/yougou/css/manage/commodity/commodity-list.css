@@ -1,0 +1,22 @@
+.fl p.mb3 textarea{display:none;float:left;width:200px;height:auto;border:1px solid #C9C9C9;resize:none;padding:2px;}
+.fl p.mb3 a.commodity-title{display:inline-block;width:220px;float:left;}
+.fl p.mb3 a.edit{margin-left:5px;display:inline-block;width:16px;height:16px;background:url(/yougou/images/icon_edit.png);float:left;}
+.fl p.mb3 a.save{margin-left:5px;display:none;width:16px;height:16px;background:url(/yougou/images/icon_save.png);float:left;}
+.fl p.mb3 a.cancel{margin-left:5px;display:none;margin-top:4px;width:9px;height:9px;background:url(/yougou/images/del-class.gif) no-repeat;float:left;}
+.fl p.mb3 span{margin-left:5px;float:left;display:none}
+
+p em.c3 input{display:none;width:40px;}
+p em.c3 a.edit4price{margin-left:5px;display:inline-block;width:16px;height:16px;background:url(/yougou/images/icon_edit.png);}
+p em.c3 a.save4price{margin-left:5px;display:inline-block;width:16px;height:16px;background:url(/yougou/images/icon_save.png);display:none}
+p em.c3 a.cancel4price{margin-left:5px;display:inline-block;width:9px;height:9px;background:url(/yougou/images/del-class.gif);display:none}
+p em.c3 span.loadimg{display:none;}
+p.price-p{text-align:left;}
+.price-tit{display:inline-block;padding-left:10px;}
+
+.webuploader-pick{background: url("/yougou/images/button_s.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+background-position: 100% -50px;color:#3366cc;border-radius: 3px;cursor: pointer;display: inline-block;
+overflow: hidden;padding: 1px;position: relative;text-align: center;float:left;width:85px;}
+div.button{padding-left: 1px;}
+.webuploader-pick-hover {background: url("/yougou/images/button_s.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);background-position: 100% -150px;color:#404040;}
+.tab_fr .span{display: inline-block;vertical-align: top;}
+.tab_fr .span *{vertical-align: middle;line-height:25px;}

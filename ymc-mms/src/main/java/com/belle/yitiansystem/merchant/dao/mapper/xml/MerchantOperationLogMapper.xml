@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.belle.yitiansystem.merchant.dao.mapper.MerchantOperationLogMapper" >
+	<!-- <resultMap type="merchantOperationLog" type="com.belle.yitiansystem.merchant.model.pojo.MerchantOperationLog">
+		<result column="id" property="id" jdbcType="VARCHAR"/>
+		<result column="operator" property="operator" jdbcType="VARCHAR"/>
+		<result column="operated" property="operated" jdbcType="VARCHAR" />
+		<result column="operation_type" property="operationType" jdbcType="VARCHAR"/>
+		<result column="operation_notes" property="operationNotes" javaType="VARCHAR" />
+		<result column="merchant_code" property="merchantCode" javaType="VARCHAR" />
+	</resultMap> -->
+
+	<select id="selectMerchantOperationLog" parameterType="com.belle.infrastructure.orm.basedao.Query"  resultType="java.util.Map" >
+		select distinct l.merchant_code, l.id,l.operator,l.operated,l.operation_type,l.operation_notes from
+		tbl_merchant_operation_log l where l.merchant_code=#{merchantCode}
+		UNION
+		select distinct  h.supplier_id as merchant_code, h.id,h.operator,h.operation_time as operated,'CREATEORUPDATE' as operation_type,
+		<![CDATA[ CONCAT(h.processing,' ',IFNULL(h.update_after,'')) ]]> as operation_notes from
+		tbl_sp_supplier_update_history h where h.supplier_id=#{supplierId}
+		order by operated desc
+		<if test="query!=null">
+			limit #{query.offset},#{query.pageSize}
+		</if>
+	</select>
+	
+	<select id="selectMerchantOperationLogCount" resultType="int">
+		select count(*) from (
+		select distinct l.merchant_code, l.id,l.operator,l.operated,l.operation_type,l.operation_notes from
+		tbl_merchant_operation_log l where l.merchant_code=#{merchantCode}
+		UNION
+		select distinct  h.supplier_id as merchant_code, h.id,h.operator,h.operation_time as operated,'CREATEORUPDATE' as operation_type,
+		<![CDATA[ CONCAT(h.processing,' ',IFNULL(h.update_after,'')) ]]> as operation_notes from
+		tbl_sp_supplier_update_history h where h.supplier_id=#{supplierId}
+				
+		) as t
+	</select>
+	
+</mapper>

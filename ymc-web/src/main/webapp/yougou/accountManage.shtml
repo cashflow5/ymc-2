@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>优购-商家中心-基本信息</title>
+    <link rel="stylesheet" type="text/css" href="css/base.css" />
+    <link rel="stylesheet" type="text/css" href="css/mold.css" />
+</head>
+
+<body>
+    <script type="text/javascript" src="js/bootstrap.js"></script>
+    <!--#include file="layout/header.shtml" -->
+    <div id="newcontent" class="wrap clearfix mt10">
+        <!--#include file="layout/sidebar.shtml" -->
+        <div id="newmain" class="main_bd fr">
+            <div class="main_container">
+                <div class="normal_box">
+                    <p class="title site">当前位置：商家中心 &gt; 账户管理</p>
+                    <ul class="account-information">
+                        <li>登陆账号：<span>中</span></li>
+                        <li>安全等级：<span>中</span></li>
+                        <li>绑定手机：<span class="bold">135*****88</span></li>
+                        <li>绑定邮箱：<span>未绑定</span></li>
+                    </ul>
+                    <div class="account-box clearfix">
+                        <div class="account-img">
+                            <div class="img-icon img-ok"></div>
+                            <div class="red">强度低</div>
+                        </div>
+                        <div class="account-left">登陆密码</div>
+                        <div class="account-main">安全性高的密码可以使账户更安全，建议您定期更换密码。</div>
+                        <a href="passwordModify.shtml" class="account-right">修改</a>
+                    </div>
+                    <div class="account-box clearfix">
+                        <div class="account-img">
+                            <div class="img-icon img-warn"></div>
+                            <div>未绑定</div>
+                        </div>
+                        <div class="account-left">绑定邮箱</div>
+                        <div class="account-main">验证后，可以用邮箱找回密码，接受订单提醒等，保障您的账户更加安全。</div>
+                        <a href="emallModify.shtml" class="btn-blue-1 fr">立即绑定</a>
+                    </div>
+                    <div class="account-box clearfix">
+                        <div class="account-img">
+                            <div class="img-icon img-ok"></div>
+                            <div>已绑定</div>
+                        </div>
+                        <div class="account-left">绑定手机</div>
+                        <div class="account-main">绑定后，可以用手机找回密码、接收手机动态验证码等，使您的账户更加安全。</div>
+                        <a  href="telphoneModify.shtml" class="account-right">修改</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--#include file="layout/footer.shtml" -->
+    <script src="js/ygdialog/lhgdialog.js"></script>
+</body>
+
+</html>

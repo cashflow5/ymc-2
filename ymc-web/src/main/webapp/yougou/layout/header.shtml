@@ -1,0 +1,24 @@
+<div id="newhead" class="header">
+    <div class="header">
+        <div class="wrap header_bd rel">
+            <a class="logo" href="/merchants/login/to_index.sc"><img src="images/logo2.jpg" width="285" height="47" alt="商家中心" /></a>
+            <p class="login_inf abs">
+                欢迎您，<a class="ml10 black" href="accountManage.shtml">huang.t1</a>
+                <a class="ml10 black" href="merchants/login/to_Back.sc">退出</a>
+                <a style="color:#3366CC" href="javascript:;" onclick="setPresendMerchant();">[设置商家]</a>
+            </p>
+        </div>
+    </div>
+    <div class="nav">
+        <div class="wrap nav_bd clearfix">
+            <div class="bsns_name fr">当前商家：Quincy测试专用供应商2</div>
+            <ul class="fr navlst clearfix">
+                <li><a href="merchants/login/to_index.sc">商家首页</a><i>|</i></li>
+                <li><a href="http://open.yougou.com" target="_blank">开放平台</a><i>|</i></li>
+                <li><a href="http://www.yougou.com" target="_blank">优购商城</a><i>|</i></li>
+                <li><a href="http://open.yougou.com/help/help_index.shtml" target="_blank">帮助中心</a><i>|</i></li>
+                <li><a href="merchants/feeback/list.sc">意见反馈</a></li>
+            </ul>
+        </div>
+    </div>
+</div>

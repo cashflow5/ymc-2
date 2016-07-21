@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>优购-商家中心-关联版式设置2</title>
+    <link rel="stylesheet" type="text/css" href="css/base.css" />
+    <link rel="stylesheet" type="text/css" href="css/mold.css" />
+</head>
+
+<body>
+    <script type="text/javascript" src="js/bootstrap.js"></script>
+    <!--#include file="layout/header.shtml" -->
+    <div id="newcontent" class="wrap clearfix mt10">
+        <!--#include file="layout/sidebar.shtml" -->
+        <div id="newmain" class="main_bd fr">
+            <div class="main_container">
+                <div class="normal_box">
+                    <p class="title site">当前位置：商家中心 &gt; 设置模块 &gt; 关联版式设置</p>
+                    <div class="box-contain">
+                        <div class="c-h-row">
+                            <label>选择版式：</label>
+                            <select name="" id="">
+                                <option value="1">自定义</option>
+                                <option value="0" selected="selected">固定模版</option>
+                            </select>
+                            <div class="c-h-row-fl tpupdate">
+                                <label class="ml10">插入商品：</label>
+                                <input id="tempList" type="text" class="inputtxt" placeholder="输入商品编码，用“，”隔开" style="width: 300px;" />
+                                <a id="importProc" class="button tmpSave" onclick="javascript:;"><span>导入</span></a>
+                            </div>
+                        </div>
+                        <div class="c-h-row">
+                            <label>选择商品：</label>
+                            <select>
+                                <option value="1">全部商品</option>
+                                <option value="0">部分商品</option>
+                            </select>
+                            <input type="text" class="inputtxt ml10" style="width:188px;" placeholder="输入商品编码，用“，”隔开" />
+                            <a class="button" onclick="javascript:;"><span>浏览</span></a>
+                            <a class="ml10" href="javascript:;">下载csv模板</a>
+                        </div>
+                        <div class="selectTemp">
+                        </div>
+                        <div class="mt20 tc" style="line-height:25px; width:800px;">
+                            <a class="button" onclick="javascript:;" style="vertical-align: top;"><span>保存</span></a>
+                            <a class="ml10" href="javascript:;">点击预览</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--#include file="layout/footer.shtml" -->
+    <script type="text/javascript" src="js/zclip/jquery.zclip.min.js"></script>
+    <script type="text/javascript" src="js/kindeditor/kindeditor.min.js"></script>
+    <script type="text/javascript" src="js/yguib.js"></script>
+    <script>
+    $(function() {
+        $('#importProc').click(function() {
+            var tlist = $.trim($('#tempList').val()).split(','),
+                tmpArr = [];
+            tmpArr.push('<ul class="relation-goods-list clearfix">');
+            $(tlist).each(function(i, item) {
+                console.log('id > ' + item);
+                tmpArr.push('<li>');
+                tmpArr.push('<div class="goods-box">');
+                tmpArr.push('<a href="#">')
+                tmpArr.push('<img src="http://i1.ygimg.cn/pics/belle/2014/99940470/99940470_02_mb.jpg?'+ item +'" class="goods-img" />')
+                tmpArr.push('</a>')
+                tmpArr.push('<div class="goods-title clearfix"><span class="goods-price">&yen;278</span><a href="javascript:;" class="goods-buy">立即购买</a></div>');
+                tmpArr.push('</div>');
+                tmpArr.push('</li>');
+            });
+            tmpArr.push('</ul>')
+            $('.selectTemp').html(tmpArr.join(''));
+        });
+    })
+    </script>
+</body>
+
+</html>

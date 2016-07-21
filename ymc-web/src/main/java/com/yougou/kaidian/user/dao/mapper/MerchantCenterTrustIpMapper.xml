@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yougou.kaidian.user.dao.MerchantCenterTrustIpMapper" >
+	<select id="checkTrustIp" resultType="Integer">
+		select count(id) from tbl_merchant_trust_ip where login_ip = #{ip} and login_name = #{loginName}
+	</select>
+	<insert id="insert" parameterType="com.yougou.kaidian.user.model.pojo.MerchantCenterTrustIp">
+		insert into tbl_merchant_trust_ip(id,login_name,create_date,login_ip,merchant_code) 
+		values(#{id,jdbcType=VARCHAR},#{loginName,jdbcType=VARCHAR},#{createDate,jdbcType=TIMESTAMP},
+		#{loginIp,jdbcType=VARCHAR},#{merchantCode,jdbcType=VARCHAR})
+	</insert>
+	<select id="findLoginLogCount" resultType="Integer">
+		select count(id) from tbl_merchant_center_operation_log where login_name = #{loginName,jdbcType=VARCHAR} and type = 1 
+		and operated <![CDATA[<]]> #{endTime,jdbcType=TIMESTAMP}
+	</select>
+	
+	<select id="findTrustAddrByName" resultType="java.lang.String">
+		select DISTINCT login_address from tbl_merchant_center_operation_log where login_name = #{loginName,jdbcType=VARCHAR} 
+		and type = 1 and operated <![CDATA[>=]]> DATE_ADD(#{endTime},INTERVAL -1 month) 
+		and operated <![CDATA[<]]> #{endTime,jdbcType=TIMESTAMP} and login_address !='未分配或者内网IP'
+	</select>
+</mapper>

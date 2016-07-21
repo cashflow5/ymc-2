@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+ <HEAD>
+  <TITLE> 图片服务器 </TITLE>
+  <META NAME="Generator" CONTENT="EditPlus">
+  <META NAME="Author" CONTENT="">
+  <META NAME="Keywords" CONTENT="">
+  <META NAME="Description" CONTENT="">
+  <link rev="stylesheet" rel="stylesheet" type="text/css" href="../../../../css/ytsys-base.css" />
+  <style>
+	.proList{ clear:both; }
+	.proList li{ float:left; width:160px; height:245px; margin-top:10px; }
+	.proList li span{ display:block; }
+	.proList li span span{ display:inline; }
+	.proList li .img{ margin-bottom:4px; }
+	.proList li .img img{ height:160px; width:160px; }
+	.proList li .num{ line-height:12px; position:absolute; left:0; top:0; }
+	.proList li .icon{ position:absolute; left:25px; top:-8px; }
+ </style>
+  <script type="text/javascript"  src="../../../jquery-1.4.2.min.js" ></script>
+  <script type="text/javascript">
+		var KE = parent.KindEditor;
+		var id = KE.util.getParam(location.href, 'id');
+		KE.event.ready(function() {
+			KE.util.pluginLang('serverimage', document);
+			KE.util.hideLoadingPage(id);
+		}, window, document);
+		
+		
+		var url = '../../../../yitiansystem/commoditymgmt/commodityinfo/productlist/queryCommodityServicePic.sc';
+	
+		var data={
+			"no":KE.siconfig.no
+		};
+
+	ajaxRequest(url,data,function(result){
+
+		result = result.replace(/(^\s*)|(\s*$)/g,'');
+		//如果获取数据为空  则清空数据
+		if(result.length == ""){
+			return ;
+		}
+		
+		var picList = eval("("+result+")");
+		if(picList.length > 0){
+			$("#picListId").empty();
+		}
+		
+		var picrow =  "";
+		for(var i = 0 ; i < picList.length ; i ++){
+			var picUrl = picList[i].picDomain+picList[i].picAddress+picList[i].picDesc;
+			var imgStr = "<img src='"+picUrl+"' style='width:150px;height:150px;border:0px;' />";
+			
+			picrow = "<li>";
+			picrow += "<span class='img'>"+imgStr+"</span> ";
+			picrow += "<span><input type='checkbox' name='"+KE.siconfig.fileName+"' value='"+picUrl+"' />"+picList[i].picNo;
+			picrow += "&nbsp;&nbsp;&nbsp;<a href='"+picUrl+"' target='_blank'>查看原图</a></span>";
+			picrow += "</li>";
+			$("#picListId").append(picrow);
+		}
+
+	});
+	
+//发达ajax请求
+function ajaxRequest(url,reqParam,callback){
+	$.ajax({
+		  type: 'POST',
+		  url: url,
+		  data: reqParam,
+		  cache: true,
+		  success: callback
+	});
+}
+
+	</script>
+ </HEAD>
+
+ <BODY style="overflow:scroll;overflow-x:hidden"> 
+ 
+<div class="contentMain">
+            
+            <div class="content">
+            	<div class="mb-btn-fd-bd">
+                    <div class="mb-btn-fd relative">
+                    <span class="btn-extrange absolute">
+                        <ul class="onselect">
+                            <li class="pl-btn-lfbg"></li>
+                            <li class="pl-btn-ctbg">商品相关图片</li>
+                            <li class="pl-btn-rtbg"></li>
+                        </ul>
+                    </span>
+                    </div>
+                </div>
+               	 <ul class="proList" id="picListId">
+			        <li>
+			        	<div class="yt-tb-list-no">暂无图片</div>
+			         </li>
+			    </ul>
+            </div>
+</div>
+<!-- 	<input type="checkbox" name="imageId" value="http://www.baidu.com/img/baidu_sylogo1.gif" /> image_01 -->
+ </BODY>
+</HTML>

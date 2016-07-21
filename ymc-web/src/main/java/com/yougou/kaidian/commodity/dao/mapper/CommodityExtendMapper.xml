@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yougou.kaidian.commodity.dao.CommodityExtendMapper">
+	<resultMap id="CommodityExtendResultMap"
+		type="com.yougou.kaidian.common.commodity.pojo.CommodityExtend">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="commodity_no" property="commodityNo" jdbcType="VARCHAR" />
+		<result column="sensitive_word" property="sensitiveWord" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Commodity_Extend_Column_List">
+		s.id,s.commodity_no,s.sensitive_word
+	</sql>
+
+	<sql id="Commodity_where4CommodityList">
+		<if test="commodityNo != null and commodityNo != '' ">
+			AND s.commodity_no = #{commodityNo,jdbcType=VARCHAR}
+		</if>
+	</sql>	
+
+	<select id="getCommodityExtendByCommodityNo" resultMap="CommodityExtendResultMap"
+		parameterType="java.lang.String">
+		SELECT
+		<include refid="Commodity_Extend_Column_List" />
+		FROM tbl_commodity_style_extend s
+		WHERE s.commodity_no = #{commodityNo,jdbcType=VARCHAR}
+	</select>
+
+	<insert id="insertCommodityExtend"
+		parameterType="com.yougou.kaidian.common.commodity.pojo.CommodityExtend">
+		insert into tbl_commodity_style_extend (id, commodity_no, sensitive_word)
+		values (#{id,jdbcType=VARCHAR}, #{commodityNo,jdbcType=VARCHAR},
+		#{sensitiveWord,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updateCommodityExtend"
+		parameterType="com.yougou.kaidian.common.commodity.pojo.CommodityExtend">
+		update tbl_commodity_style_extend
+		<set>
+			<if test="sensitiveWord != null">
+				sensitive_word = #{sensitiveWord,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where commodity_no = #{commodityNo,jdbcType=VARCHAR}
+	</update>
+	
+	<select id="getCommodityExtendCountByCommodityNo" resultType="int" parameterType="java.lang.String">
+		select count(1) from tbl_commodity_style_extend where commodity_no = #{commodityNo,jdbcType=VARCHAR}
+	</select>
+	
+</mapper>

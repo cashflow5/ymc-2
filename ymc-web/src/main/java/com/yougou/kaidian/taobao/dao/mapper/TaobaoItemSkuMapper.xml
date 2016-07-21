@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yougou.kaidian.taobao.dao.TaobaoItemSkuMapper">
+
+	<resultMap id="taobaoItemSku" type="com.yougou.kaidian.taobao.model.TaobaoItemSku">
+		<result column="sku_id" property="skuId" jdbcType="BIGINT" />
+		<result column="num_iid" property="numIid" jdbcType="BIGINT" />
+		<result column="outer_id" property="outerId" jdbcType="VARCHAR" />
+		<result column="barcode" property="barcode" jdbcType="VARCHAR" />
+		<result column="properties" property="properties" jdbcType="VARCHAR" />
+		<result column="properties_name" property="propertiesName" jdbcType="VARCHAR" />
+		<result column="quantity" property="quantity" jdbcType="BIGINT" />
+	</resultMap>
+
+	<delete id="deleteTaobaoItemSkuByNumIid">
+		DELETE FROM tbl_merchant_taobao_item_sku
+		WHERE num_iid = #{numIid, jdbcType=BIGINT}
+	</delete>
+	
+	<delete id="deleteTaobaoItemSkuBySkuid">
+		DELETE FROM tbl_merchant_taobao_item_sku
+		WHERE sku_id = #{skuId, jdbcType=BIGINT}
+	</delete>
+	
+	<insert id="insertTaobaoItemSkuList" parameterType="com.yougou.kaidian.taobao.model.TaobaoItemSku">
+		INSERT INTO tbl_merchant_taobao_item_sku (sku_id, num_iid, outer_id,
+		properties, properties_name, quantity)
+		VALUES
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(
+			#{item.skuId,jdbcType=BIGINT},
+			#{item.numIid,jdbcType=BIGINT},
+			#{item.outerId,jdbcType=VARCHAR},
+			#{item.properties,jdbcType=VARCHAR},
+			#{item.propertiesName,jdbcType=VARCHAR},
+			#{item.quantity,jdbcType=SMALLINT}
+			)
+		</foreach>
+	</insert>
+
+	<select id="queryTaobaoItemSkuByNumIid" resultMap="taobaoItemSku">
+		SELECT sku_id, num_iid, outer_id, barcode, properties, properties_name, quantity FROM
+		tbl_merchant_taobao_item_sku
+		WHERE num_iid = #{numIid, jdbcType=BIGINT}
+		ORDER BY outer_id
+	</select>
+</mapper>

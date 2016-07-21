@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.belle.yitiansystem.merchant.dao.mapper.MerchantOfficialActivityMapper">
+	
+	<resultMap id="BaseResultMap" type="com.belle.yitiansystem.active.vo.MerchantActiveSignup" >
+		<id column="id" property="id" jdbcType="VARCHAR" />
+	    <result column="merchant_code" property="merchantCode" jdbcType="VARCHAR" />
+	    <result column="merchant_name" property="merchantName" jdbcType="VARCHAR" />
+	    <result column="active_id" property="activeId" jdbcType="VARCHAR" />
+	    <result column="active_name" property="activeName" jdbcType="VARCHAR" />
+	    <result column="active_type" property="activeType" jdbcType="SMALLINT" />
+	    <result column="status" property="status" jdbcType="SMALLINT" />
+	    <result column="audit_remark" property="auditRemark" jdbcType="VARCHAR" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  	</resultMap>
+	
+	<sql id="Base_Column_List" >
+    	id, merchant_code, merchant_name, active_id, active_name, active_type, status, audit_remark, creator, 
+    	create_time, update_time
+  	</sql>
+  
+  	<select id="selectMerchantActiveSignupNotAudited" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    	select 
+    	<include refid="Base_Column_List" />
+    	from tbl_merchant_active_signup
+   		where status in (1,2,4)
+  	</select>
+  	
+  	<update id="updateByPrimaryKey" parameterType="com.belle.yitiansystem.active.vo.MerchantActiveSignup" >
+	    update tbl_merchant_active_signup
+	    set      
+	      status = #{status,jdbcType=SMALLINT},
+	      audit_remark = #{auditRemark,jdbcType=VARCHAR},	     
+	      update_time = #{updateTime,jdbcType=TIMESTAMP}
+	    where id = #{id,jdbcType=VARCHAR}
+	  </update>
+	
+	<!-- 查询官方商家活动列表 -->
+	<select id="queryMerchant" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+			select * from tbl_merchant_active_signup
+			where active_id=#{activeId}
+			<if test=" merchantName != null and merchantName != ''">
+				and merchant_name like  CONCAT('%',#{merchantName},'%' ) 
+			</if>
+			<if test=" merchantCode != null and merchantCode != ''">
+				and merchant_code like  CONCAT('%',#{merchantCode},'%' ) 
+			</if>
+			<if test=" status != null and status != ''">
+				and status=#{status} 
+			</if>
+			<if test=" start != null and pageSize != null">
+			 limit #{start},#{pageSize}	
+			</if>
+	</select>
+	
+	<select id="queryMerchantCount" parameterType="java.util.HashMap" resultType="int">
+			select count(*) from tbl_merchant_active_signup where active_id=#{activeId}
+			<if test=" merchantName != null and merchantName != ''">
+				and merchant_name like  CONCAT('%',#{merchantName},'%' ) 
+			</if>
+			<if test=" merchantCode != null and merchantCode != ''">
+				and merchant_code like  CONCAT('%',#{merchantCode},'%' ) 
+			</if>
+			<if test=" status != null and status != ''">
+				and status=#{status} 
+			</if>
+			 
+	</select>
+	<!-- 查询官方商家活动列表 -->
+	<select id="queryCommodity" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		
+		select s.no,s.commodity_name,s.brand_name ,s.spec_name ,s.public_price ,s.sale_price ,c.active_price,c.coupon_amount ,m.active_name,m.merchant_name 
+		from tbl_merchant_active_commodity c ,tbl_commodity_style s ,
+			tbl_merchant_active_signup m  where active_id=#{activeId}   and 
+			      m.merchant_code=#{merchantCode}  and
+			    m.id=c.signup_id  and c.comodity_no=s.no
+		     <if test=" commodityNo != null and commodityNo != ''">
+				and c.comodity_no like  CONCAT('%',#{commodityNo},'%' ) 
+			</if>  
+			<if test=" start != null and pageSize != null">
+			 limit #{start},#{pageSize}	
+			 
+			</if>
+	</select>
+	<select id="queryCommodityCount" parameterType="java.util.HashMap" resultType="int">
+		
+		select count(*)  from tbl_merchant_active_commodity c ,tbl_commodity_style s ,
+			tbl_merchant_active_signup m  where active_id=#{activeId}   and 
+			  m.merchant_code=#{merchantCode}  and
+			    m.id=c.signup_id  and c.comodity_no=s.no
+			     <if test=" commodityNo != null and commodityNo != ''">
+				and c.comodity_no like  CONCAT('%',#{commodityNo},'%' ) 
+			</if> 
+	</select>
+</mapper>

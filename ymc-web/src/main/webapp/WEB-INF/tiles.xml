@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+	<!-- 主框架 -->
+	<definition name="baselayout" template="/manage/tiles/baselayout.jsp">
+		<put-attribute name="title" value="优购-商家中心" />
+        <put-attribute name="head" value="/manage/tiles/head.ftl" type="freemarker"/>
+        <put-attribute name="left" value="/manage/tiles/menu.ftl" type="freemarker"/>
+        <put-attribute name="main" value="/manage/tiles/index.ftl" type="freemarker"/>
+        <put-attribute name="footer" value="/manage/tiles/footer.ftl" type="freemarker"/>
+	</definition>
+	
+	<!-- 发布页面新UI -->
+	<definition name="publishCommodityLayout" template="/manage/tiles/publishCommodityLayout.jsp">
+		<put-attribute name="title" value="优购-商家中心" />
+        <put-attribute name="head" value="/manage/tiles/head.ftl" type="freemarker"/>
+        <put-attribute name="main" value="/manage/tiles/index.ftl" type="freemarker"/>
+        <put-attribute name="footer" value="/manage/tiles/footer.ftl" type="freemarker"/>
+	</definition>
+	
+	<!-- 菜单 -->
+    <definition name="/manage_publish/commodity/*" extends="publishCommodityLayout">
+		<put-attribute name="main" value="/manage/commodity/{1}.ftl" type="freemarker"/>
+	</definition>
+	 <definition name="/manage_publish/taobao/*" extends="publishCommodityLayout">
+		<put-attribute name="main" value="/manage/taobao/{1}.ftl" type="freemarker"/>
+	</definition>
+	
+	<definition name="/manage_unless/*/*" template="/manage/{1}/{2}.ftl" templateType="freemarker"/>
+	<definition name="manage_unless/*/*" template="/manage/{1}/{2}.ftl" templateType="freemarker"/>
+    <!-- 菜单 -->
+    <definition name="manage/merchants/*" extends="baselayout">
+		<put-attribute name="main" value="/manage/merchants/{1}.ftl" type="freemarker"/>
+	</definition>
+	<definition name="/manage/commodity/*" extends="baselayout">
+		<put-attribute name="main" value="/manage/commodity/{1}.ftl" type="freemarker"/>
+	</definition>
+	<definition name="manage/order/*" extends="baselayout">
+		<put-attribute name="main" value="/manage/order/{1}.ftl" type="freemarker"/>
+	</definition>
+	<definition name="manage/bi/*" extends="baselayout">
+		<put-attribute name="main" value="/manage/bi/{1}.ftl" type="freemarker"/>
+	</definition>
+	<definition name="/manage/asm/*" extends="baselayout">
+		<put-attribute name="main" value="/manage/asm/{1}.ftl" type="freemarker"/>
+	</definition>
+	<definition name="manage/finance/*" extends="baselayout">
+		<put-attribute name="main" value="/manage/finance/{1}.ftl" type="freemarker"/>
+	</definition>
+	<definition name="/manage/order/*" extends="baselayout">
+		<put-attribute name="main" value="/manage/order/{1}.ftl" type="freemarker"/>
+	</definition>
+	<definition name="manage/wms/supplyStockInput/*" extends="baselayout">
+		<put-attribute name="main" value="/manage/wms/supplyStockInput/{1}.ftl" type="freemarker"/>
+	</definition>
+	<definition name="manage/wms/*" extends="baselayout">
+		<put-attribute name="main" value="/manage/wms/{1}.ftl" type="freemarker"/>
+	</definition>
+	<definition name="manage/notice/*" extends="baselayout">
+		<put-attribute name="main" value="/manage/notice/{1}.ftl" type="freemarker"/>
+	</definition>
+	<definition name="manage/comm/*" extends="baselayout">
+		<put-attribute name="main" value="/manage/comm/{1}.ftl" type="freemarker"/>
+	</definition>
+	<definition name="/manage/pics/*" extends="baselayout">
+		<put-attribute name="main" value="/manage/pics/{1}.ftl" type="freemarker"/>
+	</definition>
+	<definition name="/manage/taobao/*" extends="baselayout">
+		<put-attribute name="main" value="/manage/taobao/{1}.ftl" type="freemarker"/>
+	</definition>
+	<definition name="/manage/fss/*" extends="baselayout">
+		<put-attribute name="main" value="/manage/fss/{1}.ftl" type="freemarker"/>
+	</definition>
+	<definition name="manage/security/*" extends="baselayout">
+		<put-attribute name="main" value="/manage/security/{1}.ftl" type="freemarker"/>
+	</definition>
+	<definition name="manage_publish/security/*" extends="publishCommodityLayout">
+		<put-attribute name="main" value="/manage/security/{1}.ftl" type="freemarker"/>
+	</definition>
+	
+	
+	
+	<!-- 培训中心  主框架 -->
+	<definition name="training_base_layout" template="/manage/training/training_base_layout.jsp">
+		<put-attribute name="title" value="优购-商家中心-培训中心" />
+        <put-attribute name="head" value="/manage/training/head.ftl" type="freemarker"/>
+        <put-attribute name="main" value="/manage/training/training_list.ftl" type="freemarker"/>
+        <put-attribute name="footer" value="/manage/training/footer.ftl" type="freemarker"/>
+	</definition>
+	
+	<!-- 培训中心课程列表及详情  -->
+	<definition name="/manage/training/*" extends="training_base_layout">
+		<put-attribute name="main" value="/manage/training/{1}.ftl" type="freemarker"/>
+	</definition>
+	
+	<!-- 商家中心数据报表 -->
+	<definition name="/manage/report/*" template="/manage/report/{1}.ftl" templateType="freemarker"/>
+ 
+	
+	<!-- 商家中心关联版式设置 -->
+	<definition name="/manage/layout_setting/*" extends="baselayout">
+		<put-attribute name="main" value="/manage/layout_setting/{1}.ftl" type="freemarker"/>
+	</definition>
+	
+	<!-- 商家中心关联版式设置预览 -->
+	<definition name="layoutSettingPreview" template="/manage/layout_setting/layoutSettingPreview.ftl" templateType="freemarker"/>
+
+	<!-- 赔付详情预览
+	<definition name="compensatePreview" template="/manage/asm/compensate_detail.ftl" templateType="freemarker"/> -->
+	
+	<!-- 官方活动 -->
+	<definition name="/manage/active/*" extends="baselayout">
+		<put-attribute name="main" value="/manage/active/{1}.ftl" type="freemarker"/>
+	</definition>
+	
+	<!-- 首尔直发二期，退回单确认收货 -->
+	<definition name="/manage/backorder/*" extends="baselayout">
+		<put-attribute name="main" value="/manage/backorder/{1}.ftl" type="freemarker"/>
+	</definition>
+	
+	<!-- 首尔直发二期，确认收货弹出层 -->
+	<definition name="receiveBackOrder" template="/manage/backorder/receiveBackOrder.ftl" templateType="freemarker"/>
+	
+	
+</tiles-definitions>

@@ -1,0 +1,127 @@
+/*背景色btn颜色*/
+/*字体颜色登陆会员显示信息*/
+/*字体颜色 Blue*/
+/*detail颜色*/
+/*左侧菜单背景色*/
+/*导航条选中的颜色*/
+/*边框颜色*/
+/*灰色字体颜色*/
+/*字体颜色*/
+/*背景颜色*/
+/*淡灰色背景*/
+.goods-wrap {
+  *zoom: 1;
+  padding: 10px;
+}
+.goods-wrap:before,
+.goods-wrap:after {
+  content: "\20";
+  display: table;
+  line-height: 0;
+}
+.goods-wrap:after {
+  clear: both;
+}
+.goods-wrap.border-top {
+  border-top: 1px solid #f0f0f0;
+}
+.goods-wrap .goods-box {
+  padding-right: 15px;
+  width: 488px;
+}
+.goods-wrap .goods-box img.goods-img {
+  border: 1px solid #f0f0f0;
+  width: 480px;
+  height: 480px;
+}
+.goods-wrap h1.goods-tile {
+  font-size: 16px;
+  color: #0b80ed;
+  font-family: "宋体";
+}
+.goods-wrap .goods-message li {
+  height: 30px;
+  line-height: 30px;
+}
+.goods-wrap .goods-message li span.message-title {
+  text-align: justify;
+}
+.goods-wrap .goods-message li span.goods-price {
+  font-size: 16px;
+  font-weight: bold;
+  font-family: "Arial";
+}
+.goods-wrap .message-list {
+  *zoom: 1;
+  border: 1px solid #f0f0f0;
+  background: #f5f5f5;
+  width: 466px;
+  padding: 10px;
+}
+.goods-wrap .message-list:before,
+.goods-wrap .message-list:after {
+  content: "\20";
+  display: table;
+  line-height: 0;
+}
+.goods-wrap .message-list:after {
+  clear: both;
+}
+.goods-wrap .message-list li {
+  height: 30px;
+  line-height: 30px;
+  width: 233px;
+  float: left;
+  font-weight: bold;
+}
+.goods-wrap .message-list li span.message-item {
+  font-family: "宋体";
+  letter-spacing: 1px;
+  font-size: 14px;
+}
+.goods-wrap .message-table-title {
+  font-size: 14px;
+}
+.goods-wrap .message-table-title span {
+  font-weight: normal;
+  font-size: 12px;
+}
+.goods-wrap .message-table {
+  width: 480px;
+  border: 1px solid #f0f0f0;
+  border-right: 0;
+  border-bottom: 0;
+}
+.goods-wrap .message-table.w488 {
+  width: 488px;
+}
+.goods-wrap .message-table tr th {
+  font-weight: normal;
+  text-align: left;
+  padding: 5px 10px;
+  *padding: 5px;
+  background: #f5f5f5;
+  border-right: 1px solid #f0f0f0;
+  border-bottom: 1px solid #f0f0f0;
+}
+.goods-wrap .message-table tr td {
+  text-align: left;
+  padding: 5px 10px;
+  *padding: 5px;
+  border-right: 1px solid #f0f0f0;
+  border-bottom: 1px solid #f0f0f0;
+}
+.goods-wrap .message-table tr td .nowrap-text {
+  text-overflow: ellipsis;
+  height: 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 280px;
+  display: inline-block;
+}
+.goods-wrap .scroll-y {
+  height: 341px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  display: block;
+}

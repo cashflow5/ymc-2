@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>优购-商家中心-基本信息</title>
+    <link rel="stylesheet" type="text/css" href="css/base.css" />
+    <link rel="stylesheet" type="text/css" href="css/mold.css" />
+    <link rel="stylesheet" type="text/css" href="css/merchans_center.css" />
+</head>
+
+<body>
+    <script type="text/javascript" src="js/bootstrap.js"></script>
+    <!--#include file="layout/header.shtml" -->
+    <div id="newcontent" class="wrap clearfix mt10">
+        <!--#include file="layout/sidebar.shtml" -->
+        <div id="newmain" class="main_bd fr">
+            <div class="main_container">
+                <div class="normal_box">
+                    <p class="title site">当前位置：商家中心 &gt; 设置 &gt; 合同信息</p>
+                    <div class="tab_panel relative">
+                        <ul class="tab">
+                            <li onclick="location.href='basic_info.shtml'"><span>基本信息</span></li>
+                            <li onclick="location.href='shop_info.shtml'"><span>店铺信息</span></li>
+                            <li onclick="location.href='contracts_info.shtml'" class="curr"><span>合同信息</span></li>
+                        </ul>
+                        <div class="tab_content">
+                            <div class="info-box">
+                                <h3>合同信息</h3>
+                                <ul class="info-list clearfix">
+                                    <li><span class="stitle">商家名称：</span>优购科技XX有限公司</li>
+                                    <li><span class="stitle">合同编号：</span>541845</li>
+                                    <li><span class="stitle">合作模式：</span>不入优购仓库，商家发货</li>
+                                    <li><span class="stitle">合同起止时间：</span>从 2015-01-03 至 2016-01-03(<span class="red">已过期，请续签</span>)</li>
+                                    <li><span class="stitle">成本帐套名称：</span>优购科技（商家销售）</li>
+                                    <li><span class="stitle">合同电子版：</span>[<a href="javascript:;">查看</a>]</li>
+                                    <li><span class="stitle">结算方式：</span>扣点结算</li>
+                                    <li><span class="stitle">是否需续签：</span>是</li>
+                                    <li><span class="stitle">验收差异处理方式：</span>销退</li>
+                                    <li><span class="stitle">验销售发票开具方：</span>优购</li>
+                                     <li><span class="stitle">使用优购WMS：</span>是</li>
+                                      <li><span class="stitle">使用ERP系统对接：</span>是</li>
+                                    <li><span class="stitle">是否需缴纳保证金：</span>是</li>
+                                    <li><span class="stitle">是否需缴纳平台使用费：</span>是</li>
+                                    <li><span class="stitle">保证金金额：</span>10000元（<span class="green">已缴纳</span>）</li>
+                                    <li><span class="stitle">平台使用费金额：</span>6000元（<span class="red">未缴纳</span>）</li>
+                                    <li><span class="stitle">优惠券分摊比例：</span>100%</li>
+                                    <li><span class="stitle">申报人：</span>张三</li>
+                                </ul>
+                            </div>
+                            <div class="info-box">
+                                <h3>结算银行信息</h3>
+                                <ul class="info-list clearfix">
+                                    <li><span class="stitle">银行开户名：</span>优购科技有限公司</li>
+                                    <li><span class="stitle">银行账号：</span>4000024109200180788</li>
+                                    <li><span class="stitle">开户银行所在地：</span>广东深圳市</li>
+                                    <li><span class="stitle">开户行支行名称：</span>中国工商银行深圳市蛇口支行</li>
+                                </ul>
+                            </div>
+                            <div class="info-box">
+                                <h3>授权资质</h3>
+                                <ul class="info-list clearfix">
+                                    <li><span class="stitle">授权书：</span>[<a href="javascript:;">查看</a>]</li>
+                                    <li><span class="stitle">商标注册证：</span>[<a href="javascript:;">查看</a>]</li>
+                                    <li><span class="stitle">商标授权：</span><span class="green">有效</span></li>
+                                </ul>
+                                <table class="authorised-list">
+                                    <thead>
+                                        <tr>
+                                            <th>商标</th>
+                                            <th>商标专利授权人</th>
+                                            <th>类别</th>
+                                            <th>注册商标号</th>
+                                            <th>注册开始日期</th>
+                                            <th>注册截止日期</th>
+                                            <th>授权级别</th>
+                                            <th>被授权人</th>
+                                            <th>授权期起</th>
+                                            <th>授权期止</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>三枪</td>
+                                            <td>上海三枪（集团）有限公司</td>
+                                            <td>25</td>
+                                            <td>5723499</td>
+                                            <td>2009-12-07</td>
+                                            <td>2019-12-06</td>
+                                            <td>一级授权</td>
+                                            <td>优购科技有限公司</td>
+                                            <td>2015-03-23</td>
+                                            <td>2016-03-22</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--#include file="layout/footer.shtml" -->
+</body>
+
+</html>

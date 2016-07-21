@@ -1,0 +1,16 @@
+/target/
+/.settings/
+*/.settings/*
+/classes/
+.project
+.classpath
+.gitignore/ymc-web
+ymc-*/.gitignore
+mct-*/.gitignore
+mct-api-server/src/main/webapp/WEB-INF/.gitignore
+ymc-image/src/main/webapp/WEB-INF/.gitignore
+ymc-mms/src/main/webapp/WEB-INF/.gitignore
+ymc-web/src/main/resources/.gitignore
+ymc-web/src/main/webapp/WEB-INF/.gitignore
+/bin/
+*/.externalToolBuilders/*

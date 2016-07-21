@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yougou.kaidian.bi.dao.ReportSingleAnalysisMapper">
+	<resultMap type="com.yougou.kaidian.bi.vo.SingleAnalysisVo" id="singleAnalysisMap">
+		<result column="commodity_name" property="commodityName" javaType="String"/>
+		<result column="commodity_no" property="commodityNo" javaType="String"/>
+		<result column="picUrl" property="picUrl" javaType="String"/>
+		<result column="commodity_style_no" property="commodityStyleNo" javaType="String"/>
+		<result column="ypublic_price" property="publicPrice" javaType="double"/>
+		<result column="commodity_yougou_price" property="yougouPrice" javaType="double"/>
+		<result column="discount" property="discount" javaType="double"/>
+		<result column="commodity_score" property="commodityScore" javaType="double"/>
+		<result column="commodity_times" property="commodityTimes" javaType="int"/>
+		<result column="commodity_first_sell_date" property="commodityFirstSaleDate" javaType="String"/>
+		<result column="commodity_totall_available" property="commodityTotalAvailable" javaType="int"/>
+		<result column="page_view" property="pageView" javaType="int"/>
+		<result column="visit_count" property="visitCount" javaType="int"/>
+		<result column="changePercent" property="changePercent" javaType="double"/>
+		<result column="commodity_num" property="commodityNum" javaType="int"/>
+		<result column="prod_total_amt" property="prodTotalAmt" javaType="double"/>
+		<result column="avgSendAmount" property="avgSendAmt" javaType="double"/>
+		
+	</resultMap>
+	<!-- 单品分析，查询商品基本信息 -->
+	<select id="queryCommodityInfo" parameterType="java.util.HashMap" resultMap="singleAnalysisMap">
+		select t.commodity_name,t.commodity_no,replace(default_pic, '_s', '_m') picUrl,
+			t.commodity_style_no,t.ypublic_price ,t.commodity_yougou_price,round(t.commodity_yougou_price/t.ypublic_price*10,2) discount,
+			t.commodity_score,t.commodity_times,date_format(t.commodity_first_sell_date,'%Y-%m-%d') commodity_first_sell_date,
+			t.commodity_totall_available,sum(s.page_view) page_view,
+			sum(s.visit_count) visit_count,
+			round(sum(s.sale_commodity_num)/sum(s.visit_count)*100,2) changePercent,
+			sum(s.commodity_num) commodity_num,
+			sum(s.prod_total_amt) prod_total_amt,ifnull(round(sum(s.send_total_amount)/sum(s.send_commodity_num),2),0)avgSendAmount
+		from tbl_merchant_report_commodity_base_info t left join tbl_merchant_report_commodity_analysis s 
+			on (t.commodity_no = s.commodity_no and t.merchant_code = s.merchant_code)
+		where t.commodity_no = #{commodityNo}  
+		and t.merchant_code = #{merchantCode}
+		group by t.merchant_code,t.commodity_no
+	</select>
+	
+	<resultMap type="java.util.HashMap" id="commodityEveryDayIndexMap">
+		<result column="commodityPageView" property="commodityPageView" javaType="int"/>
+		<result column="commodityVisitCount" property="commodityVisitCount" javaType="int"/>
+		<result column="orderCommodityNum" property="orderCommodityNum" javaType="int"/>
+		<result column="commodityChangePercent" property="commodityChangePercent" javaType="double"/>	
+		<result column="payedCommodityNum" property="payedCommodityNum" javaType="int"/>
+		<result column="deliveryCommodityNum" property="deliveryCommodityNum" javaType="int"/>
+		<result column="orderCommodityAmt" property="orderCommodityAmt" javaType="double"/>
+		<result column="payedCommodityAmt" property="payedCommodityAmt" javaType="double"/>	
+		<result column="deliveryCommodityAmt" property="deliveryCommodityAmt" javaType="double"/>
+		<result column="avgOrderCommodityAmt" property="avgOrderCommodityAmt" javaType="double"/>
+		<result column="avgPayedCommodityAmt" property="avgPayedCommodityAmt" javaType="double"/>
+		<result column="avgDeliveryCommodityAmt" property="avgDeliveryCommodityAmt" javaType="double"/>	
+		<result column="reportDate" property="reportDate" javaType="String"/>
+	</resultMap>
+	
+	<!-- 单品分析每天指标数据统计以便折线图展示 -->
+	<select id="queryCommodityEveryDayIndex" parameterType="java.util.HashMap" resultMap="commodityEveryDayIndexMap" >
+		select sum(t.page_view) commodityPageView,
+			 sum(t.visit_count)commodityVisitCount,
+			 sum(t.sale_commodity_num) orderCommodityNum,
+			 round(sum(t.sale_commodity_num) / sum(t.visit_count) ,2)*100 commodityChangePercent,
+		     sum(t.commodity_num) payedCommodityNum,
+			 sum(t.send_commodity_num) deliveryCommodityNum,
+			 round(sum(t.sale_total_amount),2) orderCommodityAmt,
+	         round(sum(t.prod_total_amt),2) payedCommodityAmt,
+	         round(sum(t.send_total_amount),2) deliveryCommodityAmt,
+	         round(sum(t.sale_total_amount) / sum(t.sale_commodity_num),2) avgOrderCommodityAmt,
+			 round(sum(t.prod_total_amt) / sum(t.commodity_num),2) avgPayedCommodityAmt,
+			 round(sum(t.send_total_amount) / sum(t.send_commodity_num),2)avgDeliveryCommodityAmt,
+			 DATE_FORMAT(report_date,'%Y-%m-%d') reportDate
+		   from tbl_merchant_report_commodity_analysis t 
+		where t.merchant_code = #{merchantCode} and t.commodity_no = #{commodityNo} 
+		and (t.report_date BETWEEN #{startDate} and #{endDate})
+		group by DATE_FORMAT(report_date,'%Y-%m-%d')
+	</select>
+	
+	<!-- 单品分析，商品事件列表 -->
+	<resultMap type="java.util.HashMap" id="commodityLoginfoMap">
+		<result column="commodity_no" property="commodityNo" javaType="String"/>
+		<result column="loginfo" property="loginfo" javaType="String"/>
+		<result column="start_date" property="startDate" javaType="String"/>
+		<result column="end_date" property="endDate" javaType="String"/>
+		<result column="merchant_code" property="merchantCode" javaType="String"/>		
+	</resultMap>
+	
+	<!-- 单品分析，尺码列表 -->
+	<resultMap type="java.util.HashMap" id="commoditySizeinfoMap">
+		<result column="size_name" property="sizeName" javaType="String"/>
+		<result column="total_storage_num" property="totalStorageNum" javaType="int"/>
+		<result column="product_no" property="productNo" javaType="String"/>
+		<result column="finalSaleNum" property="finalSaleNum" javaType="int"/>	
+	</resultMap>
+	
+	
+	
+	<!-- 单品分析，查询商品事件列表信息 -->
+	<select id="queryCommodityLoginfoList" parameterType="java.util.HashMap" resultMap="commodityLoginfoMap">
+		select  distinct  t.commodity_no,t.loginfo,date_format(t.start_date,'%Y-%m-%d') start_date,
+				date_format(t.end_date,'%Y-%m-%d') end_date,t.merchant_code
+		 from tbl_merchant_report_commodity_log_info t 
+		where t.merchant_code = #{merchantCode}
+		and t.COMMODITY_NO = #{commodityNo} 
+		order by t.start_date desc
+	</select>
+	
+	<!-- 单品分析，查询商品尺码列表，含库存，最终销量 -->
+	<select id="queryCommoditySizeList"  parameterType="java.util.HashMap" resultMap="commoditySizeinfoMap">
+		select t.size_name,t.total_storage_num,t.product_no,
+			(select IFNULL(sum(s.final_sale_num),0) from tbl_merchant_report_product_analysis s 
+				where s.merchant_code = t.merchant_code and s.product_no = t.product_no) finalSaleNum
+		 from tbl_merchant_report_product_base_info t 
+		where t.merchant_code = #{merchantCode} and t.commodity_no = #{commodityNo}  order by size_name
+	</select>
+	
+	
+	
+</mapper>

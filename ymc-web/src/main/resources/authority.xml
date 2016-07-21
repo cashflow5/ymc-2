@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 权限菜单配置，如果menu的url有权限访问，那么resource都可以访问，反之，那么resource都不可以访问-->
+<!-- menu的url配置尽量开头不加/，resource的url加/ -->
+<menus>
+	<index name="首页" url="merchants/login/to_index.sc">
+		<resource name="合作模式" url="/merchants/login/getSupplierDistributionSide.sc"/>
+		<resource name="店铺提醒" url="/order/doShopRemind.sc"/>
+		<resource name="库存提醒" url="/wms/supplyStockInput/stockTips.sc"/>
+		<resource name="待处理售后提醒" url="/afterSale/queryAfterSaleCount.sc"/>
+		<resource name="最新公告" url="/notice/querytop5.sc"/>
+		<resource name="销量趋势" url="/order/analyzeSellInfo.sc"/>
+		<resource name="公告详情" url="/notice/showdetail.sc"/>
+		<resource name="公告列表" url="/notice/queryAll.sc"/>
+		<resource name="商品管理提醒" url="/commodity/doShopCommodityTips.sc"/>
+		<resource name="查看登录日志" url="/merchants/login/queryLoginLog.sc"/>
+		<resource name="绑定邮箱" url="/merchants/login/savemail.sc"/>
+		<resource name="意见反馈UI" url="/merchants/feeback/list.sc"/>
+		<resource name="意见反馈提交" url="/merchants/feeback/save.sc"/>
+		<!-- 账号管理 -->
+		<resource name="账号管理" url="/merchants/security/accountSecurity.sc"/>
+		<resource name="绑定手机" url="/merchants/security/bandingMobile.sc"/>
+		<resource name="获取验证码" url="/merchants/security/getMobileCode.sc"/>
+		<resource name="修改密码" url="/merchants/security/updatePwd.sc"/>
+		<resource name="验证图形码" url="/merchants/security/checkCode.sc"/>
+		<resource name="发送修改密码邮件" url="/merchants/security/sentupdatepwdemail.sc"/>
+		<resource name="验证身份" url="/merchants/security/sentupdatepwdsms.sc"/>
+		<resource name="通过手机修改密码" url="/merchants/security/updatepasswordByMobile.sc"/>
+		<resource name="修改手机页面UI" url="/merchants/security/updateMobile.sc"/>
+		<resource name="校验短信验证码" url="/merchants/security/updateMobilePre.sc"/>
+		<resource name="修改邮箱下一步" url="/merchants/security/updateEmailNext.sc"/>
+		<resource name="修改手机下一步" url="/merchants/security/updateMobileNext.sc"/>
+		<resource name="绑定邮箱身份验证" url="/merchants/security/bandingemail.sc"/>
+		<resource name="发送邮箱激活邮件" url="/merchants/security/sendUpdateEmail.sc"/>
+		<resource name="密码修改提交" url="/merchants/security/doUpdatePassword.sc"/>
+	</index>
+	<menu name="在售商品" url="commodity/goQueryOnSaleCommodity.sc">
+		<resource name="导出" url="/commodity/createOnSaleCommodity.sc"/>
+		<resource name="ftp下载导出的在售商品" url="/commodity/onSaleDownload.sc"/>
+		<resource name="选择分类" url="/wms/supplyStockInput/getChileCat.sc"/>
+		<resource name="下架" url="/commodity/downGoods.sc"/>
+		<resource name="下架（批量）" url="/commodity/downGoodsBatch.sc"/>
+		<resource name="修改商品名称" url="/commodity/updateCommodityName.sc"/>
+		<resource name="修改价格" url="/commodity/updatePrice4OnSale.sc"/>
+		<resource name="查看修改日志" url="/commodity/showCommodityLog.sc"/>
+		<resource name="修改" url="/commodity/goUpdateCommodity.sc"/>
+		<resource name="提交修改" url="/commodity/updateCommodity.sc"/>
+		<!-- 修改商品用到 -->
+		<resource  name="加载商品" url="/commodity/loadCommodityByNo.sc"/>
+		<resource  name="加载商品（原修改页面）" url="/commodity/getCommodityByNo.sc"/>
+		<resource name="加载图片分类" url="/picture/loadPicCatalog.sc"/>
+		<resource name="根据品牌查询" url="/commodity/queryBrandCat.sc"/>
+		<resource name="根据分类查询属性" url="/commodity/getCommodityPropertitiesByCatId.sc"/>
+		<resource name="通过货品编号串获取库存" url="/commodity/getInventoryByProdNo.sc"/>
+		<resource name="保存属性模板" url="/commodity/saveTemplate.sc"/>
+		<resource name="查看已保存模板" url="/commodity/getItemTemplateList.sc"/>
+		<resource name="查看已保存模板" url="/commodity/itemTemplate.sc"/>
+		<resource name="使用模板" url="/commodity/useTemplate.sc"/>
+		<resource name="删除模板" url="/commodity/delTemplate.sc"/>
+		<resource name="检查商品状态" url="/commodity/checkCommodityStatus.sc"/>
+		<resource name="上传图片" url="/img/upload.sc"/>
+		<resource name="加载图片空间图片" url="/picture/loadPiclist.sc"/>
+		<resource name="webuploader图片上传" url="/picture/imageManageUpload.sc"/>
+		<resource name="添加目录" url="/picture/savePicCatalog.sc"/>
+		<resource name="重命名" url="/picture/updatePicCatalog.sc"/>
+		<resource name="删除目录" url="/picture/delPicCatalog.sc"/>
+		<resource name="删除图片（批量）" url="/commodity/pics/delete.sc"/>
+		<resource name="上传图片" url="/picture/uploaddescribe.sc"/>
+		<resource name="移动图片" url="/picture/movePics.sc"/>
+	</menu>
+	<menu name="待售商品" url="commodity/goWaitSaleCommodity.sc">
+		<resource name="选择分类" url="/wms/supplyStockInput/getChileCat.sc"/>
+		<resource name="商品回收站" url="/commodity/go4SaleCommodityRecycle.sc"/>
+		<resource name="按商品导出待售商品" url="/commodity/createWaitSaleCommodityByComm.sc"/>
+		<resource name="按尺码导出待售商品" url="/commodity/createWaitSaleCommodityBySize.sc"/>
+		<resource name="ftp下载导出的待售商品" url="/commodity/waitSaleDownload.sc"/>
+		<resource name="导入修改资料" url="/commodity/importXlsToDb.sc"/>
+		<resource name="修改商品(新UI)" url="/commodity/preUpdateCommodity.sc"/>
+		<resource name="修改商品（原UI）" url="/commodity/goUpdateCommodity.sc"/>
+		<resource name="修改商品（原提交入口）" url="/commodity/updateCommodity.sc"/>
+		<resource name="加载商品信息" url="/commodity/getCommodityByNo.sc"/>
+		<resource name="通过货品编号串获取库存" url="/commodity/getInventoryByProdNo.sc"/>
+		<resource name="预览商品页" url="/commodity/previewDetail.sc"/>
+		<resource name="提交审核(批量)" url="/commodity/submitAuditBatch.sc"/>
+		<resource name="提交审核" url="/commodity/submitAudit.sc"/>
+		<resource name="检查商品状态" url="/commodity/checkCommodityStatus.sc"/>
+		<resource name="回收站彻底删除" url="/commodity/delForever.sc"/>
+		<resource name="商品还原" url="/commodity/recoveryCommodity.sc"/>
+		<resource name="批量删除到回收站" url="/commodity/import/deletebatch.sc"/>
+		<resource name="删除到回收站" url="/commodity/import/delete.sc"/>
+		<!-- 修改商品用到 -->
+		<resource  name="加载商品" url="/commodity/loadCommodityByNo.sc"/>
+		<resource name="添加目录" url="/picture/savePicCatalog.sc"/>
+		<resource name="重命名" url="/picture/updatePicCatalog.sc"/>
+		<resource name="删除目录" url="/picture/delPicCatalog.sc"/>
+		<resource name="删除图片（批量）" url="/commodity/pics/delete.sc"/>
+		<resource name="上传图片" url="/picture/uploaddescribe.sc"/>
+		<resource name="移动图片" url="/picture/movePics.sc"/>
+		<resource name="webuploader图片上传" url="/picture/imageManageUpload.sc"/>
+		<resource name="上传图片" url="/img/upload.sc"/>
+		<resource name="加载图片空间图片" url="/picture/loadPiclist.sc"/>
+		<resource name="发布商品（新UI）" url="/commodity/addCommodityui.sc"/>
+		<resource name="查询品牌分类" url="/commodity/queryBrandCat.sc"/>
+		<resource name="查看属性模板" url="/commodity/itemTpl.sc"/>
+		<resource name="查看属性模板ajax" url="/commodity/getItemTemplateList.sc"/>
+		<resource name="根据分类查询属性" url="/commodity/loadPropertitiesByCatId.sc"/>
+		<resource name="使用模板" url="/commodity/useTemplate.sc"/>
+		<resource name="删除模板" url="/commodity/delTemplate.sc"/>
+		<resource name="加载图片分类" url="/picture/loadPicCatalog.sc"/>
+		<resource name="保存属性模板" url="/commodity/saveTemplate.sc"/>
+		<resource name="修改商品提交" url="/commodity/updateCommodityNewui.sc"/>
+		<resource name="失败明细下载" url="/commodity/import/error/download.sc"/>
+	</menu>
+	<menu name="发布商品（原UI）" url="commodity/goAddCommodity.sc">
+		<resource name="加载图片分类" url="/picture/loadPicCatalog.sc"/>
+		<resource name="根据品牌查询" url="/commodity/queryBrandCat.sc"/>
+		<resource name="根据分类查询属性" url="/commodity/getCommodityPropertitiesByCatId.sc"/>
+		<resource name="保存属性模板" url="/commodity/saveTemplate.sc"/>
+		<resource name="查看已保存模板" url="/commodity/getItemTemplateList.sc"/>
+		<resource name="查看已保存模板" url="/commodity/itemTemplate.sc"/>
+		<resource name="使用模板" url="/commodity/useTemplate.sc"/>
+		<resource name="删除模板" url="/commodity/delTemplate.sc"/>
+		<resource name="保存商品" url="/commodity/addCommodity.sc"/>
+		<resource name="预览商品页" url="/commodity/import/preview.sc"/>
+		<resource name="上传图片" url="/img/upload.sc"/>
+		<resource name="加载图片空间图片" url="/picture/loadPiclist.sc"/>
+		<resource name="添加目录" url="/picture/savePicCatalog.sc"/>
+		<resource name="重命名" url="/picture/updatePicCatalog.sc"/>
+		<resource name="删除目录" url="/picture/delPicCatalog.sc"/>
+		<resource name="webuploader图片上传" url="/picture/imageManageUpload.sc"/>
+		<resource name="检查商品状态" url="/commodity/checkCommodityStatus.sc"/>
+	</menu>
+	<menu name="发布商品（新UI）" url="commodity/addCommodityui.sc">
+		<resource name="查询品牌分类" url="/commodity/queryBrandCat.sc"/>
+		<resource name="查看属性模板" url="/commodity/itemTpl.sc"/>
+		<resource name="查看属性模板ajax" url="/commodity/getItemTemplateList.sc"/>
+		<resource name="根据分类查询属性" url="/commodity/loadPropertitiesByCatId.sc"/>
+		<resource name="使用模板" url="/commodity/useTemplate.sc"/>
+		<resource name="删除模板" url="/commodity/delTemplate.sc"/>
+		<resource name="加载图片分类" url="/picture/loadPicCatalog.sc"/>
+		<resource name="保存商品" url="/commodity/saveCommodity.sc"/>
+		<resource name="预览商品页" url="/commodity/preview.sc"/>
+		<resource name="上传图片" url="/img/upload.sc"/>
+		<resource name="加载图片空间图片" url="/picture/loadPiclist.sc"/>
+		<resource name="添加目录" url="/picture/savePicCatalog.sc"/>
+		<resource name="重命名" url="/picture/updatePicCatalog.sc"/>
+		<resource name="删除目录" url="/picture/delPicCatalog.sc"/>
+		<resource name="webuploader图片上传" url="/picture/imageManageUpload.sc"/>
+		<resource name="检查商品状态" url="/commodity/checkCommodityStatus.sc"/>
+		<resource name="根据商品名称、款号、编码查询分类" url="/commodity/queryByKeyword.sc"/>
+		<resource name="保存属性模板" url="/commodity/saveTemplate.sc"/>
+	</menu>
+	<menu name="批量发布商品" url="commodity/import/ready.sc">
+		<resource name="加载授权分类" url="/commodity/import/struct.sc"/>
+		<resource name="加载商品列表" url="/commodity/import/list.sc"/>
+		<resource name="下载模板" url="/commodity/import/template/download.sc"/>
+		<resource name="立即导入" url="/commodity/import.sc"/>
+		<resource name="提交审核(批量)" url="/commodity/import/audit.sc"/>
+		<resource name="修改" url="/commodity/goUpdateCommodity.sc"/>
+		<resource name="上传图片提交" url="/commodity/uploadImage4Commodity.sc"/>
+		<resource name="上传图片UI" url="/commodity/pics/upload/singleReady.sc"/>
+		<resource name="删除" url="/commodity/import/delete.sc"/>
+		<resource name="批量导入商品图片" url="/commodity/pics/upload/ready.sc"/>
+		<resource name="批量导入图片之立即上传" url="/commodity/pics/upload.sc"/>
+		<!-- 修改商品用到 -->
+		<resource  name="加载商品" url="/commodity/loadCommodityByNo.sc"/>
+		<resource  name="加载商品（原修改页面）" url="/commodity/getCommodityByNo.sc"/>
+		<resource name="加载图片分类" url="/picture/loadPicCatalog.sc"/>
+		<resource name="根据品牌查询" url="/commodity/queryBrandCat.sc"/>
+		<resource name="根据分类查询属性" url="/commodity/getCommodityPropertitiesByCatId.sc"/>
+		<resource name="通过货品编号串获取库存" url="/commodity/getInventoryByProdNo.sc"/>
+		<resource name="保存属性模板" url="/commodity/saveTemplate.sc"/>
+		<resource name="查看已保存模板" url="/commodity/getItemTemplateList.sc"/>
+		<resource name="查看已保存模板" url="/commodity/itemTemplate.sc"/>
+		<resource name="使用模板" url="/commodity/useTemplate.sc"/>
+		<resource name="删除模板" url="/commodity/delTemplate.sc"/>
+		<resource name="检查商品状态" url="/commodity/checkCommodityStatus.sc"/>
+		<resource name="上传图片" url="/img/upload.sc"/>
+		<resource name="加载图片空间图片" url="/picture/loadPiclist.sc"/>
+		<resource name="webuploader图片上传" url="/picture/imageManageUpload.sc"/>
+		<resource name="添加目录" url="/picture/savePicCatalog.sc"/>
+		<resource name="重命名" url="/picture/updatePicCatalog.sc"/>
+		<resource name="删除目录" url="/picture/delPicCatalog.sc"/>
+		<resource name="删除图片（批量）" url="/commodity/pics/delete.sc"/>
+		<resource name="上传图片" url="/picture/uploaddescribe.sc"/>
+		<resource name="移动图片" url="/picture/movePics.sc"/>
+		<resource name="webuploader上传图片" url="/img/uploaddesc.sc"/>
+		<resource name="提交修改" url="/commodity/updateCommodity.sc"/>
+	</menu>
+	<menu name="图片空间" url="picture/list.sc">
+		<resource name="添加目录" url="/picture/savePicCatalog.sc"/>
+		<resource name="重命名" url="/picture/updatePicCatalog.sc"/>
+		<resource name="删除目录" url="/picture/delPicCatalog.sc"/>
+		<resource name="删除图片（批量）" url="/commodity/pics/delete.sc"/>
+		<resource name="上传图片" url="/picture/uploaddescribe.sc"/>
+		<resource name="移动图片" url="/picture/movePics.sc"/>
+	</menu>
+	<!-- 未对商家开放 -->
+	<!-- <menu name="淘宝店铺管理" url="taobao/goTaobaoShop.sc">
+		<resource name="添加淘宝店铺" url="/taobao/goNewTaobaoShop.sc"/>
+		<resource name="修改淘宝店铺" url="/taobao/goUpdateTaobaoShop.sc"/>
+		<resource name="添加店铺提交" url="/taobao/saveTaobaoShop.sc"/>
+		<resource name="修改店铺提交" url="/taobao/updateTaobaoShop.sc"/>
+		<resource name="删除（提交审核）" url="/taobao/updateTaobaoShopStatus.sc"/>
+		<resource name="校验淘宝店铺" url="/taobao/checkTaobaoShop.sc"/>
+	</menu> -->
+	<!-- 未对商家开放 -->
+	<!-- <menu name="商品导入设置" url="taobao/goYougouTaobaoItemCat.sc">
+		<resource name="加载优购淘宝分类" url="/taobao/toYougouTaobaoItemCat.sc"/>
+		<resource name="品牌对应设置" url="/taobao/goYougouTaobaoBrand.sc"/>
+		<resource name="分类对应设置" url="/taobao/getYougouTaobaoItemCatList.sc"/>
+		<resource name="优购分类树" url="/taobao/getYougouItemTree.sc"/>
+		<resource name="保存优购淘宝品牌绑定UI" url="/taobao/toSaveYougouTaobaoBrand.sc"/>
+		<resource name="保存优购淘宝品牌绑定" url="/taobao/saveYougouTaobaoBrand.sc"/>
+		<resource name="删除优购淘宝品牌绑定" url="/taobao/delYougouTaobaoBrand.sc"/>
+		<resource name="淘宝分类树" url="/taobao/getTaobaoItemTree.sc"/>
+		<resource name="删除优购淘宝分类绑定" url="/taobao/delYougouTaobaoItemCat.sc"/>
+		<resource name="绑定优购淘宝分类" url="/taobao/bindTaobaoYougouItemCat.sc"/>
+		<resource name="获取优购、淘宝属性" url="/taobao/getYougouTaobaoPro.sc"/>
+		<resource name="获取优购、淘宝属性值" url="/taobao/getTaobaoItemProVal.sc"/>
+		<resource name="绑定分类属性属性值" url="/taobao/bindTaobaoYougouItemProAndVal.sc"/>
+		<resource name="修改优购淘宝属性UI" url="/taobao/goUpdateTaobaoYougouPro.sc"/>
+		<resource name="下载淘宝商品" url="/taobao/downloadItem.sc"/>
+	</menu> -->
+	<menu name="淘宝商品导入" url="taobao/goTaobaoItemList.sc">
+		<resource name="csv上传" url="/taobao/csvImport.sc"/>
+		<resource name="商品回收站" url="/taobao/goRecycle.sc"/>
+		<resource name="商品回收站列表" url="/taobao/getRecycleList.sc"/>
+		<resource name="导入优购/审核" url="/taobao/toTaobaoItemImportYougou.sc"/>
+		<resource name="删除到回收站" url="/taobao/deleteTaobaoItemExtend.sc"/>
+		<resource name="导出修改商品" url="/taobao/createItemExcel.sc"/>
+		<resource name="ftp下载导出修改的商品" url="/taobao/excelDownload.sc"/>
+		<resource name="根据模板初始化商品" url="/taobao/initDataFromTemplate.sc"/>
+		<resource name="导入修改商品" url="/taobao/exportExcel.sc"/>
+		<resource name="修改商品UI" url="/taobao/toUpdateTaobaoItem.sc"/>
+		<resource name="修改商品提交" url="/taobao/updateTaobaoItem.sc"/>
+		<resource name="优购分类" url="/taobao/getYougouItemTree.sc"/>
+		<resource name="未导入优购商品Ajax" url="/taobao/getTaobaoItemList.sc"/>
+		<resource name="查询绑定信息" url="/taobao/checkBindInfo.sc"/>
+		<resource name="查询品牌分类" url="/taobao/queryBrandCat.sc"/>
+		<resource name="根据分类ID加载商品属性" url="/taobao/getCommodityPropertitiesByCatNo.sc"/>
+		<resource name="加载图片空间分类" url="/picture/loadPicCatalog.sc"/>
+		<resource name="添加目录" url="/picture/savePicCatalog.sc"/>
+		<resource name="重命名" url="/picture/updatePicCatalog.sc"/>
+		<resource name="删除目录" url="/picture/delPicCatalog.sc"/>
+		<resource name="删除图片（批量）" url="/commodity/pics/delete.sc"/>
+		<resource name="上传图片" url="/picture/uploaddescribe.sc"/>
+		<resource name="移动图片" url="/picture/movePics.sc"/>
+		<resource name="加载图片空间图片" url="/picture/loadPiclist.sc"/>
+		<resource name="webuploader图片上传" url="/picture/imageManageUpload.sc"/>
+		<resource name="上传图片" url="/img/upload.sc"/>
+		<resource name="预览商品页" url="/commodity/previewDetail.sc"/>
+	</menu>
+	<menu name="商品回收站" url="taobao/goRecycle.sc">
+		<resource name="彻底删除（批量）" url="/taobao/deleteRecycle.sc"/>
+		<resource name="还原（批量）" url="/taobao/reductTaobao.sc"/>
+	</menu>
+	<menu name="查看类目模板" url="taobao/goYougouTaobaoTemplet.sc">
+		<resource name="查看类目模板ajax" url="/taobao/getYougouTaobaoItemCatTempletList.sc"/>
+		<resource name="优购分类树" url="/taobao/getYougouItemTree.sc"/>
+		<resource name="淘宝分类树" url="/taobao/getTaobaoItemTempletTree.sc"/>
+		<resource name="查看属性" url="/taobao/goYougouTaobaoItemProTemplet.sc"/>
+		<resource name="查看属性ajax" url="/taobao/getYougouTaobaoProTemplet.sc"/>
+	</menu>
+	<!-- 未对商家开放 -->
+	<!-- <menu name="淘宝助手商品导入" url="taobao/goCsvImport.sc">
+		<resource name="上传csv文件" url="/taobao/csvImport.sc"/>
+	</menu> -->
+	<menu name="单据打印（新）" url="order/toDocumentPrintingNew.sc">
+		<resource name="导出拣货清单" url="/order/doExportPrintOrderNew.sc"/>
+		<resource name="打印购物清单（批量）" url="/order/toBatchPrintShoppingListTemplateAjax.sc"/>
+		<resource name="打印快递单（批量）" url="/order/toPrintExpressTemplateAjax.sc"/>
+		<resource name="缺货查询订单信息" url="/order/queryGoodsInfo.sc"/>
+		<resource name="缺货" url="/order/updateOutOfStock.sc"/>
+		<resource name="收货地址" url="/merchants/login/queryChildByLevelAndNo.sc"/>
+		<resource name="已打印未发货" url="/order/toPrintNewNotDelivery.sc"/>
+		<resource name="已发货" url="/order/toPrintNewDelivery.sc"/>
+		<resource name="补打购物清单（批量）" url="/order/toBatchPrintShoppingListTemplateAjax.sc"/>
+		<resource name="补打快递单（批量）" url="/order/toPrintExpressTemplateAjax.sc"/>
+		<resource name="缺货订单" url="/order/toPrintNewOutstock.sc"/>
+		<resource name="全部" url="/order/toPrintNewAll.sc"/>
+		<resource name="导出缺货订单" url="/order/doExportOutStockOrder.sc"/>
+		<resource name="导出违规订单" url="/order/doExportPunishOrder.sc"/>
+		<resource name="订单详情" url="/order/toOrderDetails.sc"/>
+		<resource name="查询物流信息" url="/order/selectExpressLog.sc"/>
+		<resource name="打印物流信息ajax" url="/order/getPrintExpressTemplateInfoAjax.sc"/>
+		<resource name="订单申请拦截UI" url="/order/fastdelivery/getOrderIntercept.sc"/>
+		<resource name="同意（忽略）拦截" url="/order/fastdelivery/doOrderIntercept.sc"/>
+	</menu>
+	<menu name="单据打印" url="order/toDocumentPrinting.sc">
+		<resource name="导出拣货清单" url="/order/doExportPrintOrderNew.sc"/>
+		<resource name="打印购物清单（批量）" url="/order/toBatchPrintShoppingListTemplateAjax.sc"/>
+		<resource name="打印快递单（批量）" url="/order/toPrintExpressTemplateAjax.sc"/>
+		<resource name="缺货查询订单信息" url="/order/queryGoodsInfo.sc"/>
+		<resource name="缺货" url="/order/updateOutOfStock.sc"/>
+		<resource name="收货地址" url="/merchants/login/queryChildByLevelAndNo.sc"/>
+		<resource name="已打印未发货" url="/order/toPrintNotDelivery.sc"/>
+		<resource name="已发货" url="/order/toPrintDelivery.sc"/>
+		<resource name="补打购物清单（批量）" url="/order/toBatchPrintShoppingListTemplateAjax.sc"/>
+		<resource name="补打快递单（批量）" url="/order/toPrintExpressTemplateAjax.sc"/>
+		<resource name="缺货订单" url="/order/toPrintOutstock.sc"/>
+		<resource name="全部" url="/order/toPrintAll.sc"/>
+		<resource name="订单详情" url="/order/toOrderDetails.sc"/>
+		<resource name="查询物流信息" url="/order/selectExpressLog.sc"/>
+		<resource name="打印物流信息ajax" url="/order/getPrintExpressTemplateInfoAjax.sc"/>
+		<resource name="订单申请拦截UI" url="/order/fastdelivery/getOrderIntercept.sc"/>
+		<resource name="同意（忽略）拦截" url="/order/fastdelivery/doOrderIntercept.sc"/>
+		<resource name="导出拣货清单" url="/order/doExportPrintOrder.sc"/>
+		<resource name="导出缺货订单" url="/order/doExportOutStockOrder.sc"/>
+	</menu>
+	
+	<menu name="备货清单" url="order/queryAll.sc"/>
+	<menu name="打包发货" url="order/toPackageDelivery.sc">
+		<resource name="扫描发货订单号" url="/order/scanningOrder.sc"/>
+		<resource name="校验发货商品" url="/order/inspectGoods.sc"/>
+		<resource name="同意（忽略）拦截" url="/order/fastdelivery/doOrderIntercept.sc"/>
+		<resource name="校验发货快递单" url="/order/chexkExpress.sc"/>
+	</menu>
+	<menu name="快捷发货" url="order/fastdelivery/notexported.sc">
+		<resource name="导出拣货清单" url="/order/doExportPrintOrderNew.sc"/>
+		<resource name="导出订单明细" url="/order/fastdelivery/doExportOrderdetail.sc"/>
+		<resource name="打印(补打)购物清单（批量）" url="/order/toBatchPrintShoppingListTemplateAjax.sc"/>
+		<resource name="打印(补打)快递单（批量）" url="/order/toPrintExpressTemplateAjax.sc"/>
+		<resource name="合并发货UI" url="/order/fastdelivery/mergerDelivering.sc"/>
+		<resource name="合并发货提交" url="/order/fastdelivery/mergerDispatched.sc"/>
+		<resource name="订单详情" url="/order/toOrderDetails.sc"/>
+		<resource name="发货前" url="/order/fastdelivery/delivering.sc"/>
+		<resource name="发货操作" url="/order/fastdelivery/dispatched.sc"/>
+		<resource name="缺货UI" url="/order/queryGoodsInfo.sc"/>
+		<resource name="缺货" url="/order/updateOutOfStock.sc"/>
+		<resource name="查询物流信息" url="/order/selectExpressLog.sc"/>
+		<resource name="收货地区" url="/merchants/login/queryChildByLevelAndNo.sc"/>
+		<resource name="已导出未发货" url="/order/fastdelivery/notdelivery.sc"/>
+		<resource name="已发货" url="/order/fastdelivery/delivered.sc"/>
+		<resource name="缺货订单" url="/order/fastdelivery/outoforders.sc"/>
+		<resource name="全部" url="/order/fastdelivery/allorders.sc"/>
+		<resource name="订单申请拦截UI" url="/order/fastdelivery/getOrderIntercept.sc"/>
+		<resource name="同意（忽略）拦截" url="/order/fastdelivery/doOrderIntercept.sc"/>
+		<resource name="打印物流信息ajax" url="/order/getPrintExpressTemplateInfoAjax.sc"/>
+		<resource name="常用快递选择UI" url="/order/fastdelivery/selectExpress.sc"/>
+		<resource name="常用快递选择提交" url="/order/fastdelivery/addcomexpress.sc"/>
+		<resource name="更多快递" url="/order/fastdelivery/moreExpress.sc"/>
+		<resource name="批量导出拣货清单" url="/order/fastdelivery/exportbog.sc"/>
+		<resource name="批量导出缺货订单" url="/order/fastdelivery/exportooo.sc"/>
+	</menu>
+	<menu name="销售查询" url="order/queryAllSales.sc">
+		<resource name="查询销售明细" url="/order/queryAllSalesCount.sc"/>
+		<resource name="查询销售明细" url="/order/querySalesDetail.sc"/>
+		<resource name="导出销售明细" url="/order/doExportSalesDetail.sc"/>
+		<resource name="导出查询销售明细" url="/order/doExportAllSalesList.sc"/>
+	</menu>
+	<menu name="我的违规订单" url="order/queryPunishOrderList.sc">
+		<resource name="导出违规订单" url="/order/doExportPunishOrder.sc"/>
+		<resource name="我的缺货订单" url="/order/queryPunishOrderCommodityList.sc"/>
+	</menu>
+	<menu name="发票查询" url="invoice/query.sc">
+		<resource name="导出发票明细" url="/invoice/doExportInvoice.sc"/>
+		<resource name="录入发票" url="/invoice/save.sc"/>
+		<resource name="查看发票明细" url="/invoice/detail.sc"/>
+	</menu>
+	<menu name="库存管理" url="wms/supplyStockInput/querySupplyGenStock.sc">
+		<resource name="设置安全库存" url="/wms/supplyStockInput/updateSafeStockQuantity.sc"/>
+		<resource name="导出库存" url="/wms/supplyStockInput/doGenStockExport.sc"/>
+		<resource name="商品分类" url="/wms/supplyStockInput/getChileCat.sc"/>
+		<resource name="更新库存" url="/wms/supplyStockInput/exactUpdateInventory.sc"/>
+	</menu>
+	<menu name="库存导入" url="wms/supplyStockInput/inputSupplyStockExcel.sc">
+		<resource name="下载库存导入模板（空）" url="/wms/supplyStockInput/exportTemplate.sc"/>
+		<resource name="下载库存导入模板（现有商品）" url="/wms/supplyStockInput/loacdExport.sc"/>
+		<resource name="立即导入" url="/wms/supplyStockInput/excelSupplyStockInput.sc"/>
+		<resource name="查询导入进度" url="/wms/supplyStockInput/queryStockImportProgressBar.sc"/>
+	</menu>
+	<menu name="结算单" url="finance/balancebill/queryAll.sc">
+		<resource name="结算明细" url="/finance/balancebill/cx_detail.sc"/>
+		<resource name="结算明细" url="/finance/balancebill/detail.sc"/>
+	</menu>
+	<menu name="调价单" url="finance/redeployprice/queryAll.sc"/>
+	<menu name="工单处理" url="dialoglist/query.sc">
+		<resource name="工单详情" url="/dialoglist/detail.sc"/>
+		<resource name="处理工单" url="/dialoglist/save.sc"/>
+		<resource name="查看订单详情" url="/order/toOrderDetails.sc"/>
+		<resource name="查询物流信息" url="/order/selectExpressLog.sc"/>
+	</menu>
+	<menu name="质检登记" url="quality/to_qualityRegister.sc">
+		<resource name="扫描订单号或收货快递单号" url="/quality/to_queryOrderNoOrExpressNo.sc"/>
+		<resource name="扫描商家货品条码" url="/quality/returnCheckProduct.sc"/>
+		<resource name="确认保存质检登记" url="/quality/saveResult.sc"/>
+		<resource name="查看订单详情" url="/order/toOrderDetails.sc"/>
+		<resource name="查询物流信息" url="/order/selectExpressLog.sc"/>
+		<resource name="检查快递单" url="/quality/expressNoCheck.sc"/>
+	</menu>
+	<menu name="质检查询" url="qualityquery/qualityList.sc">
+		<resource name="查看" url="/qualityquery/returnDetail.sc"/>
+		<resource name="查看订单详情" url="/order/toOrderDetails.sc"/>
+		<resource name="查询物流信息" url="/order/selectExpressLog.sc"/>
+		<resource name="生成文件上传到ftp" url="/qualityquery/qualityExport.sc"/>
+		<resource name="ftp下载" url="/qualityquery/qualityDownload.sc"/>
+	</menu>
+	<menu name="售后单查询" url="afterSale/queryAfterSaleList.sc">
+		<resource name="查看售后单" url="/afterSale/afterSaleDetail.sc"/>
+		<resource name="查看售后单是否存在" url="/afterSale/checkApplyNoIsExist.sc"/>
+		<resource name="查看订单详情" url="/order/toOrderDetails.sc"/>
+		<resource name="查询物流信息" url="/order/selectExpressLog.sc"/>
+		<resource name="查看异常售后单" url="/afterSale/ex_afterSaleDetail.sc"/>
+		<resource name="售后查看搜索" url="/afterSale/to_queryAfterSaleList.sc"/>
+		<resource name="异常售后查看搜索" url="/afterSale/queryExAfterSaleList.sc"/>
+	</menu>
+	<menu name="质检不通过" url="afterSale/queryAfterSaleList.sc">
+		<resource name="录入寄回信息" url="/quality/returnGood.sc"/>
+		<resource name="转正常质检" url="/quality/changeToQA.sc"/>
+		<resource name="维修完成" url="/quality/repairComplate.sc"/>
+		<resource name="寄回信息查看" url="/quality/returnDetail.sc"/>
+	</menu>
+	<menu name="经营概况" url="bi/preSummaryOfOperations.sc">
+		<resource name="经营数据json" url="/bi/serializeIntelligenceCalendar.sc"/>
+		<resource name="查询经营" url="/bi/querySummaryOfOperations.sc"/>
+		<resource name="打印经营" url="/bi/printSummaryOfOperations.sc"/>
+	</menu>
+	<menu name="商品销售明细" url="bi/preCommoditySaleDetails.sc">
+		<resource name="经营数据json" url="/bi/serializeIntelligenceCalendar.sc"/>
+		<resource name="查看报表类型" url="/bi/queryAllCommoditySalesDetails.sc"/>
+		<resource name="商品销售明细查询" url="/bi/queryCommoditySalesDetails.sc"/>
+		<resource name="打印经营" url="/bi/printCommoditySalesDetails.sc"/>
+	</menu>
+	<menu name="售后总览" url="bi/preAfterSaleStatistics.sc">
+		<resource name="经营数据json" url="/bi/serializeIntelligenceCalendar.sc"/>
+		<resource name="查看报表类型" url="/bi/queryAftersaleStatistics.sc"/>
+		<resource name="售后明细查询" url="/bi/queryAftersaleStatisticsDetail.sc"/>
+		<resource name="打印经营" url="/bi/printAftersaleStatisticsDetail.sc"/>
+	</menu>
+	<menu name="基本信息" url="merchants/login/to_MerchantsUser.sc">
+		<resource name="合同列表" url="/merchants/login/to_supplierContract.sc"/>
+		<resource name="查看附件" url="/merchants/login/downMerchantsContractFile.sc"/>
+		<resource name="联系人列表" url="/merchants/login/to_supplierLinkMan.sc"/>
+		<resource name="添加联系人UI" url="/merchants/login/to_addLinkMan.sc"/>
+		<resource name="添加联系人提交" url="/merchants/login/add_linkMan.sc"/>
+		<resource name="修改联系人UI" url="/merchants/login/to_updateLinkMan.sc"/>
+		<resource name="判断是否存在手机号码" url="/merchants/login/exitsNewPhone.sc"/>
+		<resource name="修改联系人提交" url="/merchants/login/update_linkMan.sc"/>
+	</menu>
+	<menu name="修改密码" url="merchants/login/to_updatePassword.sc">
+		<resource name="修改密码" url="/merchants/login/update_password.sc"/>
+		<resource name="查询原密码是否正确" url="/merchants/login/extisPassword.sc"/>
+	</menu>
+	<menu name="子账号管理" url="merchants/login/to_merchants.sc">
+		<resource name="添加账号UI" url="/merchants/login/to_addMerchants.sc"/>
+		<resource name="添加账号提交" url="/merchants/login/add_merchants.sc"/>
+		<resource name="修改账号UI" url="/merchants/login/inits_merchants.sc"/>
+		<resource name="修改账号提交" url="/merchants/login/update_merchants.sc"/>
+		<resource name="分配权限UI" url="/merchants/login/to_distributeAuthority.sc"/>
+		<resource name="分配权限提交" url="/merchants/login/assign_Merchants_User_Authority.sc"/>
+		<resource name="锁定（开启）" url="/merchants/login/updateStatus.sc"/>
+	</menu>
+	<menu name="发货地址设置" url="merchants/login/to_merchant_consignmentAdress_list.sc">
+		<resource name="退货地址" url="/merchants/login/toMerchantRejectedAddressList.sc"/>
+		<resource name="保存发货地址" url="/merchants/login/update_merchant_consignmentAdress.sc"/>
+		<resource name="保存退货地址" url="/merchants/login/saveMerchantRejectedAddress.sc"/>
+		<resource name="发货人地区树" url="/merchants/login/queryChildById.sc"/>
+	</menu>
+	<menu name="APPKEY管理" url="merchants/login/appkey.sc">
+		<resource name="状态启用/关闭" url="/merchants/login/changeApiStatus.sc"/>
+	</menu>
+	<menu name="店铺列表" url="mctfss/store/list.sc">
+		<resource name="装修" url="/fss/store/pageDesign/"/>
+		<resource name="预览" url="/fss/store/pagePreview/"/>
+	</menu>
+	<menu name="店铺日志" url="mctfss/log/list.sc">
+		<resource name="查看店铺详细日志" url="/mctfss/log/showLogDetail.sc"/>
+	</menu>
+	<menu name="店铺商品" url="mctfss/commodity/list.sc">
+		<resource name="店铺商品" url="/mctfss/commodity/getList.sc"/>
+		<resource name="店铺分类" url="/mctfss/commodity/selCate.sc"/>
+	</menu>
+	<menu name="模块列表" url="mctfss/moduleBasicInfo/list.sc"/>
+</menus>

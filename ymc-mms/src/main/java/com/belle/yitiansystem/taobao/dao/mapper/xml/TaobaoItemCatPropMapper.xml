@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.belle.yitiansystem.taobao.dao.mapper.TaobaoItemCatPropMapper">
+    <!-- 淘宝属性中间表 -->
+    <resultMap id="taobaoYougouItemCatDtoPro" type="com.belle.yitiansystem.taobao.model.TaobaoItemCatPropDto">
+		<result column="cid" property="cid" jdbcType="BIGINT" />
+		<result column="pid" property="pid" jdbcType="BIGINT" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="propBindId" property="propBindId" jdbcType="VARCHAR" />
+		<result column="yougou_prop_item_no" property="yougouPropItemNo" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+	</resultMap>
+    
+	<!--查询淘宝分类对应的所有属性-->
+	<select id="selectItemProByCatId" resultMap="taobaoYougouItemCatDtoPro">
+		select c.cid,c.pid,p.name from tbl_merchant_taobao_item_cat_prop c
+		inner join tbl_merchant_taobao_item_prop p on c.pid=p.pid
+		where c.cid = #{cid,jdbcType=VARCHAR} 
+	</select>
+	
+	<!--查询分类对应的所有属性以及绑定的属性-->
+	<select id="selectItemProWidthBindYougouItemPro" resultMap="taobaoYougouItemCatDtoPro">
+		select c.cid,c.pid,p.name,ty.yougou_prop_item_no,ty.id propBindId from 
+		tbl_merchant_taobao_item_cat_prop c
+		inner join tbl_merchant_taobao_item_prop p on c.pid=p.pid
+		inner join tbl_merchant_taobao_yougou_itemcat_templet i on i.taobao_cid = c.cid 
+		left join tbl_merchant_taobao_yougou_item_prop_templet ty on ty.taobao_cid=c.cid and ty.taobao_pid = c.pid
+		where i.id = #{catBindId,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 淘宝属性值中间表 -->
+	<resultMap id="taobaoItemCatPropValueDto" type="com.belle.yitiansystem.taobao.model.TaobaoItemCatPropValueDto">
+		<result column="cid" property="cid" jdbcType="BIGINT" />
+		<result column="pid" property="pid" jdbcType="BIGINT" />
+		<result column="vid" property="vid" jdbcType="BIGINT" />
+		<result column="name" property="vName" jdbcType="VARCHAR" />
+		<result column="bindId" property="propValBindId" jdbcType="VARCHAR" />
+		<result column="yougou_prop_value_no" property="yougouPropValueNo" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<!--根据淘宝属性查询属性值以及绑定的属性值-->
+	<select id="selectTaobaoItemProValWidthYouItemProVal" resultMap="taobaoItemCatPropValueDto">
+		select v.*,iv.name,pv.yougou_prop_value_no,pv.id bindId from tbl_merchant_taobao_item_cat_prop_value v 
+		inner join tbl_merchant_taobao_item_prop_value iv on iv.vid=v.vid
+		inner join tbl_merchant_taobao_yougou_itemcat_templet i on i.taobao_cid = v.cid
+		left join tbl_merchant_taobao_yougou_item_prop_value_templet pv on pv.taobao_cid = v.cid and pv.taobao_pid = v.pid and pv.taobao_vid = v.vid
+		where v.pid =  #{pid,jdbcType=VARCHAR} and v.cid= #{cid,jdbcType=VARCHAR}
+		and i.id = #{catBindId,jdbcType=VARCHAR}
+	</select>
+	
+	
+	<!-- 批量绑定分类属性 -->
+	<insert id="insertTaobaoYougouItemPropBatch" parameterType="java.util.List">
+        insert into tbl_merchant_taobao_yougou_item_prop_templet (id, taobao_cid, taobao_pid, yougou_cat_no, yougou_prop_item_no, is_yougou_must,operater,operated)
+        values 
+        <foreach collection="list" item="item" index="index" separator=",">
+        (
+             #{item.id,jdbcType=CHAR},
+             #{item.taobaoCid,jdbcType=BIGINT},
+             #{item.taobaoPid,jdbcType=BIGINT},
+             #{item.yougouCatNo,jdbcType=VARCHAR},
+             #{item.yougouPropItemNo,jdbcType=VARCHAR}, 
+             #{item.isYougouMust,jdbcType=BIGINT},
+             #{item.operater,jdbcType=VARCHAR},
+             #{item.operated,jdbcType=VARCHAR}
+        )
+        </foreach>
+    </insert>
+	
+	<!-- 更新分类绑定属性 -->
+	<update id="updateTaobaoYougouItemProp" parameterType="com.belle.yitiansystem.taobao.model.TaobaoYougouItemProp">
+    	update tbl_merchant_taobao_yougou_item_prop_templet
+	    <set >
+	      <if test="taobaoCid != null" >
+	        taobao_cid = #{taobaoCid,jdbcType=BIGINT},
+	      </if>
+	      <if test="taobaoPid != null" >
+	        taobao_pid = #{taobaoPid,jdbcType=BIGINT},
+	      </if>
+	      <if test="yougouCatNo != null" >
+	        yougou_cat_no = #{yougouCatNo,jdbcType=VARCHAR},
+	      </if>
+	      <if test="yougouPropItemNo != null" >
+	        yougou_prop_item_no = #{yougouPropItemNo,jdbcType=VARCHAR},
+	      </if>
+	      <if test="operated != null" >
+	        operated = #{operated,jdbcType=VARCHAR},
+	      </if>
+	    </set>
+	    where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<!-- 批量绑定分类属性值 -->
+	<insert id="insertTaobaoYougouItemPropValueBatch" parameterType="java.util.List">
+        insert into tbl_merchant_taobao_yougou_item_prop_value_templet (id, taobao_cid, taobao_pid,taobao_vid,yougou_cat_no,yougou_prop_item_no,yougou_prop_value_no,operater,operated)
+        values 
+        <foreach collection="list" item="item" index="index" separator=",">
+        (
+             #{item.id,jdbcType=CHAR},
+             #{item.taobaoCid,jdbcType=BIGINT},
+             #{item.taobaoPid,jdbcType=BIGINT},
+             #{item.taobaoVid,jdbcType=VARCHAR},
+             #{item.yougouCatNo,jdbcType=VARCHAR}, 
+             #{item.yougouPropItemNo,jdbcType=VARCHAR}, 
+             #{item.yougouPropValueNo,jdbcType=BIGINT},
+             #{item.operater,jdbcType=VARCHAR},
+             #{item.operated,jdbcType=VARCHAR}
+        )
+        </foreach>
+    </insert>
+    
+    <!-- 更新分类绑定属性值 -->
+	<update id="updateTaobaoYougouItemPropValue" parameterType="com.belle.yitiansystem.taobao.model.TaobaoYougouItemPropValue">
+    	update tbl_merchant_taobao_yougou_item_prop_value_templet
+	    <set >
+	      <if test="taobaoCid != null" >
+	        taobao_cid = #{taobaoCid,jdbcType=VARCHAR},
+	      </if>
+	      <if test="taobaoPid != null" >
+	        taobao_pid = #{taobaoPid,jdbcType=VARCHAR},
+	      </if>
+	      <if test="taobaoVid != null" >
+	        taobao_vid = #{taobaoVid,jdbcType=VARCHAR},
+	      </if>
+		  <if test="yougouCatNo != null" >
+	        yougou_cat_no = #{yougouCatNo,jdbcType=VARCHAR},
+	      </if>
+	      <if test="yougouPropItemNo != null" >
+	        yougou_prop_item_no = #{yougouPropItemNo,jdbcType=VARCHAR},
+	      </if>
+	      <if test="taobaoPid != null" >
+	        yougou_prop_value_no = #{yougouPropValueNo,jdbcType=VARCHAR},
+	      </if>
+	    </set>
+	    where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+		<!-- 批量删除属性值 -->
+	<delete id="deletePropValueBatch" parameterType="java.util.List">
+		delete from tbl_merchant_taobao_yougou_item_prop_value_templet where id in
+		(
+		<foreach collection="list" item="item" index="index" separator=",">
+           #{item,jdbcType=CHAR}
+        </foreach>
+        )
+	</delete>
+	
+	
+	
+	<delete id="deletePropBatchByTaobao_pid" parameterType="java.util.List">
+		delete from tbl_merchant_taobao_yougou_item_prop_value_templet where id in
+		(
+		<foreach collection="list" item="item" index="index" separator=",">
+           #{item,jdbcType=CHAR}
+        </foreach>
+        )
+	</delete>
+	
+	<!-- 根据属性删除属性值 -->
+	<delete id="deletePropValueBatch4Prop" parameterType="java.util.List">
+		delete from tbl_merchant_taobao_yougou_item_prop_value_templet where id in
+		(
+		<foreach collection="list" item="item" index="index" separator=",">
+           #{item,jdbcType=CHAR}
+        </foreach>
+        )
+	</delete>
+	
+	<!-- 根据cid  catno 批量删除属性 -->
+	<delete id="deletePropBatchByCidAndCatNo" parameterType="java.util.List">
+		delete from tbl_merchant_taobao_yougou_item_prop_templet where
+		<foreach collection="list" item="cat" separator="or">
+		 	(taobao_cid=#{cat.taobaoCid,jdbcType=CHAR} and yougou_cat_no = #{cat.yougouCatNo,jdbcType=CHAR})
+		</foreach>
+	</delete>
+	
+	<!-- 根据cid  catno 批量删除属性值-->
+	<delete id="deletePropValueBatchByCidAndCatNo" parameterType="java.util.List">
+		delete from tbl_merchant_taobao_yougou_item_prop_value_templet where
+		<foreach collection="list" item="cat" separator="or">
+		 	(taobao_cid=#{cat.taobaoCid,jdbcType=CHAR} and yougou_cat_no = #{cat.yougouCatNo,jdbcType=CHAR})
+		</foreach>
+	</delete>
+	
+	<!-- 根据pid查询淘宝属性 -->
+	<select id="selectTaobaoItemPropByPid" resultType="com.belle.yitiansystem.taobao.model.TaobaoItemProp">
+		select pid,name from tbl_merchant_taobao_item_prop where pid = #{pid}
+	</select>
+	
+	<!-- 根据VID查询淘宝属性值 -->
+	<select id="selectTaobaoItemPropValueByVid" resultType="com.belle.yitiansystem.taobao.model.TaobaoItemPropValue">
+		select vid,name from tbl_merchant_taobao_item_prop_value where vid = #{vid}
+	</select>
+</mapper>

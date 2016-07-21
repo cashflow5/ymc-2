@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yougou.kaidian.taobao.dao.TaobaoItemExtendPropMapper">
+	<!--属性-->
+	<resultMap id="taobaoItemProp" type="com.yougou.kaidian.taobao.model.TaobaoItemExtendYougouProp">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="num_iid" property="numIid" jdbcType="BIGINT" />
+		<result column="yougou_prop_item_no" property="yougouPropItemNo" jdbcType="VARCHAR" />
+		<result column="merchant_code" property="merchantCode" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="condition4TaobaoItemYougouProp" >
+	    <if test="null!=params" >
+	      <if test="null!=params.id and ''!=params.id" >
+	       	 and id  =  #{params.id,jdbcType=VARCHAR}
+	      </if>
+	      <if test="null!=params.numIid and ''!=params.numIid" >
+	       	 and num_iid  =  #{params.numIid,jdbcType=VARCHAR}
+	      </if>
+	      <if test="null!=params.merchantCode and ''!=params.merchantCode" >
+	       	 and merchant_code  =  #{params.merchantCode,jdbcType=VARCHAR}
+	      </if>
+	    </if>
+	</sql>
+
+	<select id="selectTaobaoItemYougouProp" parameterType="java.util.Map" resultMap="taobaoItemProp">
+		select * from tbl_merchant_taobao_item_extend_yougou_prop
+		where 1=1
+    	<include refid="condition4TaobaoItemYougouProp" />
+	</select>
+	<!-- 批量插入属性 -->
+	<insert id="insertTaobaoItemYougouPropBatch" parameterType="java.util.List">
+        insert into tbl_merchant_taobao_item_extend_yougou_prop (id,num_iid, yougou_prop_item_no,merchant_code)
+        values 
+        <foreach collection="list" item="item" index="index" separator=",">
+        (
+        	 #{item.id,jdbcType=VARCHAR},
+             #{item.numIid,jdbcType=BIGINT},
+             #{item.yougouPropItemNo,jdbcType=VARCHAR},
+             #{item.merchantCode,jdbcType=VARCHAR}
+        )
+        </foreach>
+    </insert>
+
+	<!--批量删除属性-->
+	<delete id="deleteTaobaoItemYougouPropByNumIid">
+		delete from tbl_merchant_taobao_item_extend_yougou_prop 
+		where num_iid = #{numIid,jdbcType=BIGINT} and merchant_code = #{item.merchantCode,jdbcType=VARCHAR}
+	</delete>
+	<!--属性值-->
+	<resultMap id="taobaoItemPropValue" type="com.yougou.kaidian.taobao.model.TaobaoItemExtendYougouPropValue">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="num_iid" property="numIid" jdbcType="BIGINT" />
+		<result column="yougou_prop_item_no" property="yougouPropItemNo" jdbcType="VARCHAR" />
+		<result column="yougou_prop_item_name" property="yougouPropItemName" jdbcType="VARCHAR" />
+		<result column="yougou_prop_value_no" property="yougouPropValueNo" jdbcType="VARCHAR" />
+		<result column="yougou_prop_value_name" property="yougouPropValueName" jdbcType="VARCHAR" />
+		<result column="merchant_code" property="merchantCode" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<sql id="condition4TaobaoItemYougouPropValue" >
+	    <if test="null!=params" >
+	      <if test="null!=params.id and ''!=params.id" >
+	       	 and id  =  #{params.id,jdbcType=VARCHAR}
+	      </if>
+	      <if test="null!=params.numIid and ''!=params.numIid" >
+	       	 and num_iid  =  #{params.numIid,jdbcType=VARCHAR}
+	      </if>
+	      <if test="null!=params.extendId and ''!=params.extendId" >
+	       	 and extend_id  =  #{params.extendId,jdbcType=VARCHAR}
+	      </if>
+	      <if test="null!=params.merchantCode and ''!=params.merchantCode" >
+	       	 and merchant_code  =  #{params.merchantCode,jdbcType=VARCHAR}
+	      </if>
+	    </if>
+	</sql>
+	
+		<!-- 批量插入属性 -->
+	<insert id="insertTaobaoItemYougouPropValueBatch" parameterType="java.util.List">
+        insert into tbl_merchant_taobao_item_extend_yougou_prop_value (id,num_iid,extend_id, yougou_prop_item_no,yougou_prop_item_name, yougou_prop_value_no,yougou_prop_value_name,merchant_code)
+        values 
+        <foreach collection="list" item="item" index="index" separator=",">
+        (
+        	 #{item.id,jdbcType=VARCHAR},
+             #{item.numIid,jdbcType=BIGINT},
+             #{item.extendId,jdbcType=VARCHAR},
+             #{item.yougouPropItemNo,jdbcType=VARCHAR},
+             #{item.yougouPropItemName,jdbcType=VARCHAR},
+             #{item.yougouPropValueNo,jdbcType=VARCHAR},
+             #{item.yougouPropValueName,jdbcType=VARCHAR},
+             #{item.merchantCode,jdbcType=VARCHAR}
+        )
+        </foreach>
+    </insert>
+    
+	<!--批量删除属性-->
+	<delete id="deleteTaobaoItemYougouPropValueByNumIid">
+		delete from tbl_merchant_taobao_item_extend_yougou_prop_value
+		where num_iid = #{numIid,jdbcType=BIGINT} and merchant_code = #{merchantCode,jdbcType=VARCHAR}
+	</delete>
+	
+	<delete id="deleteTaobaoItemYougouPropValueByExtendId">
+		delete from tbl_merchant_taobao_item_extend_yougou_prop_value
+		where num_iid = #{numIid,jdbcType=BIGINT} and merchant_code = #{merchantCode,jdbcType=VARCHAR} and extend_id = #{extendId,jdbcType=VARCHAR} 
+	</delete>
+	
+	<select id="selectTaobaoItemYougouPropValue" parameterType="java.util.Map" resultMap="taobaoItemPropValue">
+		select * from tbl_merchant_taobao_item_extend_yougou_prop_value
+		where 1=1
+    	<include refid="condition4TaobaoItemYougouPropValue" />
+	</select>
+	
+	<select id="selectTaobaoItemYougouPropValueByNumIid" parameterType="long" resultMap="taobaoItemPropValue">
+		select id,num_iid,merchant_code,yougou_prop_item_no,yougou_prop_item_name,group_concat(yougou_prop_value_no separator ',') as yougou_prop_value_no,group_concat(yougou_prop_value_name separator ',') as yougou_prop_value_name from tbl_merchant_taobao_item_extend_yougou_prop_value where num_iid = #{numIid} group by yougou_prop_item_no;
+	</select>
+	
+	<select id="selectTaobaoItemYougouPropValueByExtendId" parameterType="java.lang.String" resultMap="taobaoItemPropValue">
+		select id,num_iid,merchant_code,yougou_prop_item_no,yougou_prop_item_name,group_concat(yougou_prop_value_no separator ',') as yougou_prop_value_no,group_concat(yougou_prop_value_name separator ',') as yougou_prop_value_name from tbl_merchant_taobao_item_extend_yougou_prop_value where extend_id = #{extendId} group by yougou_prop_item_no;
+	</select>
+	
+	<!--尺码明细-->
+	<resultMap id="taobaoItemPropValueSize" type="com.yougou.kaidian.taobao.model.TaobaoItemExtendYougouPropValueSize">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="extend_id" property="extendId" jdbcType="VARCHAR" />
+		<result column="num_iid" property="numIid" jdbcType="BIGINT" />
+		<result column="yougou_prop_value_no" property="yougouPropValueNo" jdbcType="VARCHAR" />
+		<result column="yougou_prop_value_name" property="yougouPropValueName" jdbcType="VARCHAR" />
+		<result column="stock" property="stock" jdbcType="INTEGER" />
+		<result column="barcode" property="barcode" jdbcType="VARCHAR" />
+		<result column="weight" property="weight" jdbcType="INTEGER" />
+		<result column="merchant_code" property="merchantCode" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<sql id="condition4TaobaoItemYougouPropValueSize" >
+	    <if test="null!=params" >
+	      <if test="null!=params.id and ''!=params.id" >
+	       	 and id  =  #{params.id,jdbcType=VARCHAR}
+	      </if>
+	      <if test="null!=params.extendId and ''!=params.extendId" >
+	       	 and extend_id  =  #{params.extendId,jdbcType=VARCHAR}
+	      </if>
+	      <if test="null!=params.numIid and ''!=params.numIid" >
+	       	 and num_iid  =  #{params.numIid,jdbcType=VARCHAR}
+	      </if>
+	      <if test="null!=params.merchantCode and ''!=params.merchantCode" >
+	       	 and merchant_code  =  #{params.merchantCode,jdbcType=VARCHAR}
+	      </if>
+	    </if>
+	</sql>
+	<select id="selectTaobaoItemYougouPropValueSize" parameterType="java.util.Map" resultMap="taobaoItemPropValueSize">
+		select * from tbl_merchant_taobao_item_extend_yougou_prop_value_size
+		where 1=1
+    	<include refid="condition4TaobaoItemYougouPropValueSize" />
+    	order by yougou_prop_value_name 
+	</select>
+	
+	<!--批量删除-->
+	<delete id="deleteTaobaoItemYougouPropValueSizeByExtendId">
+		delete from tbl_merchant_taobao_item_extend_yougou_prop_value_size
+		where extend_id = #{extendId,jdbcType=VARCHAR} and merchant_code = #{merchantCode,jdbcType=VARCHAR}
+	</delete>
+	
+	<insert id="insertTaobaoItemYougouPropValueSizeBatch" parameterType="java.util.List">
+        insert into tbl_merchant_taobao_item_extend_yougou_prop_value_size (id,extend_id,num_iid,yougou_prop_value_no,yougou_prop_value_name,stock,barcode,weight,merchant_code)
+        values 
+        <foreach collection="list" item="item" index="index" separator=",">
+        (
+        	 #{item.id,jdbcType=VARCHAR},
+        	 #{item.extendId,jdbcType=VARCHAR},
+             #{item.numIid,jdbcType=BIGINT},
+             #{item.yougouPropValueNo,jdbcType=VARCHAR},
+             #{item.yougouPropValueName,jdbcType=VARCHAR},
+             #{item.stock,jdbcType=INTEGER},
+             #{item.barcode,jdbcType=VARCHAR},
+             #{item.weight,jdbcType=VARCHAR},
+             #{item.merchantCode,jdbcType=VARCHAR}
+        )
+        </foreach>
+    </insert>
+</mapper>

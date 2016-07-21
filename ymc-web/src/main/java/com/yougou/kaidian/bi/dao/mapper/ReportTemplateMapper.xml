@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yougou.kaidian.bi.dao.ReportTemplateMapper">
+	
+	<!-- 新增用户报表模板 -->
+	<insert id="addReportTemplate" parameterType="java.util.HashMap">
+		INSERT INTO tbl_merchant_report_template
+            (id,
+             name,
+			 merchant_code,
+			 login_name,
+             create_time,
+             update_time,
+             type)
+        values(#{template_id},
+             #{name},
+             #{merchant_code},
+             #{login_name},
+             Now(),
+             Now(),
+             1)
+	</insert>
+	
+	<!-- 新增模板指标关系 -->
+	<insert id="addReportTemplateIndexes" parameterType="java.util.HashMap">
+		INSERT INTO tbl_merchant_report_template_index
+            (template_id,
+             index_id,
+             create_time,
+             update_time)
+		VALUES
+		<foreach collection="indexList" item="indexName" index="index" separator="," >  
+	        (#{template_id},(select id from tbl_merchant_report_index where en_name = #{indexName} and type = 2 limit 1),now(),now())  
+	    </foreach>  
+	</insert>
+	
+	<!-- 删除模板 -->
+	<delete id="deleteReportTemplate" parameterType="int">
+		delete from tbl_merchant_report_template where id = #{tempalte_id}
+	</delete>
+	
+	<!-- 删除模板指标关系 -->
+	<delete id="deleteReportTemplateIndexes" parameterType="int">
+		delete from tbl_merchant_report_template_index where template_id = #{tempalte_id}
+	</delete>
+	
+	<!-- 更新模板信息 -->
+	<update id="updateReportTemplate" parameterType="java.util.HashMap">
+	
+		update tbl_merchant_report_template set name = #{name},update_time = now() 
+		where id = #{template_id}
+	</update>
+	
+	<!-- 根据模板ID查询模板对应指标列表 -->
+	<select id="queryReportIndexes" parameterType="String" resultType="java.util.HashMap">
+		SELECT t1.name  template_name,
+		       t2.label index_label,
+		       t2.en_name
+		FROM   tbl_merchant_report_template t1,
+		       tbl_merchant_report_index t2,
+		       tbl_merchant_report_template_index t3
+		WHERE  
+		       t1.id = t3.template_id
+		       AND t3.index_id = t2.id
+		   <!-- 查询对应模板指标 -->    
+	       <if test="value !=null">
+	       	   AND t1.id = #{value}	
+	       	   AND t1.type = 1
+	       </if>
+	       <!-- 查询系统默认预置模板指标 -->
+	       <if test="value == null">
+		       AND t1.id = 'default_template_001'
+		       AND t1.type = 0
+		   </if>    
+		ORDER  BY t2.order_by ASC
+	</select>
+	
+	<!-- 查询商家用户模板列表 -->
+	<select id="queryReportTemplate" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT t1.name  template_name,
+		       t1.id template_id,
+		       t1.type 
+		FROM   tbl_merchant_report_template t1
+		WHERE  t1.type = 1
+		       AND t1.merchant_code = #{merchant_code}
+		       AND t1.login_name = #{loginName}				    
+	</select>
+	
+	<!-- 查询系统默认预置模板 -->
+	<select id="queryDefaultTemplate" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT t1.name  template_name,
+		       t1.id template_id,
+		       t1.type 
+		FROM   tbl_merchant_report_template t1
+		WHERE  t1.type = 0
+		       AND t1.id = 'default_template_001'
+	</select>
+	
+	<!-- 查询系统指标列表 -->
+	<select id="queryIndexList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		select id,label,en_name,parent_name from tbl_merchant_report_index 
+		where parent_name is not null order by type asc,order_by asc
+	</select>
+</mapper>

@@ -1,0 +1,7 @@
+﻿
+.search_detail_box {padding:0 0px 5px 0}
+.search_detail_box p{padding-bottom:5px}
+.search_detail_box label{width:100px;text-align:right;display:inline-block;}
+.search_detail_box hr{border:none;border-bottom:1px dashed #ccc;height:1px;overflow:hidden}
+
+label.error{color: #EA5200}

@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>优购-商家中心-官方活动报名-报名详情</title>
+    <link rel="stylesheet" type="text/css" href="css/base.css" />
+    <link rel="stylesheet" type="text/css" href="css/mold.css" />
+</head>
+
+<body>
+    <script type="text/javascript" src="js/bootstrap.js"></script>
+    <!--#include file="layout/header.shtml" -->
+    <div id="newcontent" class="wrap clearfix mt10">
+        <!--#include file="layout/sidebar.shtml" -->
+        <div id="newmain" class="main_bd fr">
+            <div class="main_container">
+                <div class="normal_box">
+                    <p class="title site">当前位置：商家中心 &gt; 营销中心 &gt; 官方活动报名 &gt; 625年中大促女鞋会场</p>
+                    <div class="tab_panel">
+                        <div class="notice-box mt15 mb30">
+                            <p>活动名称：<strong>625年中大促女鞋会场</strong></p>
+                            <p>活动类型：满减</p>
+                            <p>报名时间： 2015年06月23日 13:43:36 - 2015年06月25日 23:59:59</p>
+                            <p>审核时间： 2015年06月26日 00:00:00 - 2015年06月26日 23:59:59</p>
+                            <p>活动时间： 2015年06月16日 00:00:00 - 2015年12月30日 23:59:59</p>
+                            <p>当前报名状态： <strong class="f_yellow">未报名</strong></p>
+                            <p><a href="javascript:;" class="btn-blue-1 xmedium">立即报名</a></p>
+                        </div>
+                        <ul class="tab">
+                            <li onclick="location.href='registrationInfo.shtml'" class="curr"><span>活动介绍</span></li>
+                            <li onclick="location.href='registrationActivities.shtml'"><span>活动报名</span></li>
+                        </ul>
+                        <div class="tab_content">
+                            <!--信息内容start-->
+                            <div class="info-box-content bluebox">
+                                <h1>625年中大促女鞋会场</h1>
+                                <h3>一、活动介绍：</h3>
+                                <p>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>
+                                <h3>二、活动方式：</h3>
+                                <p>1）xxxxxxxxxxxxxx</p>
+                                <p>2）xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>
+                                <p>3）xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>
+                                <p>4）xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>
+                                <h3>三、报名要求：</h3>
+                                <p>1.商家要求</p>
+                                <p>1）xxxxxxxxxxxxxxxxxxx</p>
+                                <p>2）xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>
+                                <p>3）xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>
+                                <p>2.商品要求</p>
+                                <p>1）xxxxxxxxxxxxxxx</p>
+                                <p>2）xxxxxxxxxxxxxxxxxxxxxxxx</p>
+                                <p>3）xxxxxxxxxxxxx</p>
+                                <p>4）xxxxxxxxxxxxxxxxxx</p>
+                                <p>5）xxxxxxxxxxxxxxxx</p>
+                                <p>6）xxxxxxxxxxxxxxxxxxxxxxxx</p>
+                            </div>
+                            <!--信息内容end-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--#include file="layout/footer.shtml" -->
+    <script>
+    // $.dialog.open('basic_info.shtml',{title:'提醒'});
+    $(function() {
+        $('.flag').click(function() {
+            var $this = $(this);
+            ygdg.dialog({
+                title: "添加备注信息",
+                content: '<dl class="flagForm_dl clearfix"><dt class="label">标记：</dt><dd class="pt3"><input type="radio" id="mark1" class="flagradio" name="mark" value="flag_red" /><label class="flaglabel flag flag_red" for="mark1"></label><input type="radio" id="mark2" class="flagradio" name="mark" value="flag_yellow" /><label class="flaglabel flag flag_yellow" for="mark2"></label><input type="radio" id="mark3" class="flagradio" name="mark" value="flag_green" /><label class="flaglabel flag flag_green" for="mark3"></label><input type="radio" id="mark4" class="flagradio" name="mark" value="flag_blue"/><label class="flaglabel flag flag_blue" for="mark4"></label><input type="radio" id="mark5" class="flagradio" name="mark" value="flag_purple"/><label class="flaglabel flag flag_purple" for="mark5"></label></dd></dl><dl class="flagForm_dl clearfix"><dt class="label">内容：</dt><dd><textarea class="flag_textarea"></textarea></dd></dl>',
+                max: false,
+                min: false,
+                width: '420px',
+                height: '205px',
+                lock: true,
+                ok: function() {
+                    var radio_val = $('input[name="mark"]:checked').val();
+                    if (radio_val) {
+                        $this.attr('class', "flag " + radio_val);
+                    }
+                }
+            });
+        }).hover(function() {
+            var flag_class = $(this).attr('class');
+            if (flag_class.length != 4) {
+                $(this).siblings('.flag_tip').removeClass('hide');
+            }
+        }, function() {
+            $(this).siblings('.flag_tip').addClass('hide');
+        })
+    });
+    </script>
+</body>
+
+</html>

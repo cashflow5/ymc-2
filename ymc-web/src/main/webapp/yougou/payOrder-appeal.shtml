@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>优购-商家中心-赔付工单详情-申诉中</title>
+    <link rel="stylesheet" type="text/css" href="css/icon.css" />
+    <link rel="stylesheet" type="text/css" href="css/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="css/base.css" />
+    <link rel="stylesheet" type="text/css" href="css/mold.css" />
+    <link rel="stylesheet" type="text/css" href="css/merchans_center.css" />
+</head>
+
+<body>
+    <script type="text/javascript" src="js/bootstrap.js"></script>
+    <script type="text/javascript" src="js/navs.js"></script>
+    <!--#include file="layout/header.shtml" -->
+    <div id="newcontent" class="wrap clearfix mt10">
+        <!--#include file="layout/sidebar.shtml" -->
+        <div id="newmain" class="main_bd fr">
+            <div class="main_container">
+                <div class="normal_box">
+                    <p class="title site">当前位置：商家中心 &gt; 售后 &gt; 赔付管理</p>
+                    <div class="tab_panel relative">
+                        <div class="tab_content">
+                            <div class="pay-box">
+                                <h3 class="pt10">赔付工单详情</h3>
+                                <ul class="pay-list clearfix">
+                                    <li><span class="stitle">工单号：</span>gd1505241421360001</li>
+                                    <li><span class="stitle">创建时间：</span>2015-03-12 23:28:39</li>
+                                    <li><span class="stitle">工单状态：</span><span class="bold">不同意（申诉中）</span></li>
+                                    <li><span class="stitle">订单号：</span>C650519221586_1</li>
+                                    <li><span class="stitle">订单状态：</span>已发货</li>
+                                    <li><span class="stitle">赔付方式：</span>礼品卡</li>
+                                    <li><span class="stitle">等值金额：</span><span class="cred bold">10</span>元</li>
+                                    <li><span class="stitle">赔付原因：</span>运费问题</li>
+                                    <li class="w958 pb10"><span class="stitle">申请理由：</span>您好，订单由于商品发错货原因客户垫付运费10元寄回商品，EMS快递5064200240602，按照赔付标准申请补偿10元。</li>
+                                </ul>
+                            </div>
+                            <div class="pay-box">
+                                <h3>商家处理信息</h3>
+                                <ul class="pay-list clearfix">
+                                    <li><span class="stitle">处理时间：</span>2015-03-14 09:44:11</li>
+                                    <li><span class="stitle">处理人：</span>yg_maiwei</li>
+                                    <li><span class="stitle">处理状态：</span>不同意（申诉中）</li>
+                                    <li class="w958 clearfix"><span class="stitle">审核意见：</span>
+                                        <span class="text">
+                                            此单我司不承担运费，此单顾客是反馈收到的颜色不是想要的颜色，商品均以收到的实物为准，且此商品只有一种颜色，页面也是有显示的，所以我司不承担运费。
+                                        </span>
+                                    </li>
+                                    <li class="w958 clearfix mt15"><span class="stitle fl mt20">凭证附件：</span>
+                                        <div class="nav-default fl">
+                                            <div class="navs-wrap">
+                                                <ul class="navs">
+                                                    <li class="active"><img src="images/navs-img-1.jpg" alt="" /></li>
+                                                    <li class="active"><img src="images/navs-img-2.jpg" alt="" /></li>
+                                                    <li class="active"><img src="images/navs-img-3.jpg" alt="" /></li>
+                                                    <li class="active"><img src="images/navs-img-4.jpg" alt="" /></li>
+                                                    <li class="active"><img src="images/navs-img-5.jpg" alt="" /></li>
+                                                    <li class="active"><img src="images/navs-img-2.jpg" alt="" /></li>
+                                                    <li class="active"><img src="images/navs-img-4.jpg" alt="" /></li>
+                                                    <li class="active"><img src="images/navs-img-3.jpg" alt="" /></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--#include file="layout/footer.shtml" -->
+</body>
+
+</html>

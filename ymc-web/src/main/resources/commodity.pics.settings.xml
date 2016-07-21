@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<comment>商品图片设置</comment>
+	<!-- 图片FTP服务器 -->
+	<entry key="image.ftp.server"><![CDATA[10.0.30.193]]></entry>
+	<!-- 图片FTP端口 -->
+	<entry key="image.ftp.port"><![CDATA[21]]></entry>
+	<!-- 图片FTP用户 -->
+	<entry key="image.ftp.username"><![CDATA[shop]]></entry>
+	<!-- 图片FTP用户密码 -->
+	<entry key="image.ftp.password"><![CDATA[shop]]></entry>
+	<!-- 图片FTP连接超时时效 -->
+	<entry key="image.ftp.connect.timeout"><![CDATA[60000]]></entry>
+	<!-- 图片FTP临时空间 -->
+	<entry key="image.ftp.temporary.space"><![CDATA[/merchantpics/{0}/]]></entry>
+	<!-- 商家中心图片URL正则表达式 -->
+	<entry key="merchants.image.regex"><![CDATA[(?im)http://10\.0\.30\.193/{1,}pics/{1,}merchantpics/{1,}SP[0-9]{14,}/{1,}[^\\/:\*\?"<>\|]{1,}\.jpg]]></entry>
+	<!-- 优购前台图片URL正则表达式 -->
+	<entry key="yougou.image.regex"><![CDATA[(?im)http://10\.0\.30\.193/{1,}pics/{1,}[^\\/:\*\?"<>\|]{1,}/{1,}[0-9]{4,}/{1,}[0-9]{8,}/{1,}[^\\/:\*\?"<>\|]{1,}\.jpg]]></entry>
+	<!-- 商品描述图片链接合法正则表达式 -->
+	<entry key="yougou.valid.image.regex"><![CDATA[(http:\/\/i[1-2]\.ygimg\.cn\/{1,}.{1,}\.jpg)|(http:\/\/img\.yougou\.com\/{1,}.{1,}\.jpg)|(http:\/\/10\.0\.30\.193\/{1,}.{1,}\.jpg)]]></entry>
+    <!-- 图片临时文件夹 -->
+	<entry key="windows.commodity.temporary.picdir"><![CDATA[C:\yougoupic]]></entry>
+	<entry key="unix.commodity.temporary.picdir"><![CDATA[/data/temporarypic]]></entry>
+	<!-- 图片预处理临时空间 -->
+	<entry key="image.ftp.pre.temp.space"><![CDATA[/merchantpics/temp/{0}/]]></entry>
+	
+	<!-- 图片FTP服务器 -->
+	<entry key="image.cdn.server"><![CDATA[10.0.30.193]]></entry>
+	
+	<!-- 赔付管理上传凭证图片FTP文件夹 -->
+	<entry key="compensate.image.ftp.space"><![CDATA[/merchantpics/compensate/{0}/]]></entry>
+	
+</properties>

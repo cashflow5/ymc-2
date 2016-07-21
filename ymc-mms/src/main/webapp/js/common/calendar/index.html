@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<title>在线演示 - Demo by http://www.codefans.net</title>
+    <meta name="keywords" content="lhg,lhgcalendar,calendar,date,datepicker,time,日历,弹出日历,js日历,组件,js组件,js库,lhgcore,javascript,jquery,window,clientside,control,open source,LGPL,dhtml,html,xhtml,word,plugins"/>
+    <meta name="description" content="lhgcalendar是一功能强大的简单迷你并且高效的弹出日历组件,基于网络访问并且兼容IE 6.0+,Firefox 3.0+,Opera 9.6+,Chrome 1.0+,Safari 3.22+."/>
+    <meta name="copyright" content="lhgcore.com"/>
+	
+	<script type="text/javascript" src="lhgcore.min.js"></script>
+	<script type="text/javascript" src="lhgcalendar.min.js"></script>
+	<script type="text/javascript">
+J(function(){
+    J('#inp1').calendar();
+    J('#img').calendar({ id:'inp3' });
+	J('#inp4').calendar({ btnBar:false });
+	J('#inp5').calendar({ format:'yyyy-MM-dd HH:mm:ss' });
+	J('#inp6').calendar({ format:'yyyy年MM月dd日', real:'realInp' });
+	J('#inp7').calendar({ minDate:'2011-04-10', maxDate:'2011-05-27' });
+	J('#inp8').calendar({ maxDate:'%y-%M-%d' });
+	J('#inp9').calendar({ minDate:'%y-%M-%d' });
+	J('#inp10').calendar({ minDate:'%y-04-%d', maxDate:'%y-%M-25' });
+	J('#inp11').calendar({ maxDate:'#inp12' });
+	J('#inp12').calendar({ minDate:'#inp11' });
+	J('#inp13').calendar({ maxDate:'#inp14', format:'yyyyMMdd', targetFormat:'yyyy年MM月dd日' });
+	J('#inp14').calendar({ minDate:'#inp13', format:'yyyy年MM月dd日', targetFormat:'yyyyMMdd' });
+    J('#inp15').calendar({ disWeek:'6' });
+    J('#inp16').calendar({ disWeek:'0,4' });
+	J('#inp17').calendar({ disDate:['5$'] });
+	J('#inp18').calendar({ disDate:['^19'] });
+	J('#inp19').calendar({ disDate:['2011-05-05','2011-05-24'] });
+	J('#inp20').calendar({ disDate:['2011-..-04','2011-05-29'] });
+	J('#inp21').calendar({ disDate:['200[0-8]-05-01','2011-05-29'] });
+	J('#inp22').calendar({ disDate:['....-..-07','%y-%M-%d'] });
+	J('#inp23').calendar({ disDate:['5$'], enDate:true });
+	J('#inp24').calendar({ onSetDate:function(){alert(this.inpObj.value);} });
+	J('#inp25').calendar({ onSetDate:function(){alert('日期框原来的值为:'+this.inpObj.value+',要用新选择的值:'+this.getDateStr('date')+'覆盖吗?');} });
+});
+
+function opcal(){
+    J.calendar.Show();
+}
+
+	</script>
+</head>
+
+<body>
+	    <p><input class="runcode" id="inp5" style="width:200px;"/></p>
+</body>
+</html>

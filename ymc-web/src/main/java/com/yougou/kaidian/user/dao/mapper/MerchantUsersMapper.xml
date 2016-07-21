@@ -1,0 +1,637 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yougou.kaidian.user.dao.MerchantUsersMapper">
+	<!-- 商家帐号信息实体类 -->
+	<resultMap id="MerchantsById" type="com.yougou.kaidian.user.model.pojo.MerchantUsers">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="login_name" property="loginName" jdbcType="VARCHAR" />
+		<result column="password" property="password" jdbcType="VARCHAR" />
+		<result column="mobile_code" property="mobileCode" jdbcType="VARCHAR" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="user_name" property="userName" jdbcType="INTEGER" />
+	</resultMap>
+
+	<!-- 商家发货地址实体类 -->
+	<resultMap id="consignmentAdressId" type="com.yougou.kaidian.user.model.pojo.MerchantconsignmentAdress">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="supply_id" property="supplyId" jdbcType="VARCHAR" />
+		<result column="consignment_name" property="consignmentName" jdbcType="VARCHAR" />
+		<result column="phone" property="phone" jdbcType="INTEGER" />
+		<result column="tell" property="tell" jdbcType="VARCHAR" />
+		<result column="post_code" property="postCode" jdbcType="VARCHAR" />
+		<result column="area" property="hometown" jdbcType="VARCHAR" />
+		<result column="adress" property="adress" jdbcType="VARCHAR" />
+		<result column="creater" property="creater" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="inits_merchants" parameterType="java.lang.String" resultMap="MerchantsById">
+		SELECT
+			id,login_name,user_name,password,mobile_code,remark
+		FROM
+			tbl_merchant_user t1
+		WHERE
+			t1.delete_flag=1 AND t1.id=#{id}
+  	</select>
+  	
+  	<select id="queryUidByMerchantCode" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT
+			id
+		FROM
+			tbl_merchant_user t1
+		WHERE
+			t1.delete_flag=1 AND t1.is_administrator=1 AND t1.merchant_code=#{merchantCode} order by t1.create_time limit 1
+  	</select>
+
+	<select id="showMerchantMessage" parameterType="java.lang.String" resultType="java.util.Map">
+		SELECT
+			t2.id,t1.supplier_code,t1.supplier,t2.status
+		FROM tbl_sp_supplier t1
+			INNER JOIN tbl_merchant_user t2 ON(t2.merchant_code=t1.supplier_code) 
+		WHERE
+			t1.delete_flag=1 AND t2.delete_flag=1 AND t2.id=#{id}
+		ORDER BY t2.create_time DESC LIMIT 1 
+  	</select>
+
+	<select id="getMerchantsAuthority" parameterType="com.yougou.kaidian.user.model.vo.MerchantsUserAuthorityVo" resultType="java.util.Map">
+		SELECT
+			t3.authrity_name,t3.authrity_url
+		FROM
+			tbl_merchant_role_authority t1
+			INNER JOIN tbl_merchant_user_role t2 ON t1.role_id=t2.role_id
+			INNER JOIN tbl_merchant_authority t3 ON t3.id=t1.authority_id
+		WHERE
+			t2.user_id=#{id} AND t3.authrity_module=#{authrityModule} AND t3.authrity_module!=0
+		ORDER BY t3.sort_no ASC
+  	</select>
+
+	<select id="getMerchantsAuthorityByUserId" parameterType="com.yougou.kaidian.user.model.vo.MerchantsUserAuthorityVo" resultType="java.util.Map">
+		SELECT
+			t3.authrity_name,t3.authrity_url
+		FROM
+			tbl_merchant_role_authority t1
+			INNER JOIN tbl_merchant_user_role t2 ON t1.role_id=t2.role_id
+			INNER JOIN tbl_merchant_authority t3 ON t3.id=t1.authority_id
+		WHERE
+			t2.user_id=#{id} AND t3.authrity_name=#{authrityName} AND t3.authrity_module=0
+		ORDER BY t3.sort_no ASC
+  	</select>
+
+
+	<select id="getMerchantsUserAuthority" parameterType="com.yougou.kaidian.user.model.vo.MerchantsUserAuthorityVo" resultType="java.util.Map">
+		SELECT
+			t2.authrity_name,t2.authrity_url,t2.authrity_module
+		FROM
+			tbl_merchant_user_authority t1
+			INNER JOIN tbl_merchant_authority t2 ON t1.authority_id=t2.id
+		WHERE
+			t1.user_id=#{id} AND t2.authrity_module=#{authrityModule} AND t2.authrity_module!=0
+		ORDER BY t2.sort_no asc
+  	</select>
+
+	<select id="getMerchantsUserAuthorityByUserId" parameterType="com.yougou.kaidian.user.model.vo.MerchantsUserAuthorityVo" resultType="java.util.Map">
+		SELECT
+			t2.authrity_name,t2.authrity_url
+		FROM
+			tbl_merchant_user_authority t1
+			INNER JOIN tbl_merchant_authority t2 ON t1.authority_id=t2.id
+		WHERE
+			t1.user_id=#{id} AND t2.authrity_name=#{authrityName} AND t2.authrity_module=0
+		ORDER BY t2.sort_no asc
+  	</select>
+
+	<select id="queryMerchantsByWhere" resultType="map">
+		SELECT
+			t1.id,login_name,t1.user_name,supplier_code,supplier,inventory_code,mobile_code,
+			create_time,status,t1.remark,t1.is_administrator
+		FROM
+			tbl_merchant_user t1
+			INNER JOIN tbl_sp_supplier t2 ON (t1.merchant_code=t2.supplier_code) 
+		WHERE
+			t1.delete_flag=1 AND t2.delete_flag=1 and t1.login_name != #{lgName} and t1.is_administrator = 0 
+			<!-- id  -->
+			<if test=" merchantUsers.merchantCode != null and merchantUsers.merchantCode != '' ">
+				AND t1.merchant_code=#{merchantUsers.merchantCode}
+			</if>
+			<!-- 账号 <![CDATA[>=]]>  -->
+			<if test=" merchantUsers.loginName != null and merchantUsers.loginName != '' ">
+				AND t1.login_name LIKE CONCAT('%','${merchantUsers.loginName}','%' )
+			</if>
+			<!-- 真实姓名 -->
+			<if test=" merchantUsers.userName != null and merchantUsers.userName != '' ">
+				 AND t1.user_name LIKE CONCAT('%','${merchantUsers.userName}','%' )
+			</if>
+			<!-- 手机号码 -->
+			<if test="merchantUsers.mobileCode != null and merchantUsers.mobileCode != ''">
+				 AND t1.mobile_code LIKE CONCAT('%','${merchantUsers.mobileCode}','%' )
+			</if>
+			<!-- 状态-->
+			<if test="merchantUsers.status != null">
+				 AND t1.status=#{merchantUsers.status}
+			</if>
+		ORDER BY create_time ASC
+  	</select>
+ 	<!-- 获取总条数 -->
+  	<select id="getMerchantsCounts" resultType="int" >
+    	SELECT
+      		COUNT(*)
+		FROM
+      		tbl_merchant_user t1
+      		INNER JOIN tbl_sp_supplier t2 ON(t1.merchant_code=t2.supplier_code) 
+    	WHERE
+    		t1.merchant_code=#{id} and t1.login_name != #{lgName} and t1.is_administrator = 0 AND t1.delete_flag=1 AND t2.delete_flag=1  
+  	</select>
+  	<select id="queryMerchantsListBySupplierId"  resultType="map" parameterType="java.lang.String" >
+    	SELECT
+			t2.id,supplier_code,login_name,PASSWORD,create_time,supplier,english_name,simple_name,user_name,
+			supplier_type,bank,sub_bank,duty_code,creator,coupons_allocation_proportion,account,tax_rate,
+			business_license,business_local,business_vilidity,tallage_no,institutional,taxpayer,bank_local,contact 
+    	FROM
+    		tbl_sp_supplier t1
+			INNER JOIN tbl_merchant_user t2 ON (t2.merchant_code=t1.supplier_code)
+    	WHERE
+    		t2.id = #{id} AND t1.delete_flag=1 AND t2.delete_flag=1
+  	</select>
+  
+   	<select id="merchantsLogin" resultType="map" parameterType="java.lang.String" >
+    	SELECT
+     		t1.id,t1.status,t1.password,t1.login_name,t1.email,t1.emailstatus,t1.is_administrator,t1.strength,t1.mobile_code,t1.delete_flag,t1.is_yougou_admin,t1.merchant_code
+    	FROM
+    		tbl_merchant_user t1
+    	WHERE
+    		t1.login_name = #{loginAccount} AND t1.delete_flag = 1 
+  	</select>
+  	
+  	<select id="merchantById" resultType="map" parameterType="java.lang.String" >
+    	SELECT
+     		t1.id,t1.status,t1.password,t1.login_name,t1.email,t1.emailstatus,t1.is_administrator,t1.delete_flag,t1.is_yougou_admin,t1.merchant_code
+    	FROM
+    		tbl_merchant_user t1
+    	WHERE
+    		t1.id = #{id} AND t1.delete_flag = 1
+  	</select>
+  	<select id="getMerchantAndWarehouse" resultType="map" parameterType="java.lang.String" >
+    	SELECT
+     		t2.is_valid,t2.id AS supplierId,t2.supplier,t2.supplier_code,t2.inventory_code,
+     		t2.delete_flag as supplierFlag,t2.is_input_yougou_warehouse
+    	FROM tbl_sp_supplier t2
+    	WHERE
+    		t2.supplier_code = #{merchantCode} AND t2.delete_flag = 1
+  	</select>
+  	<select id="queryYougouAdminMerchants" resultType="map" parameterType="com.yougou.kaidian.user.model.pojo.MerchantUsers">
+  		SELECT DISTINCT t2.id,t1.supplier,t1.supplier_code,t1.is_input_yougou_warehouse,t1.delete_flag,t1.is_valid
+			FROM tbl_sp_supplier t1
+			INNER JOIN tbl_merchant_user_supplier t2 ON t1.supplier_code = t2.merchant_code
+			left JOIN tbl_sp_limit_brand t3 ON t3.supply_id = t1.id
+		WHERE
+			t2.merchant_user_id = #{id,jdbcType=VARCHAR} AND t1.supplier_type='招商供应商' AND t1.delete_flag = 1
+		<if test="merchantCode != null and merchantCode != ''">
+			AND t1.supplier_code = #{merchantCode,jdbcType=VARCHAR}
+		</if>
+		<if test="merchantName != null and merchantName != ''">
+			AND t1.supplier LIKE '%${merchantName}%'
+		</if>
+		<if test="brands != null and brands != ''">
+			AND t3.brand_no in (${brands})
+		</if>
+		ORDER BY CONVERT(t1.supplier USING GBK)
+	</select>
+  	<select id="queryYougouAdminMerchantCount" resultType="Integer" parameterType="com.yougou.kaidian.user.model.pojo.MerchantUsers">
+  		SELECT COUNT(t.id)
+			FROM (SELECT DISTINCT t2.id,t1.supplier,t1.supplier_code,t1.is_input_yougou_warehouse,t1.delete_flag,t1.is_valid
+			FROM tbl_sp_supplier t1
+			INNER JOIN tbl_merchant_user_supplier t2 ON t1.supplier_code = t2.merchant_code
+			left JOIN tbl_sp_limit_brand t3 ON t3.supply_id = t1.id
+		WHERE
+			t2.merchant_user_id = #{id,jdbcType=VARCHAR} AND t1.supplier_type='招商供应商' AND t1.delete_flag = 1
+		<if test="merchantCode != null and merchantCode != ''">
+			AND t1.supplier_code = #{merchantCode,jdbcType=VARCHAR}
+		</if>
+		<if test="merchantName != null and merchantName != ''">
+			AND t1.supplier LIKE '%${merchantName}%'
+		</if>
+		<if test="brands != null and brands != ''">
+			AND t3.brand_no in (${brands})
+		</if>) t
+	</select>
+  	<select id="getConsignmentAdressList" parameterType="java.lang.String" resultMap="consignmentAdressId">
+   		SELECT
+			id,supply_id,consignment_name,phone,tell,post_code,area,adress,creater,
+   			create_time,remark FROM tbl_merchant_consignmentadress 
+   		WHERE
+   			supply_id=#{id}
+  	</select>
+  
+  	<delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    	UPDATE tbl_merchant_user SET delete_flag=0 WHERE id = #{id,jdbcType=VARCHAR}
+  	</delete>
+  
+  	<!-- 判断登录帐号是否存在 -->
+  	<select id="exitsLoginAccount" parameterType="java.lang.String" resultType="int">
+		SELECT
+			COUNT(1)
+		FROM
+			tbl_merchant_user
+		WHERE
+			login_name = #{value} AND delete_flag=1
+	</select>
+	
+    <!-- 根据子账户商家编号查询超级管理员账户id -->
+	<select id="getMerchantUserIdByMerchantCode" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT
+			t1.id
+		FROM
+			tbl_merchant_user t1
+		WHERE
+			t1.merchant_code=#{value} AND t1.is_administrator=1 AND delete_flag=1; 
+	</select>
+
+ 	<!-- 根据帐号Id查询该帐号具备的权限-->
+	<select id="getMerchantChildUserAuthorityList" parameterType="java.lang.String" resultType="java.util.Map">	  
+		SELECT
+			*
+		FROM
+			(
+				SELECT
+				    t2.id,
+					t2.authrity_name
+				FROM
+					tbl_merchant_user_authority t1
+				INNER JOIN tbl_merchant_authority t2 ON t1.authority_id = t2.id
+				LEFT JOIN tbl_merchant_authority t3 ON t2.parent_id = t3.id
+				WHERE
+					t1.user_id = #{value}
+				AND t2.authrity_module != 0
+				UNION
+					SELECT
+					    t22.id,
+						t22.authrity_name
+					FROM
+						tbl_merchant_role_authority t11
+					INNER JOIN tbl_merchant_authority t22 ON t11.authority_id = t22.id
+					LEFT JOIN tbl_merchant_authority t23 ON t22.parent_id = t23.id
+					INNER JOIN tbl_merchant_user_role r11 ON t11.role_id = r11.role_id
+					INNER JOIN tbl_merchant_role r22 ON t11.role_id = r22.id
+					WHERE
+						r11.user_id = #{value}
+					AND r22.`status` = '1'
+			) AS s
+	</select>
+	
+   	<insert id="add_merchants" parameterType="com.yougou.kaidian.user.model.pojo.MerchantUsers">
+      	INSERT INTO
+      		tbl_merchant_user (id, merchant_code,user_name,login_name,status,password,mobile_code,create_time,remark,is_administrator,delete_flag,strength)
+      	VALUES
+      		(#{id,jdbcType=VARCHAR}, #{merchantCode,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR},
+      		#{loginName,jdbcType=VARCHAR},#{status,jdbcType=INTEGER}, #{password,jdbcType=VARCHAR}, #{mobileCode,jdbcType=VARCHAR}, 
+      		#{createTime,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},#{isAdministrator,jdbcType=INTEGER},#{deleteFlag,jdbcType=INTEGER},
+      		#{strength,jdbcType=VARCHAR})
+  	</insert>
+  
+  	<update id="update_merchants" parameterType="com.yougou.kaidian.user.model.pojo.MerchantUsers">
+     	UPDATE
+     		tbl_merchant_user 
+     	SET
+     		login_name = #{loginName,jdbcType=INTEGER},
+     		<if test="password!=null and password!=''">password = #{password,jdbcType=VARCHAR},</if>
+      		create_time = #{createTime,jdbcType=DATE},
+      		remark = #{remark,jdbcType=VARCHAR},
+      		user_name = #{userName,jdbcType=VARCHAR},
+      		mobile_code = #{mobileCode,jdbcType=VARCHAR},
+      		delete_flag = #{deleteFlag,jdbcType=INTEGER},
+      		strength = #{strength,jdbcType=VARCHAR}
+      	WHERE
+      		id = #{id,jdbcType=VARCHAR}
+  	</update>
+  
+ 	<update id="updateStauts" parameterType="com.yougou.kaidian.user.model.pojo.MerchantUsers">
+     	UPDATE
+     		tbl_merchant_user
+     	SET
+     		status = #{status,jdbcType=INTEGER}
+      	WHERE
+			id = #{id,jdbcType=VARCHAR} AND delete_flag=1
+  	</update>
+  
+  	<update id="update_password" parameterType="com.yougou.kaidian.user.model.pojo.MerchantUsers">
+     	UPDATE
+     		tbl_merchant_user
+     	SET
+     		password = #{password,jdbcType=VARCHAR}
+     		<if test="strength!=null and strength!=''">
+     			,strength = #{strength,jdbcType=VARCHAR}
+     		</if>
+      	WHERE
+      		id = #{id,jdbcType=VARCHAR} AND delete_flag=1
+  	</update>
+  	
+   	<insert id="addMerchantUserAuthority" parameterType="com.yougou.kaidian.user.model.pojo.UserAuthority">
+     	INSERT INTO
+     		tbl_merchant_user_authority
+     		(id,user_id,authority_id,create_date,remark) 
+      	VALUES
+      		(#{id,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{authorityId,jdbcType=VARCHAR},
+      		#{createDate,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR})
+  	</insert>
+  	
+  	<update id="saveEmail" parameterType="java.util.Map">
+     	UPDATE 
+     	   tbl_merchant_user
+     	SET
+     	   email = #{email,jdbcType=VARCHAR},
+     	   emailstatus = 0
+      	WHERE
+           id=#{id,jdbcType=VARCHAR};
+  	</update>
+  	
+  	<update id="updateEmail" parameterType="java.util.Map">
+     	UPDATE 
+     	   tbl_merchant_user
+     	SET
+     	   email=#{email,jdbcType=VARCHAR},
+     	   emailstatus = #{emailstatus,jdbcType=INTEGER}
+      	WHERE
+           id=#{id,jdbcType=VARCHAR};
+  	</update>
+  	
+  	<select id="queryCommonUseLogisticsCompany" parameterType="java.lang.String" resultType="java.util.Map">
+  		select logistic_company_code,logistics_company_name 
+  		from tbl_merchant_common_logisticscompany where merchant_code = #{merchantCode} 
+  		order by sort_no
+  	</select>
+  	
+  	<select id="getCommonUseLogisticsSize" parameterType="java.lang.String" resultType="java.lang.Integer">
+  		select count(id) from tbl_merchant_common_logisticscompany where merchant_code = #{merchantCode}
+  	</select>
+  	
+  	<delete id="deleteCommonUseExpress" parameterType="java.lang.String">
+  		delete from tbl_merchant_common_logisticscompany where merchant_code = #{merchantCode}
+  	</delete>
+  
+   	<delete id="deleteMerchantUserAuthorityByUserId" parameterType="java.lang.String">
+      	DELETE FROM tbl_merchant_user_authority WHERE user_id=#{value}
+  	</delete>
+  
+   	<!-- 添加商家发货地址信息-->
+   	<insert id="addMerchantConsignmentAdress" parameterType="com.yougou.kaidian.user.model.pojo.MerchantconsignmentAdress">
+      	INSERT INTO
+      		tbl_merchant_consignmentadress
+      		(id,supply_id,consignment_name,phone,tell,post_code,area,adress,creater,create_time,remark)
+		VALUES
+			(#{id,jdbcType=VARCHAR},#{supplyId,jdbcType=VARCHAR},#{consignmentName,jdbcType=VARCHAR},#{phone,jdbcType=VARCHAR},
+			#{tell,jdbcType=VARCHAR},#{postCode,jdbcType=VARCHAR},#{hometown,jdbcType=VARCHAR},#{adress,jdbcType=VARCHAR},
+			#{creater,jdbcType=VARCHAR},#{createTime,jdbcType=VARCHAR},#{remark,jdbcType=VARCHAR})
+  	</insert>
+  	
+  	<insert id="saveCommonUseExpress" parameterType="com.yougou.kaidian.user.model.pojo.CommonUseLogisticsCompany">
+  		insert into tbl_merchant_common_logisticscompany(id,logistic_company_code,logistics_company_name,merchant_code,sort_no)
+  		 values(#{id,jdbcType=VARCHAR},
+  		 #{logisticCompanyCode,jdbcType=VARCHAR},
+  		 #{logisticsCompanyName,jdbcType=VARCHAR},
+  		 #{merchantCode,jdbcType=VARCHAR},
+  		 #{sortNo,jdbcType=INTEGER})
+  	</insert>
+  
+   	<!-- 添加商家发货地址信息-->
+  	<update id="updateMerchantConsignmentAdress" parameterType="com.yougou.kaidian.user.model.pojo.MerchantconsignmentAdress">
+     	UPDATE
+     		tbl_merchant_consignmentadress 
+      	SET
+      		supply_id = #{supplyId,jdbcType=VARCHAR},
+      		consignment_name = #{consignmentName,jdbcType=VARCHAR},
+      		phone = #{phone,jdbcType=VARCHAR},
+      		tell = #{tell,jdbcType=VARCHAR},
+      		post_code = #{postCode,jdbcType=VARCHAR},
+      		area = #{hometown,jdbcType=VARCHAR},
+      		adress = #{adress,jdbcType=VARCHAR},
+      		creater = #{creater,jdbcType=VARCHAR},
+      		create_time = #{createTime,jdbcType=VARCHAR},
+      		remark = #{remark,jdbcType=VARCHAR}
+      	WHERE
+      		id = #{id,jdbcType=VARCHAR}
+  	</update>
+  
+  	<!--获取省市区第一级结果集数据 -->
+  	<!-- select id="getAreaList" resultType="java.util.Map">	  
+	  	SELECT t1.name,t1.no FROM tbl_systemmg_area t1 WHERE t1.level=1  
+  	</select -->
+  
+   	<!-- 根据ID查询子地区 -->
+  	<!--select id="getChildAreaByNo" resultType="java.util.Map" parameterType="com.yougou.kaidian.user.model.pojo.Area">	  
+	  	SELECT
+	  		t1.name,t1.no FROM tbl_systemmg_area t1 
+	  	WHERE
+	  		t1.level= #{level} AND t1.no LIKE CONCAT('%','${no}','%' )
+  	</select-->
+	<!-- 根据id查错发货地址集合-->
+  	<select id="getConsignmentAdressById" resultType="java.util.Map" parameterType="java.lang.String">	  
+	  	SELECT
+			t1.id,t1.area
+		FROM
+			tbl_merchant_consignmentadress t1 
+	  	WHERE
+	  		t1.id= #{value} 
+  	</select>
+
+	<!-- 查询物流公司数据列表-->
+  	<select id="getLogisticscompanList" resultType="java.util.Map" >	  
+	  	SELECT
+			t1.id,t1.logistics_company_name,logistic_company_code
+		FROM
+			tbl_wms_logisticscompany t1
+		WHERE
+			t1.is_merchant=2
+  	</select>
+  
+ 	<!-- 根据物流公司Id获取快递单模版信息-->
+  	<select id="getExpressTemplateByLogisticsId" resultType="java.util.Map"  parameterType="java.lang.String">
+    	SELECT
+			t1.width,t1.heigth,t1.font_size,t1.is_bold,t1.back_bround_image,t1.tbody,t1.number
+    	FROM
+    		tbl_merchant_express_template t1 WHERE t1.logistics_id=#{value}
+  	</select>
+  
+  	<!-- 根据模版Id获取快递单模版信息-->
+  	<select id="getExpressTemplateById" resultType="java.util.Map"  parameterType="java.lang.String">
+    	SELECT
+    		t1.width,t1.heigth,t1.font_size,t1.is_bold,t1.back_bround_image,t1.tbody,t1.number
+    	FROM
+    		tbl_merchant_express_template t1
+    	WHERE
+    		t1.id=#{value}
+  </select>
+  
+  	<!-- 根据订单号查询商家的收货人相关的信息-->
+  	<!-- select id="getOrderInfo" resultType="java.util.Map"  parameterType="java.lang.String">	  
+	  	SELECT
+	  		t1.order_sub_no,t2.user_name,
+	 		(SELECT NAME FROM tbl_systemmg_area WHERE LEVEL=1 AND NO=t2.province) AS province,
+     		(SELECT NAME FROM tbl_systemmg_area WHERE LEVEL=2 AND NO=t2.city) AS city,
+	 		(SELECT NAME FROM tbl_systemmg_area WHERE LEVEL=3 AND NO=t2.area) AS area,
+	 		t2.consignee_address,t2.mobile_phone,t2.zip_code,t2.constact_phone,
+	 		t1.product_send_quantity,t1.out_shop_name,t1.total_price,t1.message
+	 	FROM
+	 		tbl_order_sub t1
+	 		INNER JOIN tbl_order_consignee_info t2 ON t1.consignee_id=t2.id
+	 	WHERE
+			t1.order_sub_no=#{value}    
+  	</select -->
+  
+  	<!-- 根据订单号查询商家的发货地址相关的信息-->
+  	<select id="getMerchantConsignmentadress" resultType="java.util.Map"  parameterType="java.lang.String">	  
+	  	SELECT
+	  		t1.id,t1.consignment_name,t1.phone,t1.tell,t1.post_code,t1.area,t1.adress 
+	  	FROM
+	  		tbl_merchant_consignmentadress t1
+	  	WHERE
+	  		t1.supply_id=#{value}
+  	</select>
+    <!-- 查询所有的资源信息-->
+  	<select id="getMerchantsAuthorityList" resultType="java.util.Map">
+		SELECT t1.authrity_url FROM tbl_merchant_authority t1 WHERE authrity_module>0
+  	</select>
+  
+   	<!-- 根据用户Id查询用户密码-->
+  	<select id="getMerchantUserById" resultType="java.lang.String">
+		SELECT PASSWORD FROM tbl_merchant_user WHERE id=#{value}
+  	</select>
+  	
+  	<resultMap type="com.yougou.kaidian.user.model.pojo.MerchantsAuthority" id="merchantAuthorityMap">
+  		<result column="authrity_name" property="authrityName" jdbcType="VARCHAR" />
+  		<result column="authrity_url" property="authrityURL" jdbcType="VARCHAR" />
+  		<result column="authrity_module" property="authrityModule" jdbcType="VARCHAR" />
+  		<result column="parent_id" property="parentAuthrityId" jdbcType="VARCHAR" />
+  		<result column="parent_AuthrityName" property="parentAuthrityName" jdbcType="VARCHAR" />
+  		<result column="sort_no" property="sortNo" jdbcType="INTEGER" />
+  	</resultMap>
+  	<select id="getMerchantAuthorityById" resultMap="merchantAuthorityMap" parameterType="java.lang.String">
+		SELECT
+			*
+		FROM
+			(
+				SELECT
+					t2.authrity_name,
+					t2.authrity_url,
+					t2.parent_id,
+					t3.authrity_name AS parent_AuthrityName,
+					t3.sort_no,
+					t2.sort_no as c_sort_no
+				FROM
+					tbl_merchant_user_authority t1
+				INNER JOIN tbl_merchant_authority t2 ON t1.authority_id = t2.id
+				LEFT JOIN tbl_merchant_authority t3 ON t2.parent_id = t3.id
+				WHERE
+					t1.user_id = #{uid}
+				AND t2.authrity_module != 0
+				UNION
+					SELECT
+						t22.authrity_name,
+						t22.authrity_url,
+						t22.parent_id,
+						t23.authrity_name AS parent_AuthrityName,
+						t23.sort_no,
+						t22.sort_no as c_sort_no
+					FROM
+						tbl_merchant_role_authority t11
+					INNER JOIN tbl_merchant_authority t22 ON t11.authority_id = t22.id
+					LEFT JOIN tbl_merchant_authority t23 ON t22.parent_id = t23.id
+					INNER JOIN tbl_merchant_user_role r11 ON t11.role_id = r11.role_id
+					INNER JOIN tbl_merchant_role r22 ON t11.role_id = r22.id
+					WHERE
+						r11.user_id = #{uid}
+					AND r22.`status` = '1'
+			) AS s
+		ORDER BY
+			s.sort_no,s.c_sort_no
+  	</select>
+  	
+  	<resultMap type="com.yougou.kaidian.common.vo.MerchantsAuthorityVo" id="merchantAuthorityVoMap">
+  		<result column="authrity_name" property="authrityName" jdbcType="VARCHAR" />
+  		<result column="authrity_url" property="authrityURL" jdbcType="VARCHAR" />
+  		<result column="authrity_module" property="authrityModule" jdbcType="VARCHAR" />
+  		<result column="parent_id" property="parentAuthrityId" jdbcType="VARCHAR" />
+  		<result column="parent_AuthrityName" property="parentAuthrityName" jdbcType="VARCHAR" />
+  		<result column="sort_no" property="sortNo" jdbcType="INTEGER" />
+  	</resultMap>
+  	
+  	<select id="getMerchantAuthorityVoById" resultMap="merchantAuthorityVoMap" parameterType="java.lang.String">
+		SELECT
+			*
+		FROM
+			(
+				SELECT
+					t2.authrity_name,
+					t2.authrity_url,
+					t2.parent_id,
+					t3.authrity_name AS parent_AuthrityName,
+					t3.sort_no,
+					t2.sort_no as c_sort_no
+				FROM
+					tbl_merchant_user_authority t1
+				INNER JOIN tbl_merchant_authority t2 ON t1.authority_id = t2.id
+				LEFT JOIN tbl_merchant_authority t3 ON t2.parent_id = t3.id
+				WHERE
+					t1.user_id = #{uid}
+				AND t2.authrity_module != 0
+				UNION
+					SELECT
+						t22.authrity_name,
+						t22.authrity_url,
+						t22.parent_id,
+						t23.authrity_name AS parent_AuthrityName,
+						t23.sort_no,
+						t22.sort_no as c_sort_no
+					FROM
+						tbl_merchant_role_authority t11
+					INNER JOIN tbl_merchant_authority t22 ON t11.authority_id = t22.id
+					LEFT JOIN tbl_merchant_authority t23 ON t22.parent_id = t23.id
+					INNER JOIN tbl_merchant_user_role r11 ON t11.role_id = r11.role_id
+					INNER JOIN tbl_merchant_role r22 ON t11.role_id = r22.id
+					WHERE
+						r11.user_id = #{uid}
+					AND r22.`status` = '1'
+			) AS s
+		ORDER BY
+			s.sort_no,s.c_sort_no
+  	</select>
+  	<select id="getAllMerchant" resultType="String">
+  		select id from tbl_merchant_user where status = 1 and delete_flag = 1
+  	</select>
+  	
+  	<select id="updateMobilePhone">
+  		update tbl_merchant_user set mobile_code = #{mobileCode} where 
+  		login_name = #{loginName}
+  	</select>
+  	
+  	<select id="getMobilePhoneOfLoginName" resultType="java.util.Map">
+  		select mobile_code,is_administrator from tbl_merchant_user where 
+  		login_name = #{loginName} and delete_flag=1
+  	</select>
+  	
+  	<select id="exitsTelePhoneOfMerchantUsers" resultType="Integer" parameterType="String">
+  		select count(id) from tbl_merchant_user where mobile_code = #{mobileCode} and delete_flag=1 
+  		<if test="loginName!=null and loginName!=''">
+  			and login_name != #{loginName}
+  		</if>
+  	</select>
+  	
+  	<select id="exitsEmailOfMerchantUsers" resultType="Integer" parameterType="String">
+  		select count(id) from tbl_merchant_user where email = #{email} and emailstatus = 1 and delete_flag=1
+  	</select>
+  	
+  	<select id="getMerchantAuthorityCountVoById" resultType="Integer" parameterType="String">
+		select (SELECT count(t2.id) as ccid FROM tbl_merchant_user_authority t1 
+		INNER JOIN tbl_merchant_authority t2 ON t1.authority_id = t2.id 
+		WHERE t1.user_id = #{uid} AND t2.authrity_module != 0 )
+		+ (SELECT count(t22.id) as ccid FROM tbl_merchant_role_authority 
+		t11 INNER JOIN tbl_merchant_authority t22 ON t11.authority_id = t22.id 
+		 INNER JOIN tbl_merchant_user_role r11 ON t11.role_id = r11.role_id 
+		INNER JOIN tbl_merchant_role r22 ON t11.role_id = r22.id WHERE r11.user_id = #{uid} 
+		AND r22.`status` = '1' ) as ccid
+  	</select>
+  	
+  	<select id="queryAccountByMerchantCode" parameterType="String" resultType="String">
+  		select login_name from tbl_merchant_user where merchant_code =#{merchantCode}
+  	</select>
+</mapper>

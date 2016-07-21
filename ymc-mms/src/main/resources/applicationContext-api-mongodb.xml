@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns="http://www.springframework.org/schema/beans"
+    xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+	http://www.springframework.org/schema/context  http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+    <description>招商系统MongoDB配置</description>
+    
+    <bean id="mongoFactoryBean" class="com.yougou.api.mongodb.MongoFactoryBean">
+        <property name="host">
+            <value>${yougou.mongo.host}</value>
+        </property>
+        <property name="port">
+            <value>${yougou.mongo.port}</value>
+        </property>
+        <property name="writeConcern">
+        	<bean class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+        		<property name="staticField">
+        			<value>com.mongodb.WriteConcern.NONE</value>
+        		</property>
+        	</bean>
+        </property>
+    </bean>
+
+    <bean id="mongoDaoSupport" class="com.yougou.api.mongodb.MongoDaoSupport" abstract="true">
+        <property name="dbName">
+            <value>${yougou.mongo.dbName}</value>
+        </property>
+        <property name="userName">
+            <value>${yougou.mongo.userName}</value>
+        </property>
+        <property name="passwd">
+            <value>${yougou.mongo.passwd}</value>
+        </property>
+        <property name="debuggable">
+        	<value>false</value>
+        </property>
+    </bean>
+    
+    <bean id="genericMongoDaoImpl" class="com.yougou.api.mongodb.GenericMongoDaoImpl" parent="mongoDaoSupport"/>
+     
+</beans>

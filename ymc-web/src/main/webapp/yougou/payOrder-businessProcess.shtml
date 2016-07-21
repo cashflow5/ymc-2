@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>优购-商家中心-赔付工单详情-待商家处理</title>
+    <link rel="stylesheet" type="text/css" href="css/icon.css" />
+    <link rel="stylesheet" type="text/css" href="css/iconfont.css" />
+    <!-- 图片上传样式 -->
+    <link rel="stylesheet" type="text/css" href="js/webuploader/webuploader.css"/>
+
+    <link rel="stylesheet" type="text/css" href="css/base.css" />
+    <link rel="stylesheet" type="text/css" href="css/mold.css" />
+    <link rel="stylesheet" type="text/css" href="css/merchans_center.css" />
+</head>
+
+<body>
+    <script type="text/javascript" src="js/bootstrap.js"></script>
+    <!--#include file="layout/header.shtml" -->
+    <div id="newcontent" class="wrap clearfix mt10">
+        <!--#include file="layout/sidebar.shtml" -->
+        <div id="newmain" class="main_bd fr">
+            <div class="main_container">
+                <div class="normal_box">
+                    <p class="title site">当前位置：商家中心 &gt; 售后 &gt; 赔付管理</p>
+                    <div class="tab_panel relative">
+                        <div class="tab_content">
+                            <div class="pay-box">
+                                <h3 class="pt10">赔付工单详情</h3>
+                                <ul class="pay-list clearfix">
+                                    <li><span class="stitle">工单号：</span>gd1505241421360001</li>
+                                    <li><span class="stitle">创建时间：</span>2015-03-12 23:28:39</li>
+                                    <li><span class="stitle">工单状态：</span><span class="bold">待商家处理</span></li>
+                                    <li><span class="stitle">订单号：</span>C650519221586_1</li>
+                                    <li><span class="stitle">订单状态：</span>已发货</li>
+                                    <li><span class="stitle">赔付方式：</span>礼品卡</li>
+                                    <li><span class="stitle">等值金额：</span><span class="cred bold">10</span>元</li>
+                                    <li><span class="stitle">赔付原因：</span>运费问题</li>
+                                    <li><span class="stitle">剩余时间：</span><span class="cred">19</span>小时<span class="cred">23</span>分钟<span class="cred">30</span>秒</li>
+                                    <li class="w958 pb10"><span class="stitle">申请理由：</span>您好，订单由于商品发错货原因客户垫付运费10元寄回商品，EMS快递5064200240602，按照赔付标准申请补偿10元。</li>
+                                    <li class="w958 clearfix"><span class="stitle fl">审核意见：</span>
+                                        <div class="text fl">
+                                            <textarea class="view fl"></textarea>
+                                            <span class="cred fl ml5 mt30">*需要申诉时必填</span>
+                                        </div>
+                                    </li>
+                                    <li class="w958 clearfix"><span class="stitle fl"></span>
+                                        <div class="text mt10 fl clearfix">
+                                            <a id="filePickerBatch" class="up-btn up-btn-upload fl mt10" href="javascript:;">上传凭证</a>
+                                            <ul class="upload_list fl" id="fileList"></ul>
+                                        </div>
+                                        <p class="text Gray">最多可上传7张图片，每张图片大小不超过5M，支持bmp\jpeg\jpg\gif\png格式文件。</p>
+                                    </li>
+                                    <li class="w958 clearfix mt15"><span class="stitle fl"></span>
+                                        <div class="text fl">
+                                            <a class="btn-blue-3" href="javascript:;">同意赔付</a>
+                                            <a class="btn-gray-1" href="javascript:;">我要申诉</a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--#include file="layout/footer.shtml" -->
+
+    <!-- 图片上传插件 -->
+    <script  type="text/javascript" src="js/webuploader/webuploader.js"></script>
+    <script  type="text/javascript" src="js/upload.js"></script>
+
+    <script type="text/javascript" src="js/navs.js"></script>
+</body>
+
+</html>

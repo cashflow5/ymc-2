@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.belle.yitiansystem.merchant.dao.mapper.MerchantBrandMapper" >
+	<select id="queryMerchantByBrands" parameterType="map"
+		resultType="java.lang.String">
+		SELECT DISTINCT sp.supplier_code FROM tbl_sp_supplier sp
+		LEFT JOIN tbl_sp_limit_brand br on br.supply_id=sp.id
+		<if test="brands != null and brands != ''">
+		 	WHERE br.brand_no in (${brands})
+		</if>
+	</select>
+
+	<select id="queryMerchantByBrandsOrMerchantName" parameterType="map"
+		resultType="java.lang.String">
+		SELECT DISTINCT
+		ex.yg_contact_user_id
+		FROM
+		tbl_merchant_supplier_expand ex
+		LEFT JOIN tbl_sp_supplier sp on sp.supplier_code=ex.merchant_code
+		LEFT JOIN tbl_sp_limit_brand br on br.supply_id=sp.id
+		WHERE 1=1
+		<if test="brandNos != null and brandNos != ''">
+			AND br.brand_no in (${brandNos})
+		</if>
+		<if test="merchantName != null and merchantName != ''">
+			AND sp.supplier like CONCAT('%','${merchantName}','%' )
+		</if>
+	</select>
+	
+	<resultMap id="brandResultMap" type="com.yougou.kaidian.common.commodity.pojo.Brand">
+		<result column="brand_no" property="brandNo" jdbcType="VARCHAR" />
+		<result column="cat_struct" property="brandName" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="querySecondLevelCatsBySupplierId" parameterType="java.lang.String" resultMap="brandResultMap">
+		SELECT  distinct b.brand_no , SUBSTR(c.struct_name FROM 1 FOR 5) as cat_struct
+		FROM tbl_sp_limit_cat c 
+		LEFT JOIN tbl_sp_limit_brand_cat bc 
+		ON c.id = bc.cat_id 
+		LEFT JOIN tbl_sp_limit_brand b 
+		ON bc.brand_id = b.id 
+		WHERE c.supply_id = #{supplierId}
+		order by b.brand_no ,c.struct_name
+	</select>
+	
+</mapper>

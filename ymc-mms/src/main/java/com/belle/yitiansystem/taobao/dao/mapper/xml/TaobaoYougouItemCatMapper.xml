@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.belle.yitiansystem.taobao.dao.mapper.TaobaoYougouItemCatMapper">
+    
+	<resultMap id="taobaoYougouItemCat" type="com.belle.yitiansystem.taobao.model.TaobaoYougouItemCat">
+		<result column="id" property="id" jdbcType="CHAR" />
+		<result column="taobao_cid" property="taobaoCid" jdbcType="BIGINT" />
+		<result column="taobao_cat_full_name" property="taobaoCatFullName" jdbcType="VARCHAR" />
+		<result column="yougou_cat_no" property="yougouCatNo" jdbcType="VARCHAR" />
+		<result column="yougou_cat_struct" property="yougouCatStruct" jdbcType="VARCHAR" />
+		<result column="yougou_cat_full_name" property="yougouCatFullName" jdbcType="VARCHAR" />
+		<result column="operater" property="operater" jdbcType="VARCHAR" />
+		<result column="operated" property="operated" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="condition4TaoBaoYougouItemCat" >
+	    <if test="null!=params" >
+	      <if test="null!=params.id and ''!=params.id" >
+	       	 and b.id  =  #{params.id,jdbcType=VARCHAR}
+	      </if>
+	      <if test="null!=params.yougouCatNo and ''!=params.yougouCatNo" >
+	       	 and b.yougou_cat_no  =  #{params.yougouCatNo,jdbcType=VARCHAR}
+	      </if>
+	      <if test="null!=params.taobaoCid and ''!=params.taobaoCid" >
+	       	 and b.taobao_cid  =  #{params.taobaoCid,jdbcType=VARCHAR}
+	      </if>
+	    </if>
+	</sql>
+
+	<delete id="deleteYougouTaobaoItemCatBatch" parameterType="java.util.List">
+		delete from tbl_merchant_taobao_yougou_itemcat_templet where id in
+		<foreach collection="list" item="cat" separator="," open="(" close=")">
+			#{cat.id}
+		</foreach>
+	</delete>
+
+	<select id="selectTaobaoYougouItemCatById" resultMap="taobaoYougouItemCat">
+		select * from tbl_merchant_taobao_yougou_itemcat_templet b
+		where b.id = #{id,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectTaobaoYougouItemCatList" resultMap="taobaoYougouItemCat">
+		select * from tbl_merchant_taobao_yougou_itemcat_templet b
+		where 1=1 <include refid="condition4TaoBaoYougouItemCat" />
+		order by operated desc
+	</select>
+	
+	<select id="selectTaobaoYougouItemCatCount" resultType="java.lang.Integer">
+	select count(1) from tbl_merchant_taobao_yougou_itemcat_templet b
+		where 1=1 <include refid="condition4TaoBaoYougouItemCat" />
+	</select>
+	
+	<!-- 优购分类 -->
+	<select id="selectYougouCatList" resultType="com.belle.yitiansystem.taobao.model.YougouCat">
+	  	SELECT c.cat_no no, c.struct_name structName FROM tbl_sp_limit_cat c where 1=1
+	  	<if test="structName != null and structName != ''">
+		AND c.struct_name LIKE CONCAT(CONCAT(#{structName},'-'),'%')	
+		</if>
+  	</select>
+  	
+  	<!-- 淘宝分类 -->
+  	<resultMap id="taobaoItemCat" type="com.belle.yitiansystem.taobao.model.TaobaoItemCat">
+		<result column="cid" property="cid" jdbcType="BIGINT" />
+		<result column="parent_cid" property="parentCid" jdbcType="BIGINT" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="is_parent" property="isParent" jdbcType="TINYINT" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="sort_order" property="sortOrder" jdbcType="SMALLINT" />
+		<result column="operater" property="operater" jdbcType="VARCHAR" />
+		<result column="operated" property="operated" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="condition4TaoBaoItemCat" >
+	    <if test="null!=params" >
+	      <if test="null!=params.pId and ''!=params.pId" >
+				and c.parent_cid  =  #{params.pId,jdbcType=VARCHAR}
+	      </if>
+	     <if test="null!=params.notBind and 'y'.toString()==params.notBind" >
+				and  NOT EXISTS(SELECT 1 FROM tbl_merchant_taobao_yougou_itemcat_templet t where t.taobao_cid = c.cid) 
+	      </if>
+	    </if>
+	</sql>
+  	<select id="selectTaobaoItemCatList" resultMap="taobaoItemCat">
+    	select c.cid,c.parent_cid,c.name,c.is_parent from tbl_merchant_taobao_itemcat c
+    	where 1=1 
+    	<include refid="condition4TaoBaoItemCat" />
+    	order by c.sort_order desc
+    </select>
+    
+     <insert id="insertYougouTaobaoItem" parameterType="com.belle.yitiansystem.taobao.model.TaobaoYougouItemCat">
+        insert into tbl_merchant_taobao_yougou_itemcat_templet ( id, taobao_cid,taobao_cat_full_name, yougou_cat_no, yougou_cat_struct, yougou_cat_full_name,operater, operated )
+        values 
+        (
+             #{id,jdbcType=CHAR},
+             #{taobaoCid,jdbcType=BIGINT},
+             #{taobaoCatFullName,jdbcType=VARCHAR},
+             #{yougouCatNo,jdbcType=VARCHAR},
+             #{yougouCatStruct,jdbcType=VARCHAR}, 
+             #{yougouCatFullName,jdbcType=VARCHAR},
+             #{operater,jdbcType=VARCHAR},
+             #{operated,jdbcType=VARCHAR}
+        )
+    </insert>
+    
+</mapper>

@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>优购-商家中心-内容轮播</title>
+    <link rel="stylesheet" href="css/base.css">
+    <!-- 轮播样式 -->
+    <link rel="stylesheet" href="js/carousel/assets/css/style.css">
+    <link rel="stylesheet" href="css/carousel.css">
+</head>
+
+<body>
+  <script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+
+<div class="slider clearfix">
+  <div class="slider-icon fl"></div>
+  <!-- 单条信息 -->
+  <div class="single-message fl">
+    尊敬的商家:<br/>
+    您的优购服务期限还有<font color="red">60</font>天到期，请与合同到期之前向优购运营提交续签申请，并完成续签，逾期未提交者视为主动放弃续签，您的店铺在服务期满后自动关闭。请您及时完成续签，以免造成不必要的损失。
+  </div>
+  <!-- 多条例信息 -->
+  <div class="slider-container fl">
+    <div class="slider-wrapper">
+      <div class="slide">尊敬的商家:<br/>
+       您的优购 服务期限还有 <font color="red">11</font>天到期,请于合同到期前向优购提交续签申请并完成续签,逾期未提交者视为主动放弃续签,您的店铺在服务器满后自动关闭,请您及时完成续签,以避免造成不必要的损失. 
+</div>
+      <div class="slide"> 尊敬的商家，您的合同在<font color="red">2015年5月12日已到期</font>，请联系优购运营续签合同后再进行操作！ </div>
+      <div class="slide"> 尊敬的商家，您的合同在<font color="red">2015年5月13日已到期</font>，请联系优购运营续签合同后再进行操作！ </div>
+      <div class="slide"> 尊敬的商家，您的合同在<font color="red">2015年5月14日已到期</font>，请联系优购运营续签合同后再进行操作！ </div>
+    </div>
+  </div>
+</div>
+
+<div class="btn-box">
+  <a href="javascript:void(0);" id="btn_detail" class="btn btn_yellow">查看详情</a>
+</div>
+
+    <!-- 轮播js -->
+    <script src="js/carousel/assets/js/slider.js"></script> 
+    <script>
+    // $.dialog.open('basic_info.shtml',{title:'提醒'});
+
+
+  (function() {
+    //设置随机数，当输出1的时候显示单条信息
+    var rand = parseInt(Math.random() * 10 % 2);
+    if(rand==1){
+      $('.slider-container').addClass('hide');
+    }else{
+      $('.single-message').addClass('hide');
+      //内容轮播插件
+      Slider.init({
+        target: $('.slider'),
+        time: 5000,
+      });
+    }
+
+    //查看详情
+    $('#btn_detail').click(function(){
+      var slide=$('.slide'),
+          bullet=$('.slider-nav li').find('.bullet'),
+          single_message=$('.single-message '), 
+          currCont;
+      if(single_message.hasClass('hide')){//判断是显示单条信息还是多条信息
+        bullet.each(function(index){
+          if(bullet.eq(index).hasClass('active')){
+            currCont=slide.eq(index).text();
+            alert(currCont);
+          }
+        })
+      }else{
+        currCont=single_message.text();
+        alert(currCont);
+      }
+    })
+  })();
+
+  </script>
+</body>
+
+</html>

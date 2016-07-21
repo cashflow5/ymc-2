@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<comment>商品预览设置</comment>
+	<!-- 商品预览域名 -->
+	<entry key="commodity.preview.domain"><![CDATA[http://10.0.30.193/pics]]></entry>
+	<!-- 内存商品预览URL -->
+	<entry key="commodity.preview.memory.url"><![CDATA[http://10.0.30.71:8080/api/goods/preview.sc]]></entry>
+	<!-- 持久商品预览URL -->
+	<entry key="commodity.preview.persistent.url"><![CDATA[http://10.0.30.71:8080/api/goods/preview_by_no.sc]]></entry>
+	<!-- 商家帮助中心URL -->
+	<entry key="help.static.page.url"><![CDATA[http://10.0.30.163]]></entry>
+	
+	<!-- 赔付管理上传凭证图片的预览域名 -->
+	<entry key="compensate.preview.domain"><![CDATA[http://10.0.30.193/pics]]></entry>
+	
+</properties>

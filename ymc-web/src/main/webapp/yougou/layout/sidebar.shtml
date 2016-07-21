@@ -1,0 +1,58 @@
+<div id="newleft" class="main_menu fl jsMainMenu">
+    <div class="itm">
+        <h3 class="hd"><span>商品模块</span></h3>
+        <ul class="bd">
+            <li id="_commodity_goQueryOnSaleCommodity_sc"><a href="commodity/goQueryOnSaleCommodity.sc">在售商品</a></li>
+            <li id="_commodity_goWaitSaleCommodity_sc"><a href="commodity/goWaitSaleCommodity.sc">待售商品</a></li>
+            <li id="_commodity_goAddCommodity_sc"><a href="commodity/goAddCommodity.sc">发布商品</a></li>
+            <li id="_commodity_addCommodityui_sc"><a href="commodity/addCommodityui.sc" target='_blank'>发布商品（新UI）</a></li>
+            <li id="_commodity_import_ready_sc"><a href="commodity/import/ready.sc">批量发布商品</a></li>
+            <li id="_picture_list_sc"><a href="picture/list.sc">图片空间</a></li>
+        </ul>
+        <h3 class="hd"><span>订单模块</span></h3>
+        <ul class="bd">
+            <li id="_order_toDocumentPrintingNew_sc"><a href="order/toDocumentPrintingNew.sc">单据打印(新)</a></li>
+            <li id="_order_toDocumentPrinting_sc"><a href="order/toDocumentPrinting.sc">单据打印 </a></li>
+            <li id="_order_queryAll_sc"><a href="order/queryAll.sc">备货清单</a></li>
+            <li id="_order_fastdelivery_notexported_sc"><a href="order/fastdelivery/notexported.sc">快捷发货</a></li>
+            <li id="_order_toPackageDelivery_sc"><a href="order/toPackageDelivery.sc">打包发货</a></li>
+            <li id="_order_queryAllSales_sc"><a href="order/queryAllSales.sc">销售查询</a></li>
+            <li id="_order_queryPunishOrderList_sc"><a href="order/queryPunishOrderList.sc">我的违规订单</a></li>
+            <li id="_invoice_query_sc"><a href="invoice/query.sc">发票查询</a></li>
+        </ul>
+        <h3 class="hd"><span>淘宝商品管理</span></h3>
+        <ul class="bd">
+            <li id="_taobao_goTaobaoItemList_sc"><a href="taobao/goTaobaoItemList.sc">淘宝商品导入</a></li>
+            <li id="_taobao_goRecycle_sc"><a href="taobao/goRecycle.sc">商品回收站</a></li>
+            <li id="_taobao_goYougouTaobaoTemplet_sc"><a href="taobao/goYougouTaobaoTemplet.sc">查看类目模板</a></li>
+        </ul>
+        <h3 class="hd"><span>库存模块</span></h3>
+        <ul class="bd">
+            <li id="_wms_supplyStockInput_querySupplyGenStock_sc"><a href="wms/supplyStockInput/querySupplyGenStock.sc">库存管理</a></li>
+            <li id="_wms_supplyStockInput_inputSupplyStockExcel_sc"><a href="wms/supplyStockInput/inputSupplyStockExcel.sc">库存导入</a></li>
+        </ul>
+        <h3 class="hd"><span>售后模块</span></h3>
+        <ul class="bd">
+            <li id="_dialoglist_query_sc"><a href="dialoglist/query.sc">工单处理</a></li>
+            <li id="_quality_to_qualityRegister_sc"><a href="quality/to_qualityRegister.sc">质检登记</a></li>
+            <li id="_qualityquery_qualityList_sc"><a href="qualityquery/qualityList.sc">质检查询</a></li>
+            <li id="_afterSale_queryAfterSaleList_sc"><a href="afterSale/queryAfterSaleList.sc">售后单查询</a></li>
+            <li id="_quality_notPassList_sc"><a href="quality/notPassList.sc">质检不通过</a></li>
+        </ul>
+        <h3 class="hd"><span>设置模块</span></h3>
+        <ul class="bd">
+            <li id="_merchants_login_to_MerchantsUser_sc"><a href="merchants/login/to_MerchantsUser.sc">基本信息</a></li>
+            <li id="_highcharts_lineChart_sc"><a href="highcharts/lineChart.sc">HighCharts</a></li>
+            <li id="_merchants_login_to_updatePassword_sc"><a href="merchants/login/to_updatePassword.sc">修改密码</a></li>
+            <li id="_merchants_login_to_merchants_sc"><a href="settingChildAccount.shtml">子账号管理</a></li>
+            <li id="_merchants_login_to_merchant_consignmentAdress_list_sc"><a href="merchants/login/to_merchant_consignmentAdress_list.sc">发货地址设置</a></li>
+        </ul>
+        <h3 class="hd"><span>我的店铺</span></h3>
+        <ul class="bd">
+            <li id="_mctfss_store_list_sc"><a href="mctfss/store/list.sc">店铺列表</a></li>
+            <li id="_mctfss_log_list_sc"><a href="mctfss/log/list.sc">店铺日志</a></li>
+            <li id="_mctfss_commodity_list_sc"><a href="mctfss/commodity/list.sc">店铺商品</a></li>
+            <li id="_mctfss_moduleBasicInfo_list_sc"><a href="mctfss/moduleBasicInfo/list.sc">模块列表</a></li>
+        </ul>
+    </div>
+</div>

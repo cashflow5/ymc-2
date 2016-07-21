@@ -1,0 +1,9 @@
+User-agent: *
+Disallow: /yitianmall/
+Disallow: /yitiansystem/
+Disallow: /wms/
+Disallow: /anm/
+Disallow: /api/
+Disallow: /order/
+Disallow: /my/
+Sitemap:  http://www.yougou.com/sitemap.xml

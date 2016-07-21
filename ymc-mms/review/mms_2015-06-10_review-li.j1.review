@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Review id="mms_2015-06-10_review">
+  <ReviewIssue id="IAQP9OIW">
+    <ReviewIssueMeta>
+      <CreationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-10 :: 19:55:39:752 CST</CreationDate>
+      <LastModificationDate format="yyyy-MM-dd :: HH:mm:ss:SSS z">2015-06-10 :: 19:56:20:100 CST</LastModificationDate>
+    </ReviewIssueMeta>
+    <ReviewerId>li.j1</ReviewerId>
+    <AssignedTo>li.j1</AssignedTo>
+    <File line="302">src/main/java/com/belle/yitiansystem/taobao/web/TaobaoCatController.java</File>
+    <Type>item.type.label.codingStandards</Type>
+    <Severity>item.severity.label.critical</Severity>
+    <Summary>response可能为null</Summary>
+    <Description>潜在空指针异常风险</Description>
+    <Annotation></Annotation>
+    <Revision></Revision>
+    <Resolution>item.label.unset</Resolution>
+    <Status>item.status.label.open</Status>
+  </ReviewIssue>
+</Review>

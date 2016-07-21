@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.belle.yitiansystem.taobao.dao.mapper.TaobaoCatMapper">
+	<!-- 淘宝优购类目表 -->
+	<resultMap id="taobaoItemCat" type="com.belle.yitiansystem.taobao.model.TaobaoItemCat">
+		<result column="cid" property="cid" jdbcType="BIGINT" />
+		<result column="parent_cid" property="parentCid" jdbcType="BIGINT" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="is_parent" property="isParent" jdbcType="TINYINT" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="sort_order" property="sortOrder" jdbcType="SMALLINT" />
+		<result column="operater" property="operater" jdbcType="VARCHAR" />
+		<result column="operated" property="operated" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap type="com.belle.yitiansystem.taobao.model.vo.TaobaoItemCatParentVo" id="taobaoItemCatParent">
+		<result column="cid" property="cid" jdbcType="BIGINT"/>
+		<result column="name" property="name" jdbcType="VARCHAR"/>
+		<result column="is_parent" property="isParent" jdbcType="TINYINT"/>
+	</resultMap>
+
+    <!-- 插入单个淘宝类目数据 -->
+    <insert id="insertTaobaoItemCat" parameterType="com.belle.yitiansystem.taobao.model.TaobaoItemCat">
+        insert into tbl_merchant_taobao_itemcat ( cid, parent_cid, name, is_parent, status, sort_order, operater, operated )
+        values 
+        (
+             #{cid,jdbcType=BIGINT},
+             #{parentCid,jdbcType=BIGINT},
+             #{name,jdbcType=VARCHAR},
+             #{isParent,jdbcType=TINYINT}, 
+             #{status,jdbcType=VARCHAR},
+             #{sortOrder,jdbcType=SMALLINT},
+             #{operater,jdbcType=VARCHAR},
+             #{operated,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <!-- 批量插入淘宝类目数据 -->
+    <insert id="insertTaobaoItemCatList" parameterType="java.util.List">
+        insert into tbl_merchant_taobao_itemcat ( cid, parent_cid, name, is_parent, status, sort_order, operater, operated )
+        values 
+        <foreach collection="list" item="item" index="index" separator=","> 
+          (
+             #{item.cid,jdbcType=BIGINT},
+             #{item.parentCid,jdbcType=BIGINT},
+             #{item.name,jdbcType=VARCHAR},
+             #{item.isParent,jdbcType=TINYINT}, 
+             #{item.status,jdbcType=VARCHAR},
+             #{item.sortOrder,jdbcType=SMALLINT},
+             #{item.operater,jdbcType=VARCHAR},
+             #{item.operated,jdbcType=VARCHAR}
+          )
+        </foreach>
+    </insert>
+    
+    <!-- 根据cid查询淘宝类目 -->
+    <select id="getTaobaoItemCatByCid" resultMap="taobaoItemCat">
+    	SELECT cid, parent_cid, name, is_parent, status, sort_order, operater, operated
+    	FROM tbl_merchant_taobao_itemcat
+    	WHERE cid = #{cid, jdbcType=BIGINT};
+    </select>
+    
+    <!-- 查询淘宝所有分类 -->
+    <select id="selectAllTaobaoItemCat" parameterType="com.belle.yitiansystem.taobao.model.vo.TaobaoItemCatVo" resultType="map">
+    	SELECT t1.cid as fCid,t2.cid as sCid,t3.cid as tCid,t4.cid as foCid,
+			t1.name as fName,t2.name as sName,t3.name as tName,t4.name as foName, 
+    	t1.is_parent as isParent,t1.operater, t1.operated
+    	FROM tbl_merchant_taobao_itemcat t1 left join tbl_merchant_taobao_itemcat t2 on 
+			t1.cid = t2.parent_cid 
+		left join tbl_merchant_taobao_itemcat t3 on t3.parent_cid=t2.cid left JOIN 
+			tbl_merchant_taobao_itemcat t4 on t4.parent_cid=t3.cid 
+		where t1.is_parent=1 and t1.parent_cid=0 and t1.status = 'normal'  
+		and (t2.status ='normal' or t2.status is null) and 
+		(t3.status ='normal' or t3.status is null) and 
+		(t4.status='normal' or t4.status is null) 
+    	<include refid="condition4TaobaoItemCat"/>
+    	 order by t1.operated desc,t1.sort_order,t2.sort_order,t3.sort_order,t4.sort_order desc 
+    </select>
+    
+    <!-- 查询淘宝分类count -->
+    <select id="selectTaobaoItemCatCount" resultType="java.lang.Integer">
+    	select count(1) FROM tbl_merchant_taobao_itemcat t1 left join tbl_merchant_taobao_itemcat t2 on 
+			t1.cid = t2.parent_cid 
+		left join tbl_merchant_taobao_itemcat t3 on t3.parent_cid=t2.cid left JOIN 
+			tbl_merchant_taobao_itemcat t4 on t4.parent_cid=t3.cid 
+		where t1.is_parent=1 and t1.parent_cid=0 and t1.status = 'normal'
+		and (t2.status ='normal' or t2.status is null) and (t3.status ='normal' or t3.status is null) and 
+		(t4.status='normal' or t4.status is null)  
+    	<include refid="condition4TaobaoItemCat"/>
+    </select>
+    
+    <select id="selectAllFirstCat" resultType="map">
+    	select cid,name from tbl_merchant_taobao_itemcat where parent_cid=0 and status='normal' order by sort_order desc
+    </select>
+    
+    <select id="findChildrenById" parameterType="java.lang.Long" resultType="map" >
+    	select cid,name,parent_cid,is_parent as isParent,status,operater,operated from tbl_merchant_taobao_itemcat 
+    	where parent_cid=#{parentId,jdbcType=VARCHAR} and status='normal' order by sort_order 
+    </select>
+    
+    <select id="findCatPropDetail" parameterType="java.lang.Long" resultType="map">
+    	select pr.pid pid ,pr.name pname ,pr.must must,va.vid vid,va.name vname,v.is_artificial_input isArtificialInput
+		from tbl_merchant_taobao_itemcat c inner join 
+		tbl_merchant_taobao_item_cat_prop p on p.cid=c.cid  
+		inner join tbl_merchant_taobao_item_cat_prop_value v on v.pid=p.pid and v.cid=c.cid 
+		inner join tbl_merchant_taobao_item_prop_value va on va.vid=v.vid 
+		inner join tbl_merchant_taobao_item_prop pr on pr.pid = p.pid 
+		where c.cid=#{cid,jdbcType=VARCHAR} order by v.is_artificial_input,va.operated
+    </select>
+    
+    <select id="checkTaobaoCat" resultMap="taobaoItemCatParent">
+    	select cid,name,is_parent from tbl_merchant_taobao_itemcat where cid in 
+    	<foreach collection="array" index="index" item="item" open="(" close=")" separator=",">
+    		#{item}
+    	</foreach>
+    </select>
+    
+    <select id="deleteTaobaoCat">
+    	update tbl_merchant_taobao_itemcat set status = 'delete' where cid in 
+    	<foreach collection="array" index="index" item="item" open="(" close=")" separator=",">
+    		#{item}
+    	</foreach>
+    </select>
+    
+	 <!-- 淘宝优购类目绑定中间表 -->
+    <!-- 
+	<resultMap id="taobaoYougouItemCat" type="com.yougou.kaidian.taobao.model.TaobaoYougouItemCat">
+		<result column="id" property="id" jdbcType="CHAR" />
+		<result column="taobao_cid" property="taobaoCid" jdbcType="BIGINT" />
+		<result column="taobao_cat_full_name" property="taobaoCatFullName" jdbcType="VARCHAR" />
+		<result column="yougou_cat_no" property="yougouCatNo" jdbcType="VARCHAR" />
+		<result column="yougou_cat_struct" property="yougouCatStruct" jdbcType="VARCHAR" />
+		<result column="yougou_cat_full_name" property="yougouCatFullName" jdbcType="VARCHAR" />
+		<result column="nick_id" property="nickId" jdbcType="BIGINT" />
+		<result column="merchant_code" property="merchantCode" jdbcType="VARCHAR" />
+		<result column="operater" property="operater" jdbcType="VARCHAR" />
+		<result column="operated" property="operated" jdbcType="VARCHAR" />
+	</resultMap> -->
+	
+	<sql id="condition4TaobaoItemCat">
+		<trim prefix="and" prefixOverrides="and |or ">
+			<if test="cid!=null and cid!=''">
+				and (t1.cid=#{cid,jdbcType=VARCHAR} or t2.cid=#{cid,jdbcType=VARCHAR} 
+				or t3.cid=#{cid,jdbcType=VARCHAR} or t4.cid=#{cid,jdbcType=VARCHAR})
+			</if>
+			<if test="rootCatCode!=null and rootCatCode!=''">
+				and t1.cid=#{rootCatCode,jdbcType=VARCHAR}
+			</if>
+			<if test="secondCatCode!=null and secondCatCode!=''">
+				and t2.cid=#{secondCatCode,jdbcType=VARCHAR}
+			</if>
+		</trim>
+	</sql>
+
+	<sql id="condition4TaoBaoYougouItemCat" >
+	    <if test="null!=params" >
+	      <if test="null!=params.id and ''!=params.id" >
+	       	 and b.id  =  #{params.id,jdbcType=VARCHAR}
+	      </if>
+	      <if test="null!=params.nickId and ''!=params.nickId" >
+	       	 and b.nick_id  =  #{params.nickId,jdbcType=VARCHAR}
+	      </if>
+	      <if test="null!=params.yougouCatNo and ''!=params.yougouCatNo" >
+	       	 and b.yougou_cat_no  =  #{params.yougouCatNo,jdbcType=VARCHAR}
+	      </if>
+	      <if test="null!=params.nickName and ''!=params.nickName" >
+	       	 and a.top_visitor_nick like '%${params.nickName}%'
+	      </if>
+	      <!-- 是否已经绑定  Y 已经绑定  N 没有绑定 -->
+	      <if test="null!=params.bindType and 'Y'.toString()==params.bindType" >
+	       	 and (b.yougou_cat_no is not null and b.yougou_cat_no != '')
+	      </if>
+	      <if test="null!=params.bindType and 'N'.toString()==params.bindType" >
+	       	 and (b.yougou_cat_no is  null or  b.yougou_cat_no = '')
+	      </if>
+	      <if test="null!=params.merchantCode and ''!=params.merchantCode" >
+	       	 and b.merchant_code = #{params.merchantCode,jdbcType=VARCHAR}
+	      </if>
+	    </if>
+	</sql>
+
+    <!-- 批量插入淘宝优购绑定类目数据 -->
+    <insert id="insertTaobaoYougouItemCatList" parameterType="java.util.List">
+        insert into tbl_merchant_taobao_yougou_itemcat ( id, taobao_cid, yougou_cat_no, yougou_cat_struct, nick_id, merchant_code, operater, operated )
+        values 
+        <foreach collection="list" item="item" index="index" separator=","> 
+          (
+             #{item.id,jdbcType=CHAR},
+             #{item.taobaoCid,jdbcType=BIGINT},
+             #{item.yougouCatNo,jdbcType=VARCHAR},
+             #{item.yougouCatStruct,jdbcType=VARCHAR}, 
+             #{item.merchantCode,jdbcType=VARCHAR},
+             #{item.nickId,jdbcType=BIGINT},
+             #{item.operater,jdbcType=VARCHAR},
+             #{item.operated,jdbcType=VARCHAR}
+          )
+        </foreach>
+    </insert>
+    
+    <!--查询绑定分类列表 -->
+    <select id="selectTaobaoYougouItemCatCount" resultType="java.lang.Integer">
+    	select count(1) from tbl_merchant_taobao_yougou_itemcat b inner join tbl_merchant_taobao_authinfo a
+    	on a.top_visitor_id = b.nick_id inner join tbl_merchant_taobao_itemcat tb on tb.cid = b.taobao_cid
+    	where 1=1
+    	<include refid="condition4TaoBaoYougouItemCat" />
+    </select>
+    
+    <!-- 查询优购所有分类 -->
+    <select id="selectAllYougouCatNoByMerchantCode" resultType="java.lang.String">
+    	select cat_no from tbl_sp_limit_cat c inner join tbl_sp_supplier s on s.id =c.supply_id
+    	where s.supplier_code = #{merchantCode,jdbcType=VARCHAR} order by struct_name
+    </select>
+    
+    <!-- 更新绑定分类 -->
+    <update id="updateTaobaoYougouItemCat">
+	  	  update tbl_merchant_taobao_yougou_itemcat set yougou_cat_no =  #{yougouCatNo,jdbcType=VARCHAR},
+	  	  yougou_cat_struct = #{yougouCatStruct,jdbcType=VARCHAR},
+	  	  taobao_cat_full_name = #{taobaoCatFullName,jdbcType=VARCHAR},
+	  	  yougou_cat_full_name = #{yougouCatFullName,jdbcType=VARCHAR} 
+	  	  where id =  #{id,jdbcType=CHAR} and 
+	  	  merchant_code = #{merchantCode,jdbcType=VARCHAR}
+    </update>
+    
+    <select id="selectTaobaoItemCatPropByCid" resultType="com.belle.yitiansystem.taobao.model.vo.TaobaoItemCatPropVo">
+    	select p.pid,ip.name pname from tbl_merchant_taobao_item_cat_prop p inner join tbl_merchant_taobao_item_prop ip on p.pid=ip.pid
+    	where p.cid = #{cid}
+    </select>
+    
+    <select id="selectTaobaoItemCatePorpVlaueCountByVid" resultType="java.lang.Integer">
+    	select count(1) from tbl_merchant_taobao_item_cat_prop_value where cid = #{cid} and pid = #{pid} and vid = #{vid}
+    </select>
+    
+     <select id="selectTaobaoItemPorpVlaueByVid" resultType="com.belle.yitiansystem.taobao.model.TaobaoItemPropValue">
+    	select vid,name from tbl_merchant_taobao_item_prop_value where vid = #{vid}
+    </select>
+    
+    <insert id="insertItemCatPropValue" parameterType="com.belle.yitiansystem.taobao.model.TaobaoItemCatPropValue">
+    	insert into tbl_merchant_taobao_item_cat_prop_value(cid,pid,vid,is_artificial_input)values
+    		(
+    			#{cid},
+    			#{pid},
+    			#{vid},
+    			#{isArtificialInput}
+    		)
+    </insert>
+    
+    <insert id="insertItemPropValue" parameterType="com.belle.yitiansystem.taobao.model.TaobaoItemPropValue">
+    	insert into tbl_merchant_taobao_item_prop_value(vid,name,operater,operated)values
+    		(
+    			#{vid},
+    			#{name},
+    			#{operater},
+    			#{operated}
+    		)
+    </insert>
+    
+    <select id="selectYougouTaobaoItemPropValueTempletCountByVid" resultType="java.lang.Integer">
+    	select count(1) from tbl_merchant_taobao_yougou_item_prop_value_templet 
+    	where taobao_cid = #{cid} and taobao_pid = #{pid} and taobao_vid = #{vid}
+    </select>
+    
+    <select id="selectYougouTaobaoItemPropValueByVid" resultType="java.lang.Integer">
+    	select count(1) from tbl_merchant_taobao_yougou_item_prop_value_templet 
+    	where taobao_cid = #{cid} and taobao_pid = #{pid} and taobao_vid = #{vid}
+    </select>
+    
+    <delete id="delTaobaoItemCatPropValue">
+    	delete from tbl_merchant_taobao_item_cat_prop_value  where cid = #{cid} and pid =#{pid}   and vid =#{vid} and is_artificial_input = '1'
+    </delete>
+</mapper>

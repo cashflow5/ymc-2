@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yougou.kaidian.taobao.dao.TaobaoItemPropMapper">
+	
+	<resultMap id="taobaoItemProp" type="com.yougou.kaidian.taobao.model.TaobaoItemProp">
+		<result column="pid" property="pid" jdbcType="BIGINT" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="must" property="must" jdbcType="TINYINT" />
+		<result column="multi" property="multi" jdbcType="TINYINT" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="sort_order" property="sortOrder" jdbcType="SMALLINT" />
+		<result column="parent_pid" property="parentPid" jdbcType="BIGINT" />
+		<result column="parent_vid" property="parentVid" jdbcType="BIGINT" />
+		<result column="is_key_prop" property="isKeyProp" jdbcType="TINYINT" />
+		<result column="is_sale_prop" property="isSaleProp" jdbcType="TINYINT" />
+		<result column="is_color_prop" property="isColorProp" jdbcType="TINYINT" />
+		<result column="is_enum_prop" property="isEnumProp" jdbcType="TINYINT" />
+		<result column="is_item_prop" property="isItemProp" jdbcType="TINYINT" />
+		<result column="is_allow_alias" property="isAllowAlias" jdbcType="TINYINT" />
+		<result column="is_input_prop" property="isInputProp" jdbcType="TINYINT" />
+		<result column="operater" property="operater" jdbcType="VARCHAR" />
+		<result column="operated" property="operated" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<!-- 批量插入淘宝类目属性数据 -->
+    <insert id="insertTaobaoItemPropList" parameterType="java.util.List">
+        insert into tbl_merchant_taobao_item_prop ( pid, name, must, multi, status, sort_order, parent_pid, parent_vid, is_key_prop, is_sale_prop, 
+			is_color_prop, is_enum_prop, is_item_prop, is_allow_alias, is_input_prop, operater, operated )
+        values 
+        <foreach collection="list" item="item" index="index" separator=","> 
+          (
+             #{item.pid,jdbcType=BIGINT},
+             #{item.name,jdbcType=VARCHAR},
+             #{item.must,jdbcType=TINYINT},
+             #{item.multi,jdbcType=TINYINT},
+             #{item.status,jdbcType=VARCHAR},
+             #{item.sortOrder,jdbcType=SMALLINT},
+             #{item.parentPid,jdbcType=BIGINT},
+             #{item.parentVid,jdbcType=BIGINT},
+             #{item.isKeyProp,jdbcType=TINYINT},
+             #{item.isSaleProp,jdbcType=TINYINT},
+             #{item.isColorProp,jdbcType=TINYINT},
+             #{item.isEnumProp,jdbcType=TINYINT},
+             #{item.isItemProp,jdbcType=TINYINT},
+             #{item.isAllowAlias,jdbcType=TINYINT},
+             #{item.isInputProp,jdbcType=TINYINT},
+             #{item.operater,jdbcType=VARCHAR},
+             #{item.operated,jdbcType=VARCHAR}
+          )
+        </foreach>
+    </insert>
+	
+	<select id="getTaobaoItemProp" resultMap="taobaoItemProp">
+		SELECT pid, name, must, multi, status, sort_order, parent_pid, parent_vid, is_key_prop, is_sale_prop, 
+			is_color_prop, is_enum_prop, is_item_prop, is_allow_alias, is_input_prop, operater, operated
+		FROM 
+			tbl_merchant_taobao_item_prop 
+		WHERE pid = #{pid, jdbcType=BIGINT};
+	</select>
+	
+	<!-- 批量插入淘宝类目属性数据 -->
+    <insert id="insertTaobaoItemCatPropList" parameterType="java.util.List">
+        insert into tbl_merchant_taobao_item_cat_prop ( cid, pid )
+        values 
+        <foreach collection="list" item="item" index="index" separator=","> 
+          (
+             #{item.cid,jdbcType=BIGINT},
+             #{item.pid,jdbcType=BIGINT}
+          )
+        </foreach>
+    </insert>
+    
+	<select id="getTaobaoItemCatPropCount" parameterType="com.yougou.kaidian.taobao.model.TaobaoItemCatProp" resultType="int">
+		SELECT COUNT(1)	FROM 
+			tbl_merchant_taobao_item_cat_prop 
+		WHERE cid = #{cid, jdbcType=BIGINT} AND pid = #{pid, jdbcType=BIGINT};
+	</select>
+	
+	<!-- 淘宝属性值中间表 -->
+	<resultMap id="taobaoItemPropVO" type="com.yougou.kaidian.taobao.model.TaobaoItemPropValVO">
+		<result column="pid" property="pid" jdbcType="BIGINT" />
+		<result column="yougou_prop_item_no" property="yougouPropItemNo" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="getTaobaoYougouItemPropNoByCid" resultMap="taobaoItemPropVO">
+		SELECT t2.pid, t3.yougou_prop_item_no FROM
+			tbl_merchant_taobao_item_prop t1
+		INNER JOIN tbl_merchant_taobao_item_cat_prop t2 ON t1.pid = t2.pid
+		INNER JOIN tbl_merchant_taobao_yougou_item_prop t3 ON t3.taobao_cid = t2.cid AND t3.taobao_pid = t2.pid
+		WHERE t3.merchant_code = #{merchantCode, jdbcType=VARCHAR}
+			AND nick_id = #{nickId, jdbcType=BIGINT}
+			AND cid = #{cid, jdbcType=BIGINT}
+		ORDER BY t2.pid
+	</select>
+	
+	<select id="getTaobaoPidYougouSizeMapperingByCid" resultType="string">
+		SELECT
+			p.taobao_pid
+		FROM
+			tbl_merchant_taobao_yougou_item_prop p
+		WHERE
+			p.yougou_prop_item_no = 'size'
+		AND p.taobao_cid = #{cid, jdbcType=VARCHAR}
+		AND p.merchant_code = #{merchantCode, jdbcType=VARCHAR};
+	</select>
+	
+</mapper>

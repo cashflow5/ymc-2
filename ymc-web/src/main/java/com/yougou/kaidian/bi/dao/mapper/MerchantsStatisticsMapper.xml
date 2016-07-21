@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yougou.kaidian.bi.dao.MerchantsStatisticsMapper">
+	
+	<!-- 经营概况(订单部分) -->
+	<select id="querySummaryOfOperationsOfOrder" resultType="java.util.Map">
+		select 
+			t1.order_sub_no, 
+			t1.create_time, 
+			t1.pay_total_price, 
+			t1.payment, 
+			t3.commodity_num 
+		from 
+			tbl_order_sub t1 
+		inner join 
+			tbl_order_sub_expand t2 on(t1.id = t2.order_sub_id) 
+		inner join 
+			tbl_order_detail4sub t3 on(t2.order_sub_id = t3.order_sub_id)
+		where 
+			((t1.payment = 'ONLINE_PAYMENT' and t1.pay_status = 9) or t1.payment = 'CASH_ON_DELIVERY') 
+		and 
+			t2.merchant_code = #{merchantCode,jdbcType=VARCHAR} 
+		<if test="start != null">
+		and
+			t1.create_time <![CDATA[>=]]> #{start,jdbcType=VARCHAR} 
+		</if>
+		<if test="end != null">
+		and
+			t1.create_time <![CDATA[<=]]> #{end,jdbcType=VARCHAR} 
+		</if>
+		order by
+			t1.create_time asc
+	</select>
+	
+	<!-- 经营概况(商品部分) -->
+	<select id="querySummaryOfOperationsOfCommodity" resultType="java.util.Map">
+		select
+			count(1) as commodity_num 
+		from 
+			tbl_commodity_style t1 
+		where 
+			t1.merchant_code = #{merchantCode,jdbcType=VARCHAR} 
+		and 
+			t1.commodity_status = '2'
+		<if test="start != null">
+		and
+			t1.show_date <![CDATA[>=]]> #{start,jdbcType=VARCHAR} 
+		</if>
+		<if test="end != null">
+		and
+			t1.show_date <![CDATA[<=]]> #{end,jdbcType=VARCHAR} 
+		</if>
+		union all
+		select 
+			count(1) as commodity_num 
+		from 
+			tbl_commodity_style t1 
+		where 
+			t1.merchant_code = #{merchantCode,jdbcType=VARCHAR} 
+		and 
+			t1.commodity_status = '2'
+	</select>
+	
+	<!-- 查询商品销售明细条件SQL -->
+	<sql id="queryCommoditySalesDetailsConditionSql">
+		and 
+			t2.merchant_code = #{vo.merchantCode,jdbcType=VARCHAR} 
+		<if test="vo.start != null">
+		and
+			t1.create_time <![CDATA[>=]]> #{vo.start,jdbcType=VARCHAR} 
+		</if>
+		<if test="vo.end != null">
+		and
+			t1.create_time <![CDATA[<=]]> #{vo.end,jdbcType=VARCHAR} 
+		</if>
+		<if test="vo.commodityName != null and vo.commodityName != ''">
+		and
+			t3.prod_name like concat('${vo.commodityName}', '%')
+		</if>
+		<if test="vo.thirdPartyCode != null and vo.thirdPartyCode != ''">
+		and
+			t4.third_party_code like concat('${vo.thirdPartyCode}', '%')
+		</if>
+	</sql>
+	
+	<!-- 查询商品销售明细总记录数 -->
+	<select id="queryCommoditySalesDetailsCount" resultType="java.lang.Integer">
+		select 
+			count(1) 
+		from 
+			(
+				select 
+					1
+				from 
+					tbl_order_sub t1 
+				inner join 
+					tbl_order_sub_expand t2 on(t1.id = t2.order_sub_id) 
+				inner join 
+					tbl_order_detail4sub t3 on(t2.order_sub_id = t3.order_sub_id)
+				inner join 
+					tbl_commodity_product t4 on(t3.prod_no = t4.product_no)
+				inner join 
+					tbl_commodity_style t5 on(t4.commodity_id = t5.id)
+				where 
+					((t1.payment = 'ONLINE_PAYMENT' and t1.pay_status = 9) or t1.payment = 'CASH_ON_DELIVERY') 
+				<include refid="queryCommoditySalesDetailsConditionSql"/>
+				group by 
+					t5.default_pic, t3.prod_name, t4.third_party_code
+			) tmp
+	</select>
+	
+	<!-- 查询商品销售明细 -->
+	<select id="queryCommoditySalesDetails" resultType="java.util.Map">
+		select 
+			t5.default_pic, 
+			t3.prod_name, 
+			t3.prod_no, 
+			t4.third_party_code, 
+			t5.`no`,  
+			sum(t3.commodity_num) as order_commodity_nums, 
+			count(t1.order_sub_no) as order_nums, 
+			sum(t3.active_price) as order_pay_total_prices, 
+			sum(if(t1.payment = 'CASH_ON_DELIVERY', 0, t3.active_price)) as order_traded_amounts, 
+			(sum(t3.active_price) / sum(t3.commodity_num)) as avg_order_amounts
+		from 
+			tbl_order_sub t1 
+		inner join 
+			tbl_order_sub_expand t2 on(t1.id = t2.order_sub_id) 
+		inner join 
+			tbl_order_detail4sub t3 on(t2.order_sub_id = t3.order_sub_id)
+		inner join 
+			tbl_commodity_product t4 on(t3.prod_no = t4.product_no)
+		inner join 
+			tbl_commodity_style t5 on(t4.commodity_id = t5.id)
+		where 
+			((t1.payment = 'ONLINE_PAYMENT' and t1.pay_status = 9) or t1.payment = 'CASH_ON_DELIVERY') 
+		<include refid="queryCommoditySalesDetailsConditionSql"/>
+		group by 
+			t5.default_pic, t3.prod_name, t3.prod_no, t4.third_party_code, t5.`no`
+		order by 
+			order_commodity_nums desc
+	</select>
+	
+	<!-- 查询没有销售明细的商品总计录数 -->
+	<select id="queryCommodityNoSalesDetailsCount" resultType="java.lang.Integer">
+		select
+			count(1)
+		from
+			tbl_commodity_style t1
+		inner join
+			tbl_commodity_product t2 on (
+				t1.id = t2.commodity_id
+				and
+					t1.merchant_code = #{vo.merchantCode,jdbcType=VARCHAR}
+				<if test="vo.commodityName != null and vo.commodityName != ''">
+				and
+					t1.commodity_name like concat('${vo.commodityName}', '%')
+				</if>
+				<if test="vo.thirdPartyCode != null and vo.thirdPartyCode != ''">
+				and
+					t2.third_party_code like concat('${vo.thirdPartyCode}', '%')
+				</if>
+			)
+		where
+			not exists (
+			select
+				1
+			from
+				tbl_commodity_style t3
+			inner join
+				tbl_commodity_product t4 on(t3.id = t4.commodity_id)
+			inner join
+				tbl_order_sub_expand t5 on(t3.merchant_code = t5.merchant_code)
+			inner join 
+				tbl_order_detail4sub t6 on(t5.order_sub_id = t6.order_sub_id and t4.product_no = t6.prod_no)
+			inner join
+				tbl_order_sub t7 on(t6.order_sub_id = t7.id)
+			where
+				t2.id = t4.id
+			and 
+				t3.merchant_code = #{vo.merchantCode,jdbcType=VARCHAR}
+			<if test="vo.start != null">
+			and
+				t7.create_time <![CDATA[>=]]> #{vo.start,jdbcType=VARCHAR} 
+			</if>
+			<if test="vo.end != null">
+			and
+				t7.create_time <![CDATA[<=]]> #{vo.end,jdbcType=VARCHAR} 
+			</if>
+		)
+	</select>
+	
+	<!-- 查询没有销售明细的商品 -->
+	<select id="queryCommodityNoSalesDetails" resultType="java.util.Map">
+		select
+			t1.default_pic, 
+			t1.commodity_name, 
+			t1.`no`, 
+			t1.first_sell_date as last_sales_time,
+			t2.product_no, 
+			t2.third_party_code
+		from
+			tbl_commodity_style t1
+		inner join
+			tbl_commodity_product t2 on (
+				t1.id = t2.commodity_id
+				and
+					t1.merchant_code = #{vo.merchantCode,jdbcType=VARCHAR}
+				<if test="vo.commodityName != null and vo.commodityName != ''">
+				and
+					t1.commodity_name like concat('${vo.commodityName}', '%')
+				</if>
+				<if test="vo.thirdPartyCode != null and vo.thirdPartyCode != ''">
+				and
+					t2.third_party_code like concat('${vo.thirdPartyCode}', '%')
+				</if>
+			)
+		where
+			not exists (
+			select
+				1
+			from
+				tbl_commodity_style t3
+			inner join
+				tbl_commodity_product t4 on(t3.id = t4.commodity_id)
+			inner join
+				tbl_order_sub_expand t5 on(t3.merchant_code = t5.merchant_code)
+			inner join 
+				tbl_order_detail4sub t6 on(t5.order_sub_id = t6.order_sub_id and t4.product_no = t6.prod_no)
+			inner join
+				tbl_order_sub t7 on(t6.order_sub_id = t7.id)
+			where
+				t2.id = t4.id
+			and 
+				t3.merchant_code = #{vo.merchantCode,jdbcType=VARCHAR}
+			<if test="vo.start != null">
+			and
+				t7.create_time <![CDATA[>=]]> #{vo.start,jdbcType=VARCHAR} 
+			</if>
+			<if test="vo.end != null">
+			and
+				t7.create_time <![CDATA[<=]]> #{vo.end,jdbcType=VARCHAR} 
+			</if>
+		) order by last_sales_time desc
+	</select>
+	
+	<!-- 查询售后明细SQL -->
+	<sql id="queryAfterSaleStatisticsDetailsConditionSql">
+		<if test="vo.start != null">
+		and
+			t1.create_time <![CDATA[>=]]> #{vo.start,jdbcType=VARCHAR} 
+		</if>
+		<if test="vo.end != null">
+		and
+			t1.create_time <![CDATA[<=]]> #{vo.end,jdbcType=VARCHAR} 
+		</if>
+		<if test="vo.saleStatus != null">
+		and
+			t1.status = #{vo.saleStatus,jdbcType=VARCHAR} 
+		</if>
+		<if test="vo.saleType != null">
+		and
+			t1.sale_type = #{vo.saleType,jdbcType=VARCHAR} 
+		</if>
+	</sql>
+	
+	<!-- 查询售后明细统计 -->
+	<select id="queryAfterSaleStatistics" resultType="java.util.Map">
+		select
+			t5.third_party_code, 
+			t1.create_time as apply_time, 
+			t1.sale_type, 
+			t3.pay_total_price,
+			if(t7.backed_amount is null, 0, t7.backed_amount) as backed_amount
+		from 
+			tbl_order_sale_apply_bill t1
+		inner join
+			tbl_order_cancel_goods_info t2 on(t1.id = t2.apply_id)
+		inner join
+			tbl_order_sub t3 on(t1.order_no = t3.order_sub_no)
+		inner join
+			tbl_order_sub_expand t4 on(t3.id = t4.order_sub_id)
+		inner join
+			tbl_commodity_product t5 on(t2.prod_code = t5.product_no)
+		left join
+			tbl_order_apply_refund t7 on(t3.order_sub_no = t7.order_no)
+		where
+			t4.merchant_code = #{vo.merchantCode,jdbcType=VARCHAR}
+		<include refid="queryAfterSaleStatisticsDetailsConditionSql"/>
+	</select>
+	
+	<!-- 查询售后明细总计录数 -->
+	<select id="queryAfterSaleStatisticsDetailsCount" resultType="java.lang.Integer">
+		select
+			count(1)
+		from 
+			tbl_order_sale_apply_bill t1
+		inner join
+			tbl_order_cancel_goods_info t2 on(t1.id = t2.apply_id)
+		inner join
+			tbl_order_sub t3 on(t1.order_no = t3.order_sub_no)
+		inner join
+			tbl_order_sub_expand t4 on(t3.id = t4.order_sub_id)
+		where
+			t4.merchant_code = #{vo.merchantCode,jdbcType=VARCHAR}
+		<include refid="queryAfterSaleStatisticsDetailsConditionSql"/>
+	</select>
+	
+	<!-- 查询售后明细 -->
+	<select id="queryAfterSaleStatisticsDetails" resultType="java.util.Map">
+		select
+			t1.order_no, 
+			t5.third_party_code, 
+			t2.commodity_name, 
+			t1.warehouse_code, 
+			t3.create_time, 
+			t3.pay_total_price, 
+			t1.apply_no, 
+			t1.create_time as apply_time, 
+			t1.status, 
+			t1.sale_type, 
+			t1.sale_reason, 
+			t1.logistics_name, 
+			t1.express_no, 
+			if(t7.backed_amount is null, 0, t7.backed_amount) as backed_amount
+		from 
+			tbl_order_sale_apply_bill t1
+		inner join
+			tbl_order_cancel_goods_info t2 on(t1.id = t2.apply_id)
+		inner join
+			tbl_order_sub t3 on(t1.order_no = t3.order_sub_no)
+		inner join
+			tbl_order_sub_expand t4 on(t3.id = t4.order_sub_id)
+		inner join
+			tbl_commodity_product t5 on(t2.prod_code = t5.product_no)
+		left join
+			tbl_order_apply_refund t7 on(t3.order_sub_no = t7.order_no)
+		where
+			t4.merchant_code = #{vo.merchantCode,jdbcType=VARCHAR}
+		<include refid="queryAfterSaleStatisticsDetailsConditionSql"/>
+	</select>
+	
+</mapper>

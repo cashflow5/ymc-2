@@ -1,0 +1,53 @@
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,hr,input{margin:0;padding:0;border:0;outline:0;font-size:100%;background:transparent;}
+body{color:#404040;font: 12px/1.5 tahoma,arial,宋体,sans-serif;}
+input{vertical-align:middle;}
+ol,ul,li{list-style:none}
+blockquote,q{quotes:none}
+ins{text-decoration:none}
+del{text-decoration:line-through}
+table{border-collapse:collapse;border-spacing:0}
+a:link,a:visited{color:#3366cc; text-decoration:none;}
+a:hover,a:active{color:#ff6600;text-decoration:none;}
+.clear{clear:both;height:0;font-size:0;}
+.clearfixed{overflow:hidden;}
+.clearfixed:after{display:block;clear:both;content:"";}
+.fl{float:left;}
+.fr{float:right;}
+.f_red{color:#ff0000;}
+.f_blue{color:#06F;}
+.f_hl{color:#ff6600;}
+.f_gray{color:#999;}
+.blank5{height:5px;clear:both;}
+.blank10{height:10px; clear:both;}
+.blank20{height:20px; clear:both;}
+.none{display:none;}
+.show{display:inherit;}
+em{font-style:normal;}
+.aleft{text-align:left;}
+.row{height:20px; line-height:20px; margin-top:5px;}
+.relative{position:relative;}
+.ml10{margin-left:10px;}
+.m10{margin:10px;}
+.clearfix:after {clear: both;content: '.';display: block;visibility: hidden;height: 0;}
+.clearfix {display:block;}
+
+
+/*帮助中心*/
+.curr_site {background: none repeat scroll 0 0 #F1F8FF;border: 1px solid #CBD8ED;line-height: 28px;margin-top: 15px;padding-left: 15px;}
+.help_nav {border: 1px solid #CBD8ED;float: left;letter-spacing: 1px;margin-top: 10px;overflow: visible;width: 170px;}
+.normal_box.help {clear: none;display: inline;margin-left: 10px;overflow: hidden;width: 796px;}
+.help_nav {position: relative;}
+.help_nav dt {border-bottom: 1px solid #EBE9E9;font: bold 12px/25px '';height: 25px;margin: 5px 0; padding-left: 15px;}
+.help_nav dd {font: 12px/27px '';height: 27px;margin-left: 15px; overflow: hidden;padding-left: 12px;position: relative;right: -1px;width: 143px;z-index: 2;}
+.help_nav dd.curr {background: url("../images/help-menu-curr.png") no-repeat scroll 0 0 transparent;color: #FF5000;}
+.help .site {height: 25px;overflow: hidden;padding-left: 0;}
+.help .site a {color: #333333;float: left;height: 25px;line-height: 25px;padding: 0 15px;}
+.help .site a.curr {background: url("../images/site_curr_bg.png") repeat-x scroll 0 0 transparent;border-left: 1px solid #DDDDDD;border-right: 1px solid #D6D7DB;margin-left: -1px;}
+.help_con {padding: 15px 10px;}
+.main_container {clear: both;display: block;margin: 0 auto;width: 980px;}
+.help .site {height: 25px;overflow: hidden;padding-left: 0;}
+.normal_box {border: 1px solid #CBD8ED;clear: both;margin-top: 10px;padding-bottom: 10px;}
+.normal_box .site {font-weight: normal;}
+.normal_box .title {background: none repeat scroll 0 0 #F1F8FF;border-bottom: 1px solid #CBD8ED;height: 28px;line-height: 28px;}
+.footer {clear: both;color: #666666;display: block;font-family: Arial,Helvetica,sans-serif;height: 40px;line-height: 40px;margin-top: 20px;text-align: center;width: 980px;}
+

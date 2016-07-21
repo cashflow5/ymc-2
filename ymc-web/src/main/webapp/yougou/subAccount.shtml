@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>优购-商家中心-基本信息</title>
+    <link rel="stylesheet" type="text/css" href="css/base.css" />
+    <link rel="stylesheet" type="text/css" href="css/mold.css" />
+</head>
+
+<body id="subaccount">
+    <script type="text/javascript" src="js/bootstrap.js"></script>
+    <!--#include file="layout/header.shtml" -->
+    <div id="newcontent" class="wrap clearfix mt10">
+        <!--#include file="layout/sidebar.shtml" -->
+        <div id="newmain" class="main_bd fr">
+            <div class="main_container">
+                <div class="normal_box">
+                    <p class="title site">当前位置：商家中心 &gt; 设置 &gt; 基本信息</p>
+                    <div class="tab_panel relative">
+                        <ul class="tab">
+                            <li onclick="location.href='/order/toDocumentPrintingNew.sc'" class="curr"><span>基本信息</span></li>
+                            <li onclick="location.href='/order/toPrintNewNotDelivery.sc'"><span>店铺信息</span></li>
+                            <li onclick="location.href='/order/toPrintNewDelivery.sc'"><span>合同信息</span></li>
+                        </ul>
+                        <a id="btn-account-add" class="button btn-account" onclick="javascript:;" style="vertical-align: top;"><span>添加账号</span></a>
+                        <a id="btn-account-modifity" class="button btn-account" onclick="javascript:;" style="vertical-align: top;"><span>修改账号</span></a>
+                        <div class="tab_content">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--#include file="layout/footer.shtml" -->
+    <script src="js/ygdialog/lhgdialog.js"></script>
+    <script>
+    $(function() {
+        //添加子账号
+        $('#btn-account-add').click(function(event) {
+            dialog_obj=$.dialog.open('subAccount-add.shtml',{
+                title:"添加账号",
+                max:false,
+                min:false,
+                width: '410px',
+                height: '300px',
+                lock:true,
+                ok: function() {
+                },
+                cancel:function(){
+
+                }
+            }); 
+        });
+
+        //修改子账号
+        $('#btn-account-modifity').click(function(event) {
+            dialog_obj=$.dialog.open('subAccount-modifity.shtml',{
+                title:"修改账号",
+                max:false,
+                min:false,
+                width: '410px',
+                height: '300px',
+                lock:true,
+                ok: function() {
+                },
+                cancel:function(){
+
+                }
+            }); 
+        });
+    });
+    </script>
+</body>
+
+</html>

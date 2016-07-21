@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yougou.kaidian.taobao.dao.TaobaoItemPropImgMapper">
+
+	<resultMap id="taobaoItemPropImg" type="com.yougou.kaidian.taobao.model.TaobaoItemPropImg">
+		<result column="prop_id" property="propId" jdbcType="VARCHAR" />
+		<result column="num_iid" property="numIid" jdbcType="BIGINT" />
+		<result column="id" property="id" jdbcType="BIGINT" />
+		<result column="url" property="url" jdbcType="VARCHAR" />
+		<result column="properties" property="properties" jdbcType="VARCHAR" />
+		<result column="position" property="position" jdbcType="BIGINT" />
+	</resultMap>
+	
+	<delete id="deleteTaobaoItemPropImgByNumIid">
+		DELETE FROM tbl_merchant_taobao_item_prop_img
+		WHERE num_iid = #{numIid,jdbcType=BIGINT}
+	</delete>
+	
+	<insert id="insertTaobaoItemPropImgList" parameterType="java.util.List">
+		INSERT INTO tbl_merchant_taobao_item_prop_img ( prop_id, num_iid, id, url, properties, position )
+		VALUES
+		<foreach collection="list" item="item" index="index" separator=","> 
+          (
+			#{item.propId,jdbcType=CHAR},
+			#{item.numIid,jdbcType=BIGINT},
+			#{item.id,jdbcType=BIGINT},
+			#{item.url,jdbcType=VARCHAR},
+			#{item.properties,jdbcType=VARCHAR},
+			#{item.position,jdbcType=SMALLINT}
+			)
+		</foreach>
+	</insert>
+	
+	<select id="queryTaobaoItemPropImgByNumIid" resultMap="taobaoItemPropImg">
+		SELECT 	prop_id, num_iid, id, url, properties, position FROM 
+			tbl_merchant_taobao_item_prop_img 
+		WHERE num_iid = #{numIid, jdbcType=BIGINT}
+		ORDER BY id
+	</select>
+</mapper>

@@ -1,0 +1,19 @@
+.font-icon em {
+  *display: inline-block;
+  background: url(../images/icon.png) 0 0 no-repeat;
+  padding-left: 16px;
+  margin-right: 5px;
+}
+.font-icon .icon-door {
+  background-position: 0 0;
+  font-size: 13px;
+}
+.font-icon .icon-video {
+  background-position: 0 -21px;
+}
+.font-icon .icon-clock {
+  background-position: 0 -43px;
+}
+.font-icon .icon-user {
+  background-position: 0 -64px;
+}

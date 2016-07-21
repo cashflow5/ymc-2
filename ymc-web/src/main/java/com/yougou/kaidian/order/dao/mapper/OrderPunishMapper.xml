@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yougou.kaidian.order.dao.OrderPunishMapper">
+
+	<resultMap id="orderPunishResultMap" type="com.yougou.kaidian.order.model.OrderPunish">
+		<result column="id" property="id" jdbcType="VARCHAR" />
+		<result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+		<result column="order_time" property="orderTime" jdbcType="TIMESTAMP" />
+		<result column="order_price" property="orderPrice" jdbcType="DOUBLE" />
+		<result column="third_order_no" property="thirdOrderNo" jdbcType="VARCHAR" />
+		<result column="is_settle" property="isSettle" jdbcType="VARCHAR" />
+		<result column="settle_order_no" property="settleOrderNo" jdbcType="VARCHAR" />
+		<result column="settle_cycle" property="settleCycle" jdbcType="VARCHAR" />
+		<result column="punish_order_status" property="punishOrderStatus" jdbcType="VARCHAR" />
+		<result column="punish_price" property="punishPrice" jdbcType="DOUBLE" />
+		<result column="punish_type" property="punishType" jdbcType="VARCHAR" />
+		<result column="shipment_status" property="shipmentStatus" jdbcType="VARCHAR" />
+		<result column="shipment_time" property="shipmentTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	
+	<resultMap id="orderPunishRuleResultMap" type="com.yougou.kaidian.order.model.OrderPunishRule">
+		<result column="stock_punish_type" property="stockPunishType" jdbcType="VARCHAR" />
+		<result column="stock_punish_rate" property="stockPunishRate" jdbcType="DOUBLE" />
+		<result column="stock_punish_money" property="stockPunishMoney" jdbcType="DOUBLE" />
+		<result column="shipment_hour" property="shipmentHour"  />
+	</resultMap>
+	
+	<resultMap type="com.yougou.ordercenter.vo.merchant.output.QueryOutOfStockOutputDto" 
+		id="queryOutOfStockOutputMap">
+		<result property="prodName" column="prod_name"/>
+		<result property="orderSubNo" column="order_no"/>
+		<result property="commodityNo" column="commodity_no"/>
+		<result property="styleNo" column="style_no"/>
+		<result property="levelCode" column="level_code"/>
+		<result property="backorderDate" column="backorder_date"/>
+		<result property="picSmall" column="pic_small"/>	
+		<result property="commodityCount" column="lack_num"/>	
+	</resultMap>
+	
+	<insert id="saveOrderPunish" parameterType="com.yougou.kaidian.order.model.OrderPunish">
+		INSERT INTO tbl_sp_supplier_punish_order(id,order_no,third_order_no,order_time,merchant_code,
+		punish_type,order_price,is_settle,punish_price,create_time,update_time,punish_order_status,shipment_status,order_source_no,out_shop_name)
+		VALUES(#{id},#{orderNo},#{thirdOrderNo},#{orderTime},#{merchantCode},#{punishType},#{orderPrice},
+		#{isSettle},#{punishPrice},#{createTime},#{updateTime},#{punishOrderStatus},#{shipmentStatus},#{orderSourceNo},#{outShopName})
+	</insert>
+	
+	<update id="updateOrderPunish" >
+		UPDATE tbl_sp_supplier_punish_order
+		SET punish_type = #{punishType},update_time = #{updateTime},punish_price = #{punishPrice}
+		WHERE id = #{id}
+	</update>
+	
+	<select id="queryOrderPunishByOrderNo" resultMap="orderPunishResultMap">
+		SELECT po.id,po.order_no,po.order_time,po.order_price,po.third_order_no,
+		po.is_settle,po.settle_order_no,po.settle_cycle,po.punish_price,po.punish_type,
+		po.shipment_status,po.shipment_time,po.punish_order_status
+		FROM tbl_sp_supplier_punish_order po 
+		WHERE po.order_no = #{orderNo} and po.punish_order_status <![CDATA[<>]]> '0'
+	</select>
+	
+	<select id="queryOrderPunishByOrderNos" resultMap="orderPunishResultMap">
+		SELECT po.id,po.order_no,po.order_time,po.order_price,po.third_order_no,
+		po.is_settle,po.settle_order_no,po.settle_cycle,po.punish_price,po.punish_type,
+		po.shipment_status,po.shipment_time,po.punish_order_status
+		FROM tbl_sp_supplier_punish_order po 
+		WHERE po.order_no IN
+		<foreach  collection="orderNos" index="index" item="item" open="(" separator="," close=")">  
+      			'${item}'
+   		</foreach> 
+	</select>
+	
+	
+	
+	<select id="queryOrderPunishList" parameterType="com.yougou.kaidian.order.model.OrderPunish"
+			resultMap="orderPunishResultMap">
+		SELECT po.id,po.order_no,po.order_time,po.order_price,po.third_order_no,
+		po.is_settle,po.settle_order_no,po.settle_cycle,po.punish_price,po.punish_type,
+		po.shipment_status,po.shipment_time
+		<include refid="queryPunishFrom"/>
+		<include refid="queryPunishWhere"/>
+		ORDER BY po.create_time DESC
+	</select>
+
+	<select id="queryOrderPunishCount" parameterType="com.yougou.kaidian.order.model.OrderPunish"
+			resultType="int">
+		SELECT COUNT(1)
+		<include refid="queryPunishFrom"/>
+		<include refid="queryPunishWhere"/>
+	</select>
+	
+	<select id="getPunishValidStockList" resultMap="queryOutOfStockOutputMap">
+		select d.commodity_no,d.prod_name,cs.style_no,p.brand_name,ed.lack_num,
+		d.level_code,e.exception_time as backorder_date,o.order_no,cs.pic_small 
+		from tbl_order_handle_exception e inner join tbl_order_handle_exception_detail ed 
+		on e.id = ed.order_handle_id inner join tbl_order_sub s 
+		on s.order_sub_no = e.order_sub_no  inner join 
+		tbl_order_detail4sub d on d.order_sub_id = s.id inner join tbl_commodity_product p 
+		on d.prod_no = p.product_no 
+		inner join tbl_sp_supplier_punish_order o on 
+		o.order_no = e.order_sub_no inner JOIN tbl_commodity_style cs 
+		on cs.id = p.commodity_id 
+		<include refid="queryStockPunishOrderWhere"/> 
+		order by e.exception_time desc 
+	</select>
+	
+	<sql id="queryStockPunishOrderWhere">
+		WHERE o.punish_type='0' and o.punish_order_status = '2' 
+		<if test="merchant_code != null and merchant_code != '' ">
+			and o.merchant_code = #{merchantCode} 
+		</if>
+		<if test="orderSubNo != null and orderSubNo != '' ">
+			AND o.order_no = #{orderSubNo} 
+		</if>
+		<if test="commodityNo != null and commodityNo != '' ">
+			AND d.commodity_no = #{commodityNo} 
+		</if>
+		<if test="brandNo != null and brandNo != '' ">
+			AND p.brand_no = #{brandNo} 
+		</if>
+		<if test="styleNo != null and styleNo != '' ">
+			AND cs.style_no = #{styleNo} 
+		</if>
+		<if test="levelCode != null and levelCode != '' ">
+			AND d.level_code = #{levelCode} 
+		</if>
+		<if test="backorderDateBegin != null and backorderDateBegin !='' ">
+			AND e.exception_time <![CDATA[>=]]> #{backorderDateBegin} 
+		</if>
+		<if test="backorderDateEnd != null and backorderDateEnd !='' ">
+			AND e.exception_time <![CDATA[<=]]> #{backorderDateEnd} 
+		</if>
+	</sql>
+	
+	<select id="getPunishValidStockListCount" resultType="int">
+		select count(1) from tbl_order_handle_exception e inner join 
+		tbl_order_handle_exception_detail ed 
+		on e.id = ed.order_handle_id inner join tbl_order_sub s 
+		on s.order_sub_no = e.order_sub_no  inner join 
+		tbl_order_detail4sub d on d.order_sub_id = s.id inner join tbl_commodity_product p 
+		on d.prod_no = p.product_no 
+		inner join tbl_sp_supplier_punish_order o on 
+		o.order_no = e.order_sub_no inner JOIN tbl_commodity_style cs 
+		on cs.id = p.commodity_id  
+		<include refid="queryStockPunishOrderWhere"/>
+	</select>
+	
+	<select id="queryOrderPunishRuleList" resultMap="orderPunishRuleResultMap">
+		SELECT pr.shipment_hour
+		FROM tbl_sp_supplier_punish_rule pr
+		WHERE pr.merchant_code = #{merchantCode}
+	</select>
+
+	<sql id="queryPunishFrom">
+		FROM tbl_sp_supplier_punish_order po 
+	</sql>	
+	<sql id="queryPunishWhere">
+		WHERE po.punish_order_status = '2'
+		and po.merchant_code = #{merchantCode}
+		<if test="orderNo != null and orderNo != '' ">
+		AND po.order_no = #{orderNo}
+		</if>
+		<if test="thirdOrderNo != null and thirdOrderNo != '' ">
+		AND po.third_order_no = #{thirdOrderNo}
+		</if>
+		<if test="isSettle != null and isSettle != '' ">
+		AND po.is_settle = #{isSettle}
+		</if>
+		<if test="settleOrderNo != null and settleOrderNo != '' ">
+		AND po.settle_order_no = #{settleOrderNo}
+		</if>
+		<if test="punishType != null and punishType != '' ">
+		AND po.punish_type = #{punishType}
+		</if>
+		<if test="orderTimeStart != null and orderTimeStart !='' ">
+			AND po.order_time <![CDATA[>=]]> #{orderTimeStart}
+		</if>
+		<if test="orderTimeEnd != null and orderTimeEnd !='' ">
+			AND po.order_time <![CDATA[<=]]> #{orderTimeEnd}
+		</if>
+	</sql>	
+	
+	<!-- 违规订单商品 -->
+	<resultMap id="orderPunishCommodityMap" type="com.yougou.kaidian.order.model.OrderPunishCommodity">
+		<result column="order_sub_id" property="orderSubId" jdbcType="VARCHAR" />
+		<result column="backorder_date" property="backorderDate" jdbcType="TIMESTAMP" />
+		<result column="order_sub_no" property="orderSubNo" jdbcType="VARCHAR" />
+		<result column="commodity_no" property="commodityNo"  jdbcType="VARCHAR"/>
+		<result column="prod_name" property="prodName" jdbcType="VARCHAR" />
+		<result column="level_code" property="levelCode" jdbcType="VARCHAR" />
+		<result column="style_no" property="styleNo" jdbcType="VARCHAR" />
+		<result column="supplier_code" property="commoditySupplierCode"  jdbcType="VARCHAR"/>
+		<result column="pic_small" property="picSmall"  jdbcType="VARCHAR"/>
+		<result column="commodity_count" property="commodityCount"  jdbcType="INTEGER"/>
+	</resultMap>
+	<select id="queryOrderPunishCommodityList" resultMap="orderPunishCommodityMap" parameterType="map">
+		SELECT t1.order_sub_id,t1.backorder_date,t2.order_sub_no,t3.commodity_no,t3.prod_name,t3.level_code,c.style_no,c.supplier_code,c.pic_small,sum(t3.commodity_num) as commodity_count
+		FROM
+			tbl_order_sub_expand t1
+		INNER JOIN tbl_order_sub t2 ON (t2.id = t1.order_sub_id)
+		INNER JOIN tbl_order_detail4sub t3 ON (t3.order_sub_id = t2.id)
+		INNER JOIN tbl_commodity_style c ON (c.id = t3.commodity_id)
+		WHERE
+			1 = 1
+		AND t2.warehouse_code =#{warehouseCode}
+		AND t1.merchant_code =#{merchantCode}
+		AND t2.base_status =3
+		AND t2.suspend_type =1
+		<if test="backorderDateBegin != null and backorderDateBegin !='' ">
+			AND t1.backorder_date <![CDATA[>=]]> #{backorderDateBegin}
+		</if>
+		<if test="backorderDateEnd != null and backorderDateEnd !='' ">
+			AND t1.backorder_date <![CDATA[<=]]> #{backorderDateEnd}
+		</if>
+		<if test="orderSubNo != null and orderSubNo !='' ">
+			AND t2.order_sub_no = #{orderSubNo}
+		</if>
+		<if test="commodityNo != null and commodityNo !='' ">
+			AND t3.commodity_no = #{commodityNo}
+		</if>
+		<if test="levelCode != null and levelCode !='' ">
+			AND t3.level_code = #{levelCode}
+		</if>
+		<if test="styleNo != null and styleNo !='' ">
+			AND c.style_no = #{styleNo}
+		</if>
+		<if test="brandNo != null and brandNo !='' ">
+			AND c.brand_no = #{brandNo}
+		</if>
+		AND t2.del_flag = 1 group by t1.order_sub_id,t3.commodity_no order by t1.backorder_date desc 
+	</select>
+	<select id="queryOrderPunishCommodityListCount" resultType="int" parameterType="map">
+		select count(1) from (SELECT t1.order_sub_id,t3.commodity_no 
+		FROM
+			tbl_order_sub_expand t1
+		INNER JOIN tbl_order_sub t2 ON (t2.id = t1.order_sub_id)
+		INNER JOIN tbl_order_detail4sub t3 ON (t3.order_sub_id = t2.id)
+		INNER JOIN tbl_commodity_style c ON (c.id = t3.commodity_id)
+		WHERE
+			1 = 1
+		AND t2.warehouse_code =#{warehouseCode}
+		AND t1.merchant_code =#{merchantCode}
+		AND t2.base_status =3
+		AND t2.suspend_type =1
+		<if test="backorderDateBegin != null and backorderDateBegin !='' ">
+			AND t1.backorder_date <![CDATA[>=]]> #{backorderDateBegin}
+		</if>
+		<if test="backorderDateEnd != null and backorderDateEnd !='' ">
+			AND t1.backorder_date <![CDATA[<=]]> #{backorderDateEnd}
+		</if>
+		<if test="orderSubNo != null and orderSubNo !='' ">
+			AND t2.order_sub_no = #{orderSubNo}
+		</if>
+		<if test="commodityNo != null and commodityNo !='' ">
+			AND t3.commodity_no = #{commodityNo}
+		</if>
+		<if test="levelCode != null and levelCode !='' ">
+			AND t3.level_code = #{levelCode}
+		</if>
+		<if test="styleNo != null and styleNo !='' ">
+			AND c.style_no = #{styleNo}
+		</if>
+		<if test="brandNo != null and brandNo !='' ">
+			AND c.brand_no = #{brandNo}
+		</if>
+		AND t2.del_flag = 1 group by t1.order_sub_id,t3.commodity_no ) as ss
+	</select>
+
+</mapper>

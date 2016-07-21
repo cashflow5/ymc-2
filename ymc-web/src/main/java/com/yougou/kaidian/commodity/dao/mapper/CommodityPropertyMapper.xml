@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yougou.kaidian.commodity.dao.CommodityPropertyMapper" >
+  <resultMap id="CatResultMap" type="com.yougou.kaidian.common.commodity.pojo.Cat" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="no" property="no" jdbcType="VARCHAR" />
+    <result column="cat_name" property="catName" jdbcType="VARCHAR" />
+    <result column="struct_name" property="structName" jdbcType="VARCHAR" />
+    <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <resultMap id="brandResult" type="com.yougou.kaidian.common.commodity.pojo.Brand" >
+    <result column="brand_no" property="brandNo" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="catResult" type="com.yougou.kaidian.common.commodity.pojo.Cat" >
+    <result column="cat_no" property="no" jdbcType="VARCHAR" />
+    <result column="struct_name" property="structName" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <select id="querySupplierBrandList" resultMap="brandResult" parameterType="java.lang.String">
+  	SELECT
+		b.brand_no
+	FROM
+		tbl_sp_limit_brand b
+	INNER JOIN tbl_sp_supplier s ON b.supply_id = s.id 
+	WHERE s.supplier_code = #{merchantCode}
+  </select>
+  
+  <select id="querySupplierCatList" resultMap="catResult">
+  	SELECT
+		t.cat_no,
+		t.struct_name
+	FROM
+		tbl_sp_limit_cat t
+	INNER JOIN tbl_sp_supplier s ON t.supply_id = s.id
+	WHERE
+		s.supplier_code = #{merchantCode}
+  </select>
+  
+  <select id="queryCategoryListByBrandNo" resultMap="catResult">
+  	SELECT
+		c.cat_no,
+	    c.struct_name
+	FROM
+		tbl_sp_limit_cat c
+	INNER JOIN tbl_sp_limit_brand_cat bc ON bc.cat_id = c.id
+	INNER JOIN tbl_sp_limit_brand b ON bc.brand_id = b.id
+	INNER JOIN tbl_sp_supplier s ON c.supply_id = s.id
+	WHERE
+		b.supply_id = c.supply_id
+	AND s.supplier_code = #{merchantCode}
+	AND b.brand_no = #{brandNo}
+  </select>
+  
+  <select id="querySupplierCatListByStructName" resultMap="catResult">
+  	SELECT
+		c.cat_no,
+		c.struct_name
+	FROM
+		tbl_sp_limit_cat c
+	INNER JOIN tbl_sp_supplier s ON c.supply_id = s.id
+	WHERE s.supplier_code = #{merchantCode}
+	<if test="structName != null and structName != ''">
+	AND c.struct_name LIKE CONCAT(CONCAT(#{structName},'-'),'%')	
+	</if>
+  </select>
+  <select id="queryCategoryListByBrandNoAndCate" resultType="java.util.Map">
+  	SELECT
+		bc.brand_id,b.brand_no
+	FROM
+		tbl_sp_limit_cat c
+	INNER JOIN tbl_sp_limit_brand_cat bc ON bc.cat_id = c.id
+	INNER JOIN tbl_sp_limit_brand b ON bc.brand_id = b.id
+	INNER JOIN tbl_sp_supplier s ON c.supply_id = s.id
+	WHERE
+		b.supply_id = c.supply_id
+	AND s.supplier_code = #{merchantCode}
+	AND b.brand_no = #{brandNo} 
+	and c.cat_no = #{catNo}
+  </select>
+</mapper>
